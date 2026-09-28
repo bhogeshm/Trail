@@ -1,0 +1,30 @@
+{
+  "name": "trail",
+  "version": "1.0.0",
+  "description": "HyperFrames-powered project: write HTML, render video.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "hf:init": "hyperframes init",
+    "hf:preview": "hyperframes preview",
+    "hf:check": "hyperframes check",
+    "hf:render": "hyperframes render"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bhogeshm/Trail.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bhogeshm/Trail/issues"
+  },
+  "homepage": "https://github.com/bhogeshm/Trail#readme",
+  "dependencies": {
+    "@hyperframes/core": "^0.8.82",
+    "@hyperframes/engine": "^0.8.82",
+    "@hyperframes/producer": "^0.8.82",
+    "hyperframes": "^0.8.82"
+  }
+}
