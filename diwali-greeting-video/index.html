@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"><!-- required: p5 has unicode regexes that break without it -->
+  <title>Watercolor Short</title>
+  <style>
+    html, body { margin: 0; background: #1b1512; }
+    #stage canvas { width: 100vw !important; height: auto !important; display: block; }
+    @font-face { font-family: 'Great Vibes'; src: url('assets/fonts/GreatVibes-Regular.ttf') format('truetype'); font-weight: 400; }
+    @font-face { font-family: 'Playfair Display'; src: url('assets/fonts/PlayfairDisplay-Bold.ttf') format('truetype'); font-weight: 700; }
+    .fontprime { position: absolute; left: -9999px; top: -9999px; font-family: 'Great Vibes', 'Playfair Display', serif; }
+  </style>
+</head>
+<body>
+  <div id="stage"></div>
+  <div class="fontprime">Happy Diwali AaBbCc</div>
+  <script>
+    // surface script errors to render.mjs right away instead of a long timeout
+    window.addEventListener('error', (e) => { window.__error = e.message + ' @ ' + (e.filename || '') + ':' + (e.lineno || ''); });
+  </script>
+  <script src="node_modules/p5/lib/p5.min.js"></script>
+  <script src="node_modules/p5.brush/dist/p5.brush.js"></script>
+  <script src="engine/core.js"></script>
+  <script src="engine/paint.js"></script>
+  <script src="engine/kit.js"></script>
+  <script src="engine/rig.js"></script>
+  <script src="engine/scene.js"></script>
+  <script src="story/story.js"></script>
+  <script>
+    // index.html            -> looping real-time preview
+    // index.html?t=4.2      -> hold one moment
+    // index.html?render     -> frame-by-frame mode driven by render.mjs
+    const q = new URLSearchParams(location.search);
+    Promise.all([
+      startScene({
+        parent: 'stage',
+        render: q.has('render'),
+        still: q.has('t') ? parseFloat(q.get('t')) : null,
+      }),
+      document.fonts.load('700 100px "Playfair Display"'),
+      document.fonts.load('100px "Great Vibes"'),
+      document.fonts.ready,
+    ]).then(([api]) => { window.scene = api; window.__ready = true; })
+      .catch((e) => { console.error(e); window.__error = String(e && e.stack || e); });
+  </script>
+</body>
+</html>
