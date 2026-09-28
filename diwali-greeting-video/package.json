@@ -1,0 +1,19 @@
+{
+  "name": "watercolor-short",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Watercolor cartoon short: p5.js + p5.brush, rendered with Puppeteer + FFmpeg",
+  "scripts": {
+    "render": "node render.mjs",
+    "stills": "node render.mjs --stills 0.5,1.9,2.9,4.8,5.9,7.0",
+    "audio": "node render.mjs --audio-only",
+    "check-motion": "node tools/check-motion.mjs",
+    "sheet": "node tools/sheet.mjs"
+  },
+  "dependencies": {
+    "p5": "^2.2.3",
+    "p5.brush": "^2.2.3",
+    "puppeteer": "^24.0.0"
+  }
+}
