@@ -8,7 +8,8 @@
     "hf:init": "hyperframes init",
     "hf:preview": "hyperframes preview",
     "hf:check": "hyperframes check",
-    "hf:render": "hyperframes render"
+    "hf:render": "hyperframes render",
+    "hf:smoke-test": "bash scripts/smoke-test.sh"
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,7 @@
     "@hyperframes/core": "^0.8.82",
     "@hyperframes/engine": "^0.8.82",
     "@hyperframes/producer": "^0.8.82",
-    "hyperframes": "^0.8.82"
+    "hyperframes": "^0.8.82",
+    "gsap": "^3.14.2"
   }
 }
