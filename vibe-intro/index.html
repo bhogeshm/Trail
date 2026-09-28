@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Anton"; font-weight: 400; font-style: normal; font-display: block; src: url("assets/fonts/anton-latin-400-normal.woff2") format("woff2"); }
+      @font-face { font-family: "Inter"; font-weight: 500; font-style: normal; font-display: block; src: url("assets/fonts/inter-latin-500-normal.woff2") format("woff2"); }
+      @font-face { font-family: "Inter"; font-weight: 700; font-style: normal; font-display: block; src: url("assets/fonts/inter-latin-700-normal.woff2") format("woff2"); }
+      @font-face { font-family: "JetBrains Mono"; font-weight: 500; font-style: normal; font-display: block; src: url("assets/fonts/jetbrains-mono-latin-500-normal.woff2") format("woff2"); }
+      @font-face { font-family: "JetBrains Mono"; font-weight: 700; font-style: normal; font-display: block; src: url("assets/fonts/jetbrains-mono-latin-700-normal.woff2") format("woff2"); }
+      :root {
+        --bg: #0a0a0a;
+        --fg: #f2efe8;
+        --accent: #ff4a1c;
+        --lime: #c8ff2e;
+        --panel: #141414;
+        --line: #2a2a2a;
+        --display: "Anton", Impact, sans-serif;
+        --mono: "JetBrains Mono", ui-monospace, monospace;
+        --ui: "Inter", ui-sans-serif, system-ui, sans-serif;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--bg);
+      }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+      #stage { position: absolute; inset: 0; transform-origin: 50% 50%; }
+      .scene { position: absolute; inset: 0; overflow: hidden; background: var(--bg); }
+      .d { font-family: var(--display); color: var(--fg); line-height: 0.88; text-transform: uppercase; white-space: nowrap; }
+      .mono { font-family: var(--mono); color: var(--fg); letter-spacing: 0.08em; text-transform: uppercase; }
+      .hit { opacity: 0; display: inline-block; }
+      .ch { display: inline-block; }
+      .outline { color: transparent; -webkit-text-stroke: 5px var(--fg); }
+      .accent { color: var(--accent); }
+      .label { position: absolute; font-size: 30px; color: #8a877f; }
+
+      /* Scene 1 */
+      #s1 .stack { position: absolute; left: 90px; top: 250px; }
+      #s1 .row { display: block; transform-origin: 0% 60%; }
+      #s1-q { position: absolute; right: -120px; top: 280px; font-size: 1500px; color: #141414; opacity: 0; }
+      #w5 { width: fit-content; background: var(--accent); color: var(--bg); padding: 22px 36px 0; margin-top: 26px; transform: rotate(-3deg); }
+
+      /* Scene 2 */
+      #s2 .mainrow { position: absolute; top: 470px; width: 100%; text-align: center; font-size: 210px; }
+      #s2 .mainrow .hit { margin: 0 18px; }
+      #band { position: absolute; left: 0; top: 820px; width: 1080px; height: 330px; background: var(--accent); transform-origin: 0% 50%; }
+      .name { position: absolute; top: 840px; width: 100%; text-align: center; font-size: 300px; }
+      #name { color: var(--bg); }
+      .echo { color: transparent; -webkit-text-stroke: 4px var(--accent); opacity: 0; }
+      .rgb { opacity: 0; mix-blend-mode: screen; }
+      #rgb-r { color: #ff2a55; }
+      #rgb-c { color: #19e6ff; }
+      #ring { position: absolute; left: 540px; top: 985px; width: 400px; height: 400px; margin: -200px 0 0 -200px; border: 14px solid var(--fg); border-radius: 50%; opacity: 0; }
+
+      /* Language switch pill */
+      #pill {
+        position: absolute; left: 540px; top: 1500px; width: 460px; height: 110px; margin-left: -230px;
+        border: 4px solid var(--fg); border-radius: 60px; opacity: 0; transform-origin: 50% 50%; z-index: 20;
+        background: var(--bg);
+      }
+      #pill .knob { position: absolute; left: 10px; top: 10px; width: 82px; height: 82px; border-radius: 50%; background: var(--accent); }
+      #pill .txt { position: absolute; top: 0; line-height: 102px; font-size: 44px; font-weight: 700; }
+      #pill-hi { left: 118px; }
+      #pill-en { left: 70px; opacity: 0; }
+
+      /* Scene 3 */
+      #s3 .idorow { position: absolute; top: 330px; width: 100%; text-align: center; font-size: 230px; }
+      #s3 .idorow .hit { margin: 0 20px; }
+      #vibe { position: absolute; top: 600px; width: 100%; text-align: center; font-size: 520px; color: var(--accent); }
+      #editing { position: absolute; top: 1110px; width: 100%; text-align: center; font-size: 270px; }
+      #eq { position: absolute; left: 90px; bottom: 150px; width: 900px; height: 300px; display: flex; align-items: flex-end; gap: 12px; }
+      #eq i { flex: 1; height: 100%; background: var(--fg); transform-origin: 50% 100%; transform: scaleY(0.04); }
+      #eq i:nth-child(3n) { background: var(--accent); }
+
+      /* Montage common */
+      .kicker { position: absolute; left: 80px; top: 120px; font-size: 190px; }
+      .grid { position: absolute; inset: 0;
+        background-image: linear-gradient(#161616 2px, transparent 2px), linear-gradient(90deg, #161616 2px, transparent 2px);
+        background-size: 90px 90px; }
+
+      /* Chat */
+      #chat { position: absolute; left: 70px; top: 390px; width: 940px; height: 1180px; background: var(--panel); border: 3px solid var(--line); border-radius: 34px; overflow: hidden; }
+      #chat .bar { height: 88px; border-bottom: 3px solid var(--line); display: flex; align-items: center; padding: 0 32px; gap: 14px; }
+      #chat .bar b { width: 22px; height: 22px; border-radius: 50%; background: #3a3a3a; }
+      #chat .bar b:first-child { background: var(--accent); }
+      #chat .bar span { margin-left: 18px; font-size: 26px; color: #8a877f; }
+      #bubble { position: absolute; right: 36px; top: 140px; width: 760px; min-height: 120px; background: #232323; border-radius: 30px 30px 8px 30px; padding: 30px 36px; font-family: var(--ui); font-weight: 500; font-size: 50px; line-height: 1.25; color: var(--fg); }
+      .ty { display: none; }
+      .cursor { display: inline-block; width: 6px; height: 54px; margin-left: 4px; vertical-align: -8px; background: var(--accent); }
+      #ai { position: absolute; left: 40px; top: 660px; width: 860px; }
+      #ai .who { display: flex; align-items: center; gap: 18px; font-family: var(--ui); font-weight: 700; font-size: 38px; color: var(--fg); opacity: 0; }
+      #ai .who i { width: 30px; height: 30px; background: var(--accent); transform: rotate(45deg); border-radius: 6px; }
+      #ai .ln { margin-top: 26px; font-family: var(--mono); font-size: 38px; color: var(--fg); opacity: 0; }
+      #ai .ln em { font-style: normal; color: var(--lime); margin-right: 16px; }
+
+      /* Timeline editor */
+      #monitor { position: absolute; left: 80px; top: 380px; width: 920px; height: 480px; border-radius: 24px; overflow: hidden; border: 3px solid var(--line); background: linear-gradient(135deg, #1b1b1b, #0e0e0e); }
+      #mon-word { position: absolute; width: 100%; top: 110px; text-align: center; font-size: 250px; }
+      #mon-tc { position: absolute; left: 24px; bottom: 18px; font-size: 26px; color: #8a877f; }
+      #tlpanel { position: absolute; left: 40px; top: 920px; width: 1000px; height: 760px; border-radius: 24px; background: var(--panel); border: 3px solid var(--line); overflow: hidden; }
+      #ruler { position: absolute; left: 100px; right: 0; top: 0; height: 70px; border-bottom: 3px solid var(--line);
+        background-image: linear-gradient(90deg, #3a3a3a 3px, transparent 3px); background-size: 43px 30px; background-repeat: repeat-x; background-position: 0 40px; }
+      .trk { position: absolute; left: 0; width: 100%; height: 150px; border-bottom: 2px solid #1f1f1f; }
+      .trk .nm { position: absolute; left: 22px; top: 54px; font-size: 28px; color: #8a877f; }
+      .clipbox { position: absolute; top: 22px; height: 106px; border-radius: 12px; }
+      .v2 { background: var(--accent); }
+      .v1 { background: #d9d4c9; border-left: 3px solid var(--panel); }
+      .wave { display: flex; align-items: center; gap: 5px; padding: 0 10px; background: #1d2a0b; }
+      .wave i { flex: 1; background: var(--lime); border-radius: 3px; }
+      .mus { background: #10243a; }
+      .mus.wave i { background: #4fb3ff; }
+      #playhead { position: absolute; top: 0; left: 0; width: 6px; height: 100%; background: var(--accent); z-index: 5; }
+      #playhead::before { content: ""; position: absolute; left: -14px; top: 0; width: 34px; height: 34px; background: var(--accent); border-radius: 0 0 8px 8px; }
+      .cutmark { position: absolute; top: 0; width: 8px; height: 100%; margin-left: -1px; background: var(--fg); opacity: 0; z-index: 6; transform-origin: 50% 0%; }
+
+      /* Render */
+      #pct { position: absolute; top: 520px; width: 100%; text-align: center; font-size: 420px; }
+      #done { position: absolute; top: 560px; width: 100%; text-align: center; font-size: 300px; color: var(--lime); }
+      #pbar { position: absolute; left: 90px; top: 1010px; width: 900px; height: 36px; border-radius: 18px; background: #1d1d1d; overflow: hidden; }
+      #pfill { width: 100%; height: 100%; background: var(--accent); transform-origin: 0% 50%; }
+      #stats { position: absolute; top: 1080px; width: 100%; text-align: center; font-size: 30px; color: #8a877f; }
+      #strip { position: absolute; left: 60px; top: 1200px; display: flex; gap: 22px; }
+      #strip div { width: 230px; height: 410px; border-radius: 18px; border: 3px solid var(--line); display: flex; align-items: center; justify-content: center; font-family: var(--display); font-size: 90px; color: var(--bg); }
+
+      /* Rapid words */
+      .rw { display: flex; align-items: center; justify-content: center; }
+      .rw .d { font-size: 380px; }
+      .rw .cnt { position: absolute; top: 140px; left: 0; width: 100%; text-align: center; font-size: 34px; }
+
+      /* End card */
+      #endname { position: absolute; top: 700px; width: 100%; text-align: center; font-size: 300px; }
+      #endband { position: absolute; left: 150px; top: 1000px; width: 780px; height: 150px; background: var(--accent); transform-origin: 0% 50%; display: flex; align-items: center; justify-content: center; }
+      #endband .d { font-size: 118px; color: var(--bg); opacity: 0; }
+      #endtag { position: absolute; top: 1210px; width: 100%; text-align: center; font-size: 38px; opacity: 0; }
+      #endpay { position: absolute; top: 1330px; width: 100%; text-align: center; font-size: 34px; color: var(--accent); opacity: 0; }
+
+      /* Overlays */
+      #blackout, #flash { position: absolute; inset: 0; opacity: 0; z-index: 30; }
+      #blackout { background: #000; }
+      #flash { background: var(--fg); }
+      #grain { position: absolute; inset: -200px; z-index: 31; opacity: 0.09; mix-blend-mode: screen;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+      #vignette { position: absolute; inset: 0; z-index: 32; background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.55) 100%); }
+      #hud { position: absolute; inset: 0; z-index: 33; }
+      #rec { position: absolute; left: 54px; top: 50px; font-size: 26px; display: flex; align-items: center; gap: 12px; }
+      #rec i { width: 18px; height: 18px; border-radius: 50%; background: var(--accent); }
+      #brand { position: absolute; right: 54px; top: 50px; font-size: 26px; color: #b5b1a8; }
+      #prog { position: absolute; left: 54px; right: 54px; bottom: 56px; height: 6px; background: #222; }
+      #prog i { display: block; width: 100%; height: 100%; background: var(--accent); transform-origin: 0% 50%; transform: scaleX(0); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="15" data-width="1080" data-height="1920">
+      <audio id="music" src="assets/music.wav" data-start="0" data-duration="15" data-volume="0.72" data-track-index="10"></audio>
+      <audio id="vo1" src="assets/vo1.wav" data-start="0.02" data-duration="1.79" data-volume="1.4" data-track-index="11"></audio>
+      <audio id="vo2a" src="assets/vo2a.wav" data-start="3.0" data-duration="0.76" data-volume="1.4" data-track-index="11"></audio>
+      <audio id="vo2b" src="assets/vo2b.wav" data-start="3.72" data-duration="2.2" data-volume="1.4" data-track-index="12"></audio>
+      <audio id="vo3a" src="assets/vo3a.wav" data-start="5.5" data-duration="0.72" data-volume="1.4" data-track-index="11"></audio>
+      <audio id="vo3b" src="assets/vo3b.wav" data-start="5.98" data-duration="1.85" data-volume="1.4" data-track-index="12"></audio>
+
+      <div id="stage">
+        <!-- 1 · KYA AAP MUJHE JAANTE HO? -->
+        <section id="s1" class="scene clip" data-start="0" data-duration="3" data-track-index="0">
+          <div id="s1-q" class="d">?</div>
+          <div class="mono label" style="left: 90px; top: 160px">01 — sawaal</div>
+          <div class="stack">
+            <span id="w1" class="d row hit" style="font-size: 300px">Kya</span>
+            <span id="w2" class="d row hit outline" style="font-size: 300px">Aap</span>
+            <span id="w3" class="d row hit accent" style="font-size: 330px">Mujhe</span>
+            <span id="w4" class="d row hit" style="font-size: 300px">Jaante</span>
+            <span id="w5" class="d row hit" style="font-size: 300px">Ho?</span>
+          </div>
+        </section>
+
+        <!-- 2 · MAIN HOON BHOGESH -->
+        <section id="s2" class="scene clip" data-start="3" data-duration="2.5" data-track-index="0">
+          <div class="mono label" style="left: 90px; top: 160px">02 — naam</div>
+          <div class="mainrow d"><span id="m1" class="hit">Main</span><span id="m2" class="hit outline">Hoon</span></div>
+          <div id="band"></div>
+          <div id="ring"></div>
+          <div class="name d echo" id="e1">Bhogesh</div>
+          <div class="name d echo" id="e2">Bhogesh</div>
+          <div class="name d echo" id="e3">Bhogesh</div>
+          <div class="name d rgb" id="rgb-r">Bhogesh</div>
+          <div class="name d rgb" id="rgb-c">Bhogesh</div>
+          <div class="name d" id="name">Bhogesh</div>
+        </section>
+
+        <!-- 3 · I DO VIBE EDITING -->
+        <section id="s3" class="scene clip" data-start="5.5" data-duration="3" data-track-index="0">
+          <div class="mono label" style="left: 90px; top: 160px">03 — kaam</div>
+          <div class="idorow d"><span id="i1" class="hit">I</span><span id="i2" class="hit">Do</span></div>
+          <div id="vibe" class="d"><span class="hit" id="vibe-w">Vibe</span></div>
+          <div id="editing" class="d"><span class="hit" id="edit-w">Editing</span></div>
+          <div id="eq"></div>
+        </section>
+
+        <!-- 4a · AI chat -->
+        <section id="s4a" class="scene clip" data-start="8.5" data-duration="1.25" data-track-index="0">
+          <div class="grid"></div>
+          <div class="kicker d">Just <span class="accent">prompt.</span></div>
+          <div id="chat">
+            <div class="bar"><b></b><b></b><b></b><span class="mono">vibe-edit · ai</span></div>
+            <div id="bubble"><span id="prompt">cut every silence, sync the cuts to the beat, punch-in zoom on every stomp</span><span class="cursor" id="cur"></span></div>
+            <div id="ai">
+              <div class="who"><i></i>On it.</div>
+              <div class="ln"><em>✓</em>37 cuts synced · 120 BPM</div>
+              <div class="ln"><em>✓</em>12 punch-in zooms</div>
+              <div class="ln"><em>✓</em>captions + color grade</div>
+              <div class="ln"><em>✓</em>ready to render</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4b · Timeline editor -->
+        <section id="s4b" class="scene clip" data-start="9.75" data-duration="1.25" data-track-index="0">
+          <div class="grid"></div>
+          <div class="kicker d">It <span class="accent">cuts.</span></div>
+          <div id="monitor">
+            <div id="mon-word" class="d">Vibe</div>
+            <div id="mon-tc" class="mono">00:00:09:22</div>
+          </div>
+          <div id="tlpanel">
+            <div id="ruler"></div>
+            <div class="trk" style="top: 70px"><span class="nm mono">V2</span></div>
+            <div class="trk" style="top: 220px"><span class="nm mono">V1</span></div>
+            <div class="trk" style="top: 370px"><span class="nm mono">A1</span></div>
+            <div class="trk" style="top: 520px"><span class="nm mono">A2</span></div>
+            <div id="tlclips"></div>
+            <div id="playhead"></div>
+          </div>
+        </section>
+
+        <!-- 4c · Render -->
+        <section id="s4c" class="scene clip" data-start="11" data-duration="1.25" data-track-index="0">
+          <div class="grid"></div>
+          <div class="kicker d">It <span class="accent">ships.</span></div>
+          <div id="pct" class="d">0%</div>
+          <div id="done" class="d"><span class="hit" id="done-w">Done.</span></div>
+          <div id="pbar"><div id="pfill"></div></div>
+          <div id="stats" class="mono">1080×1920 · 30 fps · h.264 · 15 s</div>
+          <div id="strip"></div>
+        </section>
+
+        <!-- 4d · Rapid words -->
+        <section class="scene clip rw" data-start="12.25" data-duration="0.25" data-track-index="0">
+          <div class="cnt mono">01 / 05</div><div class="d accent rwt">Prompt.</div>
+        </section>
+        <section class="scene clip rw" data-start="12.5" data-duration="0.25" data-track-index="0" style="background: var(--accent)">
+          <div class="cnt mono" style="color: var(--bg)">02 / 05</div><div class="d rwt" style="color: var(--bg)">Cut.</div>
+        </section>
+        <section class="scene clip rw" data-start="12.75" data-duration="0.25" data-track-index="0" style="background: var(--fg)">
+          <div class="cnt mono" style="color: var(--bg)">03 / 05</div><div class="d rwt" style="color: var(--bg)">Sync.</div>
+        </section>
+        <section class="scene clip rw" data-start="13" data-duration="0.25" data-track-index="0">
+          <div class="cnt mono">04 / 05</div><div class="d outline rwt">Grade.</div>
+        </section>
+        <section class="scene clip rw" data-start="13.25" data-duration="0.25" data-track-index="0" style="background: var(--accent)">
+          <div class="cnt mono">05 / 05</div><div class="d rwt" style="font-size: 440px">Ship.</div>
+        </section>
+
+        <!-- 5 · End card -->
+        <section id="s5" class="scene clip" data-start="13.5" data-duration="1.5" data-track-index="0">
+          <div id="endname" class="d">Bhogesh</div>
+          <div id="endband"><div class="d">Vibe Editor</div></div>
+          <div id="endtag" class="mono">Motion × Video Editing</div>
+          <div id="endpay" class="mono">ab jaante ho ;)</div>
+        </section>
+      </div>
+
+      <div id="pill" class="clip" data-start="4.9" data-duration="1.9" data-track-index="1">
+        <div class="knob"></div>
+        <div class="txt mono" id="pill-hi">HINDI</div>
+        <div class="txt mono" id="pill-en">ENGLISH</div>
+      </div>
+
+      <div id="blackout"></div>
+      <div id="flash"></div>
+      <div id="grain"></div>
+      <div id="vignette"></div>
+      <div id="hud">
+        <div id="rec" class="mono"><i></i>REC</div>
+        <div id="brand" class="mono">bhogesh / vibe-edit</div>
+        <div id="prog"><i></i></div>
+      </div>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      const $ = (s) => document.querySelector(s);
+      const $$ = (s) => [...document.querySelectorAll(s)];
+
+      let seed = 20260928;
+      const rnd = () => {
+        seed |= 0; seed = (seed + 0x6d2b79f5) | 0;
+        let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+
+      const splitChars = (el, cls = "ch", keepSpaces = false) => {
+        const text = el.textContent;
+        el.textContent = "";
+        return [...text].map((c) => {
+          const s = document.createElement("span");
+          s.className = cls;
+          s.textContent = c === " " && !keepSpaces ? "\u00a0" : c;
+          el.appendChild(s);
+          return s;
+        });
+      };
+
+      // Word/letter lands exactly on beat t.
+      function slam(target, t, { from = 2.2, dur = 0.12, blur = 10, y = 0 } = {}) {
+        tl.fromTo(target,
+          { opacity: 0, scale: from, y, filter: `blur(${blur}px)` },
+          { opacity: 1, scale: 1, y: 0, filter: "blur(0px)", duration: dur, ease: "power4.in" },
+          Math.max(0, t - dur));
+        tl.fromTo(target, { scaleX: 1.08, scaleY: 0.9 },
+          { scaleX: 1, scaleY: 1, duration: 0.2, ease: "back.out(4)", immediateRender: false }, t);
+      }
+
+      const SH = [[1, -0.6], [-0.8, 0.7], [0.6, -0.45], [-0.35, 0.3], [0.15, -0.1], [0, 0]];
+      function shake(t, m) {
+        SH.forEach(([a, b], i) => tl.to("#stage", { x: a * m, y: b * m, duration: 0.03, ease: "none" }, t + i * 0.03));
+      }
+      function flash(t, color = "#f2efe8", peak = 0.8, dur = 0.18) {
+        tl.fromTo("#flash", { opacity: peak, backgroundColor: color },
+          { opacity: 0, duration: dur, ease: "power2.out", immediateRender: false }, t);
+      }
+      function bump(t, s = 1.035, dur = 0.22) {
+        tl.fromTo("#stage", { scale: s }, { scale: 1, duration: dur, ease: "power3.out", immediateRender: false }, t);
+      }
+
+      // ---------- Scene 1: KYA AAP MUJHE JAANTE HO? ----------
+      const s1hits = [["#w1", 0.0, 28], ["#w2", 0.25, 22], ["#w3", 0.625, 30], ["#w4", 1.0, 26], ["#w5", 1.375, 40]];
+      s1hits.forEach(([el, t, m], i) => {
+        if (i === 0) {
+          tl.fromTo(el, { opacity: 0, scale: 1.6, filter: "blur(8px)" },
+            { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.08, ease: "power4.in" }, 0);
+        } else {
+          slam(el, t, { from: i === 4 ? 2.8 : 2.2 });
+        }
+        shake(t, m);
+      });
+      flash(0.625, "#ff4a1c", 0.35);
+      flash(1.375, "#f2efe8", 0.7);
+      tl.fromTo("#s1-q", { opacity: 0, scale: 0.6, rotation: -20 },
+        { opacity: 1, scale: 1, rotation: 8, duration: 1.4, ease: "power2.out" }, 1.375);
+      [2.0, 2.25].forEach((t) => { bump(t, 1.05); shake(t, 16); });
+      flash(2.5, "#f2efe8", 0.9, 0.25);
+      tl.to("#s1 .stack", { scale: 3.2, x: -700, y: -300, filter: "blur(18px)", opacity: 0, duration: 0.45, ease: "power3.in" }, 2.55);
+
+      // ---------- Scene 2: MAIN HOON BHOGESH ----------
+      slam("#m1", 3.0, { from: 2.0 });
+      shake(3.0, 24);
+      slam("#m2", 3.375, { from: 2.0 });
+      shake(3.375, 18);
+      tl.fromTo("#band", { scaleX: 0 }, { scaleX: 1, duration: 0.1, ease: "power4.in" }, 3.64);
+      const nameChars = splitChars($("#name"));
+      nameChars.forEach((c, i) => {
+        tl.fromTo(c, { opacity: 0, y: -520, scaleY: 1.6 },
+          { opacity: 1, y: 0, scaleY: 1, duration: 0.11, ease: "power4.in" }, 3.64 + i * 0.012);
+        tl.fromTo(c, { scaleY: 0.82, scaleX: 1.12 },
+          { scaleY: 1, scaleX: 1, duration: 0.3, ease: "elastic.out(1.2, 0.4)", immediateRender: false }, 3.75 + i * 0.012);
+      });
+      shake(3.75, 46);
+      flash(3.75, "#f2efe8", 1.0, 0.3);
+      tl.fromTo("#ring", { opacity: 1, scale: 0.2 }, { opacity: 0, scale: 4.2, duration: 0.6, ease: "power2.out", immediateRender: false }, 3.76);
+      ["#e1", "#e2", "#e3"].forEach((e, i) => {
+        tl.fromTo(e, { opacity: 0.9, scale: 1 }, { opacity: 0, scale: 1.25 + i * 0.18, duration: 0.7, ease: "power2.out", immediateRender: false }, 3.78 + i * 0.07);
+      });
+      [4.5, 4.75].forEach((t) => { bump(t, 1.06); shake(t, 18); });
+      tl.to("#band", { backgroundColor: "#f2efe8", duration: 0.01 }, 5.0);
+      tl.to("#band", { backgroundColor: "#ff4a1c", duration: 0.01 }, 5.12);
+      flash(5.0, "#ff4a1c", 0.4);
+      // RGB-split stutter into the language switch
+      const glitch = [[5.25, 22, -8], [5.3125, -30, 10], [5.375, 16, -4], [5.4375, -40, 14]];
+      glitch.forEach(([t, dx, dy]) => {
+        tl.set("#rgb-r", { opacity: 0.9, x: dx, y: dy }, t);
+        tl.set("#rgb-c", { opacity: 0.9, x: -dx, y: -dy }, t);
+        tl.set("#name", { x: dx * 0.3, skewX: dx * 0.4 }, t);
+        tl.set("#band", { y: dy * 2, scaleY: 1 + Math.abs(dx) / 200 }, t);
+      });
+
+      // ---------- Language pill (HINDI -> ENGLISH) ----------
+      tl.fromTo("#pill", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.18, ease: "back.out(3)" }, 4.95);
+      tl.to("#pill .knob", { x: 356, duration: 0.18, ease: "power4.inOut" }, 5.28);
+      tl.to("#pill-hi", { opacity: 0, duration: 0.05 }, 5.3);
+      tl.to("#pill-en", { opacity: 1, duration: 0.05 }, 5.36);
+      tl.to("#pill", { y: -1290, scale: 0.62, duration: 0.3, ease: "power3.inOut" }, 5.5);
+      tl.to("#pill", { opacity: 0, duration: 0.25 }, 6.5);
+
+      // ---------- Scene 3: I DO VIBE EDITING ----------
+      slam("#i1", 5.5, { from: 2.0 });
+      shake(5.5, 16);
+      slam("#i2", 5.75, { from: 2.0 });
+      shake(5.75, 16);
+      slam("#vibe-w", 6.0, { from: 3.0, blur: 14 });
+      shake(6.0, 38);
+      flash(6.0, "#ff4a1c", 0.45);
+      const editChars = splitChars($("#edit-w"));
+      tl.set("#edit-w", { opacity: 1 }, 6.3);
+      editChars.forEach((c, i) => {
+        tl.fromTo(c, { opacity: 0, y: 260, rotation: (i % 2 ? 1 : -1) * 18 },
+          { opacity: 1, y: 0, rotation: 0, duration: 0.12, ease: "power4.in" }, 6.38 + i * 0.012);
+      });
+      shake(6.5, 34);
+      flash(6.5, "#f2efe8", 0.85, 0.22);
+      const vibeChars = splitChars($("#vibe-w"));
+      for (let t = 7.0, k = 0; t < 8.3; t += 0.25, k++) {
+        vibeChars.forEach((c, i) => {
+          tl.to(c, { y: ((i + k) % 2 ? -1 : 1) * 34, rotation: ((i + k) % 2 ? -1 : 1) * 4, duration: 0.1, ease: "power2.out" }, t);
+        });
+      }
+      const eq = $("#eq");
+      for (let i = 0; i < 22; i++) eq.appendChild(document.createElement("i"));
+      const bars = $$("#eq i");
+      for (let t = 5.5; t < 8.4; t += 0.125) {
+        const energy = t < 6.75 ? 0.55 : t < 7.5 ? 0.8 : 1;
+        bars.forEach((b) => {
+          tl.to(b, { scaleY: 0.06 + rnd() * energy, duration: 0.1, ease: "power2.out" }, t);
+        });
+      }
+      [7.0, 7.5].forEach((t) => bump(t, 1.04));
+      tl.to("#stage", { scale: 1.28, duration: 0.6, ease: "power2.in" }, 7.78);
+      for (let t = 7.75; t < 8.37; t += 0.0625) shake(t, 6 + (t - 7.75) * 50);
+      tl.set("#blackout", { opacity: 1 }, 8.375);
+      tl.set("#blackout", { opacity: 0 }, 8.5);
+      tl.set("#stage", { scale: 1, x: 0, y: 0 }, 8.5);
+
+      // ---------- Montage: kick bumps + clap flashes ----------
+      for (let t = 8.5; t < 13.49; t += 0.5) bump(t, 1.03, 0.2);
+      [9, 10, 11, 12].forEach((t) => { shake(t, 14); flash(t, "#f2efe8", 0.18, 0.12); });
+      flash(8.5, "#f2efe8", 1.0, 0.3);
+      shake(8.5, 40);
+
+      // 4a · Chat
+      slam("#s4a .kicker", 8.5, { from: 1.6 });
+      tl.fromTo("#chat", { y: 400, opacity: 0, rotation: 4 }, { y: 0, opacity: 1, rotation: 0, duration: 0.18, ease: "power4.out" }, 8.5);
+      const typed = splitChars($("#prompt"), "ty", true);
+      typed.forEach((c, i) => tl.set(c, { display: "inline" }, 8.6 + i * 0.0092));
+      for (let t = 8.6; t < 9.75; t += 0.12) tl.set("#cur", { opacity: Math.round((t - 8.6) / 0.12) % 2 ? 0.2 : 1 }, t);
+      tl.to(".who", { opacity: 1, duration: 0.06 }, 9.3);
+      $$("#ai .ln").forEach((l, i) => tl.fromTo(l, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.08, ease: "power3.out" }, 9.38 + i * 0.085));
+      tl.to("#chat", { scale: 1.06, duration: 1.2, ease: "none" }, 8.55);
+
+      // 4b · Timeline editor
+      const tlc = $("#tlclips");
+      const mk = (cls, left, width, top, html = "") => {
+        const d = document.createElement("div");
+        d.className = "clipbox " + cls;
+        d.style.left = left + "px"; d.style.width = width + "px"; d.style.top = top + 22 + "px";
+        d.innerHTML = html;
+        tlc.appendChild(d);
+        return d;
+      };
+      const waveHTML = (n) => Array.from({ length: n }, () => `<i style="height:${18 + Math.round(rnd() * 78)}%"></i>`).join("");
+      const v2 = [mk("v2", 180, 220, 70), mk("v2", 560, 170, 70), mk("v2", 820, 260, 70)];
+      const phX = (t) => 110 + ((t - 9.8) / 1.2) * 890;
+      const cutTimes = [10.0, 10.25, 10.5, 10.75];
+      const cuts = cutTimes.map(phX);
+      const segEdges = [110, ...cuts, 1040];
+      const v1 = segEdges.slice(0, -1).map((x, i) => mk("v1", x, segEdges[i + 1] - x, 220));
+      const a1 = [mk("wave", 110, 560, 370, waveHTML(34)), mk("wave", 690, 350, 370, waveHTML(22))];
+      const a2 = [mk("mus wave", 110, 930, 520, waveHTML(60))];
+      [...v2, ...v1, ...a1, ...a2].forEach((c, i) => {
+        tl.fromTo(c, { x: 500, opacity: 0 }, { x: 0, opacity: 1, duration: 0.14, ease: "power4.out" }, 9.75 + (i % 6) * 0.018);
+      });
+      slam("#s4b .kicker", 9.75, { from: 1.6 });
+      tl.fromTo("#monitor", { scale: 0.85, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.14, ease: "power4.out" }, 9.75);
+      tl.fromTo("#playhead", { x: 110 }, { x: 1000, duration: 1.2, ease: "none" }, 9.8);
+      const monWords = [["Cut", "#ff4a1c"], ["Sync", "#c8ff2e"], ["Zoom", "#f2efe8"], ["Grade", "#4fb3ff"]];
+      cutTimes.forEach((t, k) => {
+        const x = phX(t);
+        const mark = document.createElement("div");
+        mark.className = "cutmark"; mark.style.left = x + "px";
+        $("#tlpanel").appendChild(mark);
+        tl.fromTo(mark, { opacity: 1, scaleY: 0 }, { scaleY: 1, duration: 0.05, ease: "power4.out" }, t);
+        tl.to(mark, { opacity: 0.25, duration: 0.2 }, t + 0.06);
+        v1.slice(k + 1).forEach((seg) => tl.to(seg, { x: 16 * (k + 1), duration: 0.08, ease: "back.out(3)" }, t));
+        tl.set(v1[k + 1], { backgroundColor: "#ff4a1c" }, t);
+        if (k > 0) tl.set(v1[k], { backgroundColor: "#d9d4c9" }, t);
+        tl.set("#mon-word", { textContent: monWords[k][0], color: monWords[k][1] }, t);
+        tl.fromTo("#mon-word", { scale: 1.4 }, { scale: 1, duration: 0.12, ease: "power4.out", immediateRender: false }, t);
+        tl.set("#mon-tc", { textContent: "00:00:" + String(10 + k).padStart(2, "0") + ":" + String((k * 7 + 3) % 30).padStart(2, "0") }, t);
+      });
+
+      // 4c · Render
+      slam("#s4c .kicker", 11.0, { from: 1.6 });
+      const pctSteps = 18;
+      for (let i = 0; i <= pctSteps; i++) {
+        const p = Math.round(100 * Math.pow(i / pctSteps, 0.8));
+        tl.set("#pct", { textContent: p + "%" }, 11.02 + i * 0.05);
+      }
+      tl.fromTo("#pfill", { scaleX: 0 }, { scaleX: 1, duration: 0.92, ease: "power1.in" }, 11.02);
+      tl.to("#pct", { opacity: 0, scale: 0.6, duration: 0.06 }, 11.94);
+      slam("#done-w", 12.0, { from: 2.4 });
+      flash(12.0, "#c8ff2e", 0.35);
+      const strip = $("#strip");
+      const fr = ["#ff4a1c", "#f2efe8", "#c8ff2e", "#4fb3ff", "#ff4a1c", "#f2efe8", "#c8ff2e", "#4fb3ff"];
+      const frw = ["Kya", "Aap", "Main", "Hoon", "Vibe", "Edit", "Cut", "Ship"];
+      fr.forEach((c, i) => {
+        const d = document.createElement("div");
+        d.style.background = c; d.textContent = frw[i];
+        strip.appendChild(d);
+      });
+      tl.fromTo("#strip", { x: 200 }, { x: -900, duration: 1.25, ease: "none" }, 11.0);
+
+      // 4d · Rapid words
+      $$(".rwt").forEach((w, i) => {
+        const t = 12.25 + i * 0.25;
+        tl.fromTo(w, { scale: 1.5, filter: "blur(10px)" }, { scale: 1, filter: "blur(0px)", duration: 0.07, ease: "power4.out" }, t);
+        tl.to(w, { scale: 0.94, duration: 0.17, ease: "none" }, t + 0.07);
+        shake(t, 20 + i * 4);
+      });
+
+      // ---------- Scene 5: End card ----------
+      const endChars = splitChars($("#endname"));
+      endChars.forEach((c, i) => {
+        tl.fromTo(c, { opacity: 0, y: 200, scale: 1.8 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.12, ease: "power4.out" }, 13.5 + i * 0.025);
+      });
+      shake(13.5, 44);
+      flash(13.5, "#ff4a1c", 0.9, 0.35);
+      tl.fromTo("#endband", { scaleX: 0 }, { scaleX: 1, duration: 0.16, ease: "power4.out" }, 13.62);
+      tl.fromTo("#endband .d", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.14, ease: "power3.out" }, 13.7);
+      tl.fromTo("#endtag", { opacity: 0, y: 30, scale: 1.15 }, { opacity: 1, y: 0, scale: 1, duration: 0.3, ease: "power3.out" }, 13.8);
+      [14.0, 14.25].forEach((t) => { bump(t, 1.04); shake(t, 12); });
+      tl.fromTo("#endpay", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.15, ease: "power3.out" }, 14.5);
+      flash(14.5, "#f2efe8", 0.25, 0.15);
+      tl.to("#stage", { scale: 1.04, duration: 0.5, ease: "none" }, 14.5);
+
+      // ---------- Global overlays ----------
+      for (let t = 0; t < 15; t += 1 / 12) {
+        tl.set("#grain", { x: Math.round(rnd() * 200 - 100), y: Math.round(rnd() * 200 - 100) }, t);
+      }
+      for (let t = 0; t < 15; t += 0.5) tl.set("#rec i", { opacity: Math.round(t * 2) % 2 ? 0.15 : 1 }, t);
+      tl.fromTo("#prog i", { scaleX: 0 }, { scaleX: 1, duration: 15, ease: "none" }, 0);
+      tl.set({}, {}, 15);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
