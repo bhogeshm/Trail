@@ -1,0 +1,5 @@
+renders/*.mp4
+!renders/bhogesh-vibe-editing-social.mp4
+snapshots/
+node_modules/
+.hyperframes/
