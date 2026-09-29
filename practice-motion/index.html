@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <style>
+      @font-face { font-family: "Anton"; src: url("assets/fonts/Anton-400.woff2") format("woff2"); font-weight: 400; font-display: block; }
+      @font-face { font-family: "Inter"; src: url("assets/fonts/Inter-500.woff2") format("woff2"); font-weight: 500; font-display: block; }
+      @font-face { font-family: "Inter"; src: url("assets/fonts/Inter-800.woff2") format("woff2"); font-weight: 800; font-display: block; }
+      @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+      @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-400-italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: block; }
+      @font-face { font-family: "Space Mono"; src: url("assets/fonts/SpaceMono-700.woff2") format("woff2"); font-weight: 700; font-display: block; }
+
+      :root {
+        --yellow: #ffe11a;
+        --ink: #0b0b0f;
+        --white: #ffffff;
+        --violet: #6d3cf0;
+        --red: #ff3b5c;
+        --cream: #f6efe1;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px; height: 1920px; overflow: hidden; background: #000;
+        font-family: "Inter", "Anton", sans-serif;
+      }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+      .clip { position: absolute; inset: 0; }
+      .layer { position: absolute; }
+      .anton { font-family: "Anton", sans-serif; font-weight: 400; text-transform: uppercase; letter-spacing: 0.01em; line-height: 0.95; }
+      .serif { font-family: "Instrument Serif", serif; font-weight: 400; }
+      .mono { font-family: "Space Mono", monospace; font-weight: 700; }
+      .ch { display: inline-block; }
+
+      /* ── video stack: framing (zoom) → shake → grade ── */
+      #video-wrap { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+      #video-zoom, #video-shake, #video-grade { position: absolute; inset: 0; }
+      #a-roll { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+      #scrim-bottom { position: absolute; left: 0; right: 0; bottom: 0; height: 760px;
+        background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0.8) 100%); }
+      #scrim-hero { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 55%, rgba(20,8,48,0.78) 0%, rgba(0,0,0,0.9) 75%); opacity: 0; }
+      #flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+      #progress-track { position: absolute; left: 0; top: 0; width: 1080px; height: 10px; background: rgba(255,255,255,0.15); }
+      #progress-fill { position: absolute; left: 0; top: 0; width: 1080px; height: 10px; background: var(--yellow); }
+
+      /* ── captions ── */
+      #captions { position: absolute; left: 40px; right: 40px; top: 1530px; height: 220px; }
+      .cap { position: absolute; left: 0; right: 0; top: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 18px; opacity: 0; }
+      .cap .w { display: inline-block; font-family: "Anton", sans-serif; font-size: 96px; line-height: 1.12; text-transform: uppercase;
+        color: #fff; padding: 0 14px; border-radius: 10px; text-shadow: 0 6px 0 rgba(0,0,0,0.55), 0 0 30px rgba(0,0,0,0.5); }
+
+      /* ── B1 LinkedIn articles ── */
+      .tag { display: inline-block; background: var(--yellow); color: var(--ink); padding: 10px 24px 6px; font-size: 70px; }
+      .article { position: absolute; top: 1180px; width: 300px; height: 230px; background: #fff; border-radius: 22px; padding: 22px;
+        box-shadow: 0 24px 50px rgba(0,0,0,0.45); }
+      .article .av { width: 54px; height: 54px; border-radius: 50%; background: #c9ced6; }
+      .article .nm { position: absolute; left: 90px; top: 30px; width: 150px; height: 14px; border-radius: 7px; background: #1c1c24; }
+      .article .nm2 { position: absolute; left: 90px; top: 56px; width: 100px; height: 10px; border-radius: 5px; background: #b5bac3; }
+      .article .ln { height: 14px; border-radius: 7px; background: #dde1e7; margin-top: 16px; }
+      .article .pill { position: absolute; left: 22px; bottom: 20px; display: flex; gap: 10px; }
+      .article .pill span { display: block; width: 44px; height: 30px; border-radius: 15px; }
+
+      /* ── B2 polarity ── */
+      .pole { position: absolute; top: 1050px; width: 540px; height: 440px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 22px; }
+      .pole .anton { font-size: 64px; }
+
+      /* ── B3 debate ── */
+      .bubble { position: absolute; top: 1110px; width: 360px; height: 220px; border-radius: 40px; display: flex; align-items: center; justify-content: center; gap: 22px; }
+      .bubble .dot { display: block; width: 34px; height: 34px; border-radius: 50%; }
+
+      /* ── B4 timeline ── */
+      #tl-line { position: absolute; left: 110px; top: 1340px; width: 860px; height: 10px; background: #fff; border-radius: 5px; }
+      .tl-dot { position: absolute; top: 1318px; width: 54px; height: 54px; border-radius: 50%; border: 8px solid #fff; }
+
+      /* ── B5 ads ── */
+      .ads-box { position: absolute; left: 190px; top: 1060px; width: 700px; height: 330px; display: flex; align-items: center; justify-content: center; border-radius: 12px; }
+
+      /* ── B8 classical ── */
+      #book { position: absolute; left: 100px; top: 1010px; width: 880px; height: 420px; background: var(--cream); border-radius: 10px; padding: 40px 56px;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.5); color: #2b2118; }
+      #stamp-old { position: absolute; right: 30px; bottom: 34px; border: 7px solid var(--red); color: var(--red); padding: 10px 20px 4px; font-size: 54px; border-radius: 8px; }
+
+      /* ── B12 digital ── */
+      #dig-panel { position: absolute; left: 60px; top: 1060px; width: 960px; height: 360px; background: rgba(8,8,14,0.88); border: 3px solid var(--yellow);
+        border-radius: 18px; padding: 36px 44px; color: #fff; }
+      #dig-bar { position: absolute; left: 44px; top: 190px; width: 872px; height: 44px; border-radius: 22px; background: rgba(255,255,255,0.12); overflow: hidden; }
+      #dig-fill { width: 872px; height: 44px; background: repeating-linear-gradient(135deg, var(--yellow) 0 26px, #ffd000 26px 52px); }
+      .px { position: absolute; width: 26px; height: 26px; background: var(--yellow); }
+
+      /* ── lower third ── */
+      #lt { position: absolute; left: 44px; top: 150px; }
+      #lt-name { display: inline-block; background: var(--yellow); color: var(--ink); font-size: 62px; padding: 10px 26px 4px; }
+      #lt-role { display: block; margin-top: 8px; background: var(--ink); color: #fff; font-family: "Inter", sans-serif; font-weight: 800; font-size: 26px;
+        letter-spacing: 0.14em; padding: 12px 22px; width: fit-content; }
+
+      /* ── end card ── */
+      #end-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 38%, #3a1d8c 0%, #140a33 45%, #06040d 100%); }
+      .vote { display: flex; align-items: center; justify-content: center; width: 400px; height: 150px; border-radius: 75px; font-size: 90px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="30.3" data-width="1080" data-height="1920">
+
+      <!-- ═════ A-ROLL ═════ -->
+      <div id="video-wrap">
+        <div id="video-zoom"><div id="video-shake"><div id="video-grade">
+          <video id="a-roll" class="clip" src="source.mp4" muted playsinline data-start="0" data-duration="28.288" data-track-index="0"></video>
+        </div></div></div>
+      </div>
+      <audio id="a-roll-audio" src="source.mp4" data-start="0" data-duration="28.288" data-track-index="20" data-volume="1"></audio>
+
+      <div id="scrim-bottom"></div>
+      <div id="scrim-hero"></div>
+
+      <!-- ═════ B1 · LinkedIn articles (1.9–3.3) ═════ -->
+      <div id="b1" class="clip" data-start="1.9" data-duration="1.4" data-track-index="2">
+        <div id="b1-tag" class="layer anton tag" style="left:60px; top:1060px;">LinkedIn articles</div>
+        <div id="b1-a1" class="article" style="left:50px;"><div class="av"></div><div class="nm"></div><div class="nm2"></div><div class="ln"></div><div class="ln" style="width:80%"></div><div class="pill"><span style="background:#0a66c2"></span><span style="background:#e7e9ee"></span></div></div>
+        <div id="b1-a2" class="article" style="left:390px;"><div class="av" style="background:#ffd36b"></div><div class="nm"></div><div class="nm2"></div><div class="ln"></div><div class="ln" style="width:65%"></div><div class="pill"><span style="background:var(--red)"></span><span style="background:#e7e9ee"></span></div></div>
+        <div id="b1-a3" class="article" style="left:730px;"><div class="av" style="background:#b9a4ff"></div><div class="nm"></div><div class="nm2"></div><div class="ln"></div><div class="ln" style="width:90%"></div><div class="pill"><span style="background:#0a66c2"></span><span style="background:#e7e9ee"></span></div></div>
+      </div>
+
+      <!-- ═════ B2 · polarity (3.5–5.75) ═════ -->
+      <div id="b2" class="clip" data-start="3.5" data-duration="2.25" data-track-index="2">
+        <div id="b2-l" class="pole" style="left:0; background:var(--yellow); color:var(--ink);"><div class="anton">Old school</div></div>
+        <div id="b2-r" class="pole" style="left:540px; background:var(--violet); color:#fff;"><div class="anton">New school</div></div>
+        <div id="b2-word" class="layer anton" style="left:0; width:1080px; top:1110px; text-align:center;">
+          <span style="display:inline-block; background:var(--ink); color:#fff; font-size:170px; padding:18px 40px 6px; border:6px solid #fff;">Polarity</span>
+        </div>
+      </div>
+
+      <!-- ═════ B3 · the debate (5.75–7.65) ═════ -->
+      <div id="b3" class="clip" data-start="5.75" data-duration="1.9" data-track-index="2">
+        <div id="b3-l" class="bubble" style="left:60px; background:var(--yellow);"><span class="dot" style="background:var(--ink)"></span><span class="dot" style="background:var(--ink)"></span><span class="dot" style="background:var(--ink)"></span></div>
+        <div id="b3-vs" class="layer anton" style="left:440px; width:200px; top:1150px; text-align:center; font-size:120px; color:#fff;">VS</div>
+        <div id="b3-r" class="bubble" style="left:660px; background:var(--violet);"><span class="dot" style="background:#fff"></span><span class="dot" style="background:#fff"></span><span class="dot" style="background:#fff"></span></div>
+        <div id="b3-tag" class="layer anton tag" style="left:60px; top:960px; font-size:58px;">The debate</div>
+      </div>
+
+      <!-- ═════ B4 · today vs 10 years ago (7.7–10.6) ═════ -->
+      <div id="b4" class="clip" data-start="7.7" data-duration="2.9" data-track-index="2">
+        <div id="tl-line"></div>
+        <div id="b4-today-dot" class="tl-dot" style="left:916px; background:var(--yellow);"></div>
+        <div id="b4-today" class="layer anton" style="left:760px; top:1220px; width:300px; text-align:center; font-size:64px; color:var(--yellow);">Today</div>
+        <div id="b4-past-dot" class="tl-dot" style="left:84px; background:var(--violet);"></div>
+        <div id="b4-mover" class="tl-dot" style="left:916px; background:#fff; border-color:var(--yellow);"></div>
+        <div id="b4-ten" class="layer anton" style="left:70px; top:990px; font-size:240px; color:#fff;"><span id="b4-num">0</span></div>
+        <div id="b4-ago" class="layer anton" style="left:330px; top:1060px; font-size:84px; color:var(--yellow); line-height:1;">Years<br />ago</div>
+      </div>
+
+      <!-- ═════ B5 · ads look different (10.6–11.6) ═════ -->
+      <div id="b5" class="clip" data-start="10.6" data-duration="1.0" data-track-index="2">
+        <div id="b5-a" class="ads-box" style="background:var(--cream);"><div class="serif" style="font-style:italic; font-size:230px; color:#2b2118;">Ads</div></div>
+        <div id="b5-b" class="ads-box" style="background:#0d1b0d; border:4px solid #3cff7a;"><div class="mono" style="font-size:190px; color:#3cff7a;">ADS_</div></div>
+        <div id="b5-c" class="ads-box" style="background:var(--yellow);"><div class="anton" style="font-size:240px; color:var(--ink);">ADS</div></div>
+        <div id="b5-sub" class="layer anton" style="left:0; width:1080px; top:1400px; text-align:center; font-size:84px; color:#fff;">look different</div>
+      </div>
+
+      <!-- ═════ B6 · social media rules the roost (11.6–13.45) ═════ -->
+      <div id="b6" class="clip" data-start="11.6" data-duration="1.85" data-track-index="2">
+        <div id="b6-crown" class="layer" style="left:420px; top:900px; width:240px; height:200px;">
+          <svg viewBox="0 0 100 84" width="240" height="200"><path d="M8 78 L0 18 L28 42 L50 2 L72 42 L100 18 L92 78 Z" fill="#ffe11a" stroke="#0b0b0f" stroke-width="4" stroke-linejoin="round" /><circle cx="50" cy="60" r="7" fill="#ff3b5c" /></svg>
+        </div>
+        <div id="b6-title" class="layer anton" style="left:0; width:1080px; top:1110px; text-align:center; font-size:160px; color:#fff; text-shadow:0 8px 0 rgba(0,0,0,0.5);">
+          <span id="b6-w1" style="display:inline-block;">Social</span> <span id="b6-w2" style="display:inline-block;">Media</span>
+        </div>
+        <div id="b6-roost" class="layer anton tag" style="left:230px; top:1290px; font-size:80px;">Rules the roost</div>
+        <div id="b6-obv" class="layer serif" style="left:0; width:1080px; top:1420px; text-align:center; font-style:italic; font-size:78px; color:var(--yellow);">…obviously.</div>
+        <div id="b6-h1" class="layer" style="left:70px; top:1300px; width:110px; height:100px;"><svg viewBox="0 0 100 90" width="110" height="100"><path d="M50 88 C20 65 0 48 0 28 C0 12 12 0 27 0 C38 0 46 6 50 14 C54 6 62 0 73 0 C88 0 100 12 100 28 C100 48 80 65 50 88Z" fill="#ff3b5c" /></svg></div>
+        <div id="b6-h2" class="layer" style="left:900px; top:1250px; width:90px; height:82px;"><svg viewBox="0 0 100 90" width="90" height="82"><path d="M50 88 C20 65 0 48 0 28 C0 12 12 0 27 0 C38 0 46 6 50 14 C54 6 62 0 73 0 C88 0 100 12 100 28 C100 48 80 65 50 88Z" fill="#ff3b5c" /></svg></div>
+        <div id="b6-c1" class="layer" style="left:860px; top:980px; width:120px; height:100px;"><svg viewBox="0 0 120 100" width="120" height="100"><path d="M10 10 H110 V70 H50 L26 94 V70 H10 Z" fill="#ffffff" stroke="#0b0b0f" stroke-width="5" stroke-linejoin="round" /></svg></div>
+        <div id="b6-p1" class="layer anton" style="left:110px; top:1010px; width:130px; height:90px; background:var(--violet); color:#fff; border-radius:45px; font-size:56px; text-align:center; line-height:90px;">+1K</div>
+      </div>
+
+      <!-- ═════ B7 · one consistent thread (13.5–16.5) ═════ -->
+      <div id="b7" class="clip" data-start="13.5" data-duration="3.0" data-track-index="2">
+        <div id="b7-t1" class="layer anton" style="left:0; width:1080px; top:1010px; text-align:center; font-size:112px; color:#fff; text-shadow:0 6px 0 rgba(0,0,0,0.5);">One consistent</div>
+        <div id="b7-left" class="layer" style="left:0; top:1180px; width:1080px; height:140px;">
+          <svg viewBox="0 0 1080 140" width="1080" height="140"><path id="b7-pl" d="M-20 70 C 100 0, 200 140, 320 70 S 470 10, 540 70" fill="none" stroke="#ffe11a" stroke-width="14" stroke-linecap="round" /></svg>
+        </div>
+        <div id="b7-right" class="layer" style="left:0; top:1180px; width:1080px; height:140px;">
+          <svg viewBox="0 0 1080 140" width="1080" height="140"><path id="b7-pr" d="M540 70 C 610 130, 700 0, 800 70 S 980 140, 1100 70" fill="none" stroke="#ffe11a" stroke-width="14" stroke-linecap="round" /></svg>
+        </div>
+        <div id="b7-spark" class="layer" style="left:470px; top:1180px; width:140px; height:140px; border-radius:50%; background:radial-gradient(circle, #fff 0%, #ffe11a 35%, rgba(255,225,26,0) 70%);"></div>
+        <div id="b7-t2" class="layer anton" style="left:0; width:1080px; top:1330px; text-align:center; font-size:150px; color:var(--yellow); text-shadow:0 6px 0 rgba(0,0,0,0.5);">Thread?</div>
+      </div>
+
+      <!-- ═════ B8 · classical branding (16.5–18.35) ═════ -->
+      <div id="b8" class="clip" data-start="16.5" data-duration="1.85" data-track-index="2">
+        <div id="book">
+          <div class="mono" style="font-size:30px; letter-spacing:0.2em; color:#8a6a45;">CHAPTER 01 · THE BASICS</div>
+          <div id="b8-w1" class="serif" style="font-style:italic; font-size:150px; line-height:1; margin-top:18px;">Classical</div>
+          <div id="b8-w2" class="serif" style="font-size:120px; line-height:1;">Branding</div>
+          <svg class="layer" style="left:56px; top:352px;" width="520" height="30" viewBox="0 0 520 30"><path id="b8-ul" d="M4 18 C 120 4, 260 30, 516 10" fill="none" stroke="#ff3b5c" stroke-width="7" stroke-linecap="round" /></svg>
+          <div id="stamp-old" class="anton">Old playbook</div>
+        </div>
+      </div>
+
+      <!-- ═════ B9 · what do you say? (18.35–20.0) ═════ -->
+      <div id="b9" class="clip" data-start="18.35" data-duration="1.65" data-track-index="2">
+        <div id="b9-q1" class="layer anton" style="left:70px; top:470px; font-size:230px; color:var(--yellow); text-shadow:0 8px 0 rgba(0,0,0,0.5);">?</div>
+        <div id="b9-q2" class="layer anton" style="left:880px; top:360px; font-size:180px; color:#fff; text-shadow:0 8px 0 rgba(0,0,0,0.5);">?</div>
+        <div id="b9-q3" class="layer anton" style="left:850px; top:820px; font-size:260px; color:var(--violet); text-shadow:0 8px 0 rgba(0,0,0,0.5);">?</div>
+      </div>
+
+      <!-- ═════ B10 · HERO: has marketing lost the plot? (20.0–21.3) ═════ -->
+      <div id="b10" class="clip" data-start="20.0" data-duration="1.3" data-track-index="3">
+        <div id="b10-stack" class="layer" style="left:0; top:560px; width:1080px; text-align:center;">
+          <div id="b10-w1" class="anton" style="font-size:150px; color:#fff;">Has</div>
+          <div id="b10-w2" class="anton" style="font-size:200px; color:#fff; margin-top:10px;">Marketing</div>
+          <div id="b10-w3" class="anton" style="font-size:170px; color:transparent; -webkit-text-stroke:5px #fff; margin-top:10px;">Lost the</div>
+          <div style="margin-top:24px;"><span id="b10-w4" class="anton" style="display:inline-block; font-size:260px; background:var(--yellow); color:var(--ink); padding:18px 50px 0;">Plot?</span></div>
+        </div>
+      </div>
+
+      <!-- ═════ B11 · clearly (21.3–22.5) ═════ -->
+      <div id="b11" class="clip" data-start="21.3" data-duration="1.2" data-track-index="3">
+        <div id="b11-pre" class="layer anton" style="left:0; width:1080px; top:1040px; text-align:center; font-size:84px; color:#fff; text-shadow:0 6px 0 rgba(0,0,0,0.6);">I think it…</div>
+        <div id="b11-stamp" class="layer anton" style="left:150px; top:1150px; width:780px; height:250px; border:12px solid var(--red); border-radius:18px; color:var(--red);
+             background:rgba(0,0,0,0.35); font-size:200px; text-align:center; line-height:240px;">Clearly.</div>
+        <div id="b11-has" class="layer anton tag" style="left:400px; top:1430px; font-size:90px;">Has.</div>
+      </div>
+
+      <!-- ═════ Lower third · guest (21.4–25.4) ═════ -->
+      <div id="lower-third" class="clip" data-start="21.4" data-duration="4.0" data-track-index="4">
+        <div id="lt">
+          <div id="lt-name-wrap"><span id="lt-name" class="anton">Amitava Mitra</span></div>
+          <span id="lt-role">GUEST · WISEX PODCAST</span>
+        </div>
+      </div>
+
+      <!-- ═════ B12 · going digital (22.5–26.73) ═════ -->
+      <div id="b12" class="clip" data-start="22.5" data-duration="4.23" data-track-index="2">
+        <div id="dig-panel">
+          <div id="b12-type" class="mono" style="font-size:44px; color:var(--yellow);">&gt; DIGITALIZING CAMPAIGNS</div>
+          <div class="mono" style="position:absolute; left:44px; top:112px; font-size:30px; color:rgba(255,255,255,0.6);">print · tv · radio → <span style="color:#fff;">pixels</span></div>
+          <div id="dig-bar"><div id="dig-fill"></div></div>
+          <div id="b12-pct" class="layer anton" style="right:44px; top:250px; font-size:86px; color:#fff;">0%</div>
+          <div id="b12-status" class="layer mono" style="left:44px; top:272px; font-size:34px; color:#3cff7a;">STATUS: GOING DIGITAL ✓</div>
+        </div>
+        <div id="b12-px" class="layer" style="left:60px; top:1000px; width:960px; height:40px;">
+          <div class="px" style="left:0"></div><div class="px" style="left:78px"></div><div class="px" style="left:156px"></div><div class="px" style="left:234px"></div><div class="px" style="left:312px"></div><div class="px" style="left:390px"></div>
+          <div class="px" style="left:546px"></div><div class="px" style="left:624px"></div><div class="px" style="left:702px"></div><div class="px" style="left:780px"></div><div class="px" style="left:858px"></div><div class="px" style="left:934px"></div>
+        </div>
+      </div>
+
+      <!-- ═════ B13 · somewhere we've lost that (26.73–28.3) ═════ -->
+      <div id="b13" class="clip" data-start="26.73" data-duration="1.57" data-track-index="3">
+        <div id="b13-some" class="layer serif" style="left:0; width:1080px; top:1030px; text-align:center; font-style:italic; font-size:96px; color:#fff;">somewhere…</div>
+        <div id="b13-lost" class="layer anton" style="left:0; width:1080px; top:1150px; text-align:center; font-size:170px; color:#fff; text-shadow:0 8px 0 rgba(0,0,0,0.5);">We've lost</div>
+        <div id="b13-that" class="layer anton" style="left:0; width:1080px; top:1330px; text-align:center; font-size:190px; color:var(--yellow); text-shadow:0 8px 0 rgba(0,0,0,0.5);">That.</div>
+      </div>
+
+      <!-- ═════ B14 · end card (28.25–30.3) ═════ -->
+      <div id="b14" class="clip" data-start="28.25" data-duration="2.05" data-track-index="5">
+        <div id="end-bg"></div>
+        <div id="b14-kick" class="layer mono" style="left:0; width:1080px; top:560px; text-align:center; font-size:34px; letter-spacing:0.3em; color:var(--yellow);">YOUR TAKE</div>
+        <div id="b14-t1" class="layer anton" style="left:0; width:1080px; top:640px; text-align:center; font-size:150px; color:#fff;">Has marketing</div>
+        <div id="b14-t2" class="layer" style="left:0; width:1080px; top:800px; text-align:center;"><span class="anton" style="display:inline-block; white-space:nowrap; font-size:132px; background:var(--yellow); color:var(--ink); padding:14px 36px 0;">Lost the plot?</span></div>
+        <div id="b14-yes" class="layer anton vote" style="left:100px; top:1140px; background:var(--yellow); color:var(--ink);">Yes</div>
+        <div id="b14-no" class="layer anton vote" style="left:580px; top:1140px; background:transparent; border:6px solid #fff; color:#fff;">No</div>
+        <div id="b14-cta" class="layer" style="left:0; width:1080px; top:1340px; text-align:center; font-family:'Inter',sans-serif; font-weight:800; font-size:44px; color:#fff;">Tell us in the comments ↓</div>
+        <div id="b14-brand" class="layer" style="left:0; width:1080px; top:1700px; text-align:center; font-family:'Inter',sans-serif; font-weight:500; font-size:30px; letter-spacing:0.3em; color:rgba(255,255,255,0.7);">WISEX PODCAST</div>
+      </div>
+
+      <!-- ═════ captions (built by script) ═════ -->
+      <div id="captions"></div>
+
+      <div id="progress-track"><div id="progress-fill"></div></div>
+      <div id="flash"></div>
+
+      <!-- ═════ SFX ═════ -->
+      <audio id="sfx-w1" src="assets/sfx/whoosh.wav" data-start="0.72" data-duration="0.45" data-track-index="21" data-volume="0.35"></audio>
+      <audio id="sfx-p1" src="assets/sfx/pop.wav" data-start="2.05" data-duration="0.09" data-track-index="22" data-volume="0.5"></audio>
+      <audio id="sfx-p2" src="assets/sfx/pop.wav" data-start="2.17" data-duration="0.09" data-track-index="23" data-volume="0.5"></audio>
+      <audio id="sfx-p3" src="assets/sfx/pop.wav" data-start="2.29" data-duration="0.09" data-track-index="22" data-volume="0.5"></audio>
+      <audio id="sfx-w2" src="assets/sfx/whoosh.wav" data-start="3.62" data-duration="0.45" data-track-index="21" data-volume="0.3"></audio>
+      <audio id="sfx-h1" src="assets/sfx/hit.wav" data-start="4.88" data-duration="0.5" data-track-index="24" data-volume="0.55"></audio>
+      <audio id="sfx-p4" src="assets/sfx/pop.wav" data-start="6.1" data-duration="0.09" data-track-index="22" data-volume="0.45"></audio>
+      <audio id="sfx-p5" src="assets/sfx/pop.wav" data-start="6.4" data-duration="0.09" data-track-index="23" data-volume="0.45"></audio>
+      <audio id="sfx-t1" src="assets/sfx/tick.wav" data-start="10.0" data-duration="0.03" data-track-index="25" data-volume="0.6"></audio>
+      <audio id="sfx-w3" src="assets/sfx/whoosh.wav" data-start="10.5" data-duration="0.45" data-track-index="21" data-volume="0.35"></audio>
+      <audio id="sfx-t2" src="assets/sfx/tick.wav" data-start="10.9" data-duration="0.03" data-track-index="25" data-volume="0.6"></audio>
+      <audio id="sfx-t3" src="assets/sfx/tick.wav" data-start="11.04" data-duration="0.03" data-track-index="26" data-volume="0.6"></audio>
+      <audio id="sfx-h2" src="assets/sfx/hit.wav" data-start="12.2" data-duration="0.5" data-track-index="24" data-volume="0.45"></audio>
+      <audio id="sfx-w4" src="assets/sfx/whoosh.wav" data-start="13.35" data-duration="0.45" data-track-index="21" data-volume="0.35"></audio>
+      <audio id="sfx-h3" src="assets/sfx/hit.wav" data-start="15.62" data-duration="0.5" data-track-index="24" data-volume="0.5"></audio>
+      <audio id="sfx-h4" src="assets/sfx/hit.wav" data-start="17.95" data-duration="0.5" data-track-index="24" data-volume="0.45"></audio>
+      <audio id="sfx-p6" src="assets/sfx/pop.wav" data-start="18.45" data-duration="0.09" data-track-index="22" data-volume="0.45"></audio>
+      <audio id="sfx-p7" src="assets/sfx/pop.wav" data-start="18.72" data-duration="0.09" data-track-index="23" data-volume="0.45"></audio>
+      <audio id="sfx-p8" src="assets/sfx/pop.wav" data-start="19.0" data-duration="0.09" data-track-index="22" data-volume="0.45"></audio>
+      <audio id="sfx-w5" src="assets/sfx/whoosh.wav" data-start="19.9" data-duration="0.45" data-track-index="21" data-volume="0.4"></audio>
+      <audio id="sfx-h5" src="assets/sfx/hit.wav" data-start="20.96" data-duration="0.5" data-track-index="24" data-volume="0.6"></audio>
+      <audio id="sfx-h6" src="assets/sfx/hit.wav" data-start="21.76" data-duration="0.5" data-track-index="25" data-volume="0.65"></audio>
+      <audio id="sfx-t4" src="assets/sfx/tick.wav" data-start="23.4" data-duration="0.03" data-track-index="26" data-volume="0.5"></audio>
+      <audio id="sfx-t5" src="assets/sfx/tick.wav" data-start="26.24" data-duration="0.03" data-track-index="26" data-volume="0.6"></audio>
+      <audio id="sfx-w6" src="assets/sfx/whoosh.wav" data-start="26.62" data-duration="0.45" data-track-index="21" data-volume="0.35"></audio>
+      <audio id="sfx-w7" src="assets/sfx/whoosh.wav" data-start="28.2" data-duration="0.45" data-track-index="21" data-volume="0.4"></audio>
+      <audio id="sfx-h7" src="assets/sfx/hit.wav" data-start="28.75" data-duration="0.5" data-track-index="24" data-volume="0.5"></audio>
+    </div>
+
+    <script src="assets/vendor/gsap.min.js"></script>
+    <script>
+      (function () {
+        const tl = gsap.timeline({ paused: true });
+        const $ = (s) => document.querySelector(s);
+
+        // ── motion vocabulary ─────────────────────────────────────────────
+        const slam = (sel, t, o = {}) =>
+          tl.fromTo(sel, { opacity: 0, scale: o.from || 1.9, rotation: o.rot || 0 },
+            { opacity: 1, scale: 1, rotation: o.rot || 0, duration: o.d || 0.22, ease: "power4.out" }, t);
+        const pop = (sel, t, o = {}) =>
+          tl.fromTo(sel, { opacity: 0, scale: 0.3, rotation: (o.rot || 0) - 14 },
+            { opacity: 1, scale: 1, rotation: o.rot || 0, duration: o.d || 0.38, ease: "back.out(2.4)" }, t);
+        const rise = (sel, t, o = {}) =>
+          tl.fromTo(sel, { opacity: 0, y: o.dist || 90 }, { opacity: 1, y: 0, duration: o.d || 0.32, ease: "power3.out" }, t);
+        const wipe = (sel, t, d = 0.3) =>
+          tl.fromTo(sel, { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: d, ease: "power3.inOut" }, t);
+        const out = (sel, t, d = 0.18, extra = {}) =>
+          tl.to(sel, Object.assign({ opacity: 0, duration: d, ease: "power2.in" }, extra), t);
+        const draw = (sel, t, d, ease = "power2.inOut") => {
+          const el = $(sel); const L = el.getTotalLength();
+          tl.fromTo(sel, { strokeDasharray: L, strokeDashoffset: L }, { strokeDashoffset: 0, duration: d, ease }, t);
+        };
+        const flash = (t, peak = 0.85) => {
+          tl.fromTo("#flash", { opacity: peak }, { opacity: 0, duration: 0.22, ease: "power2.out", immediateRender: false }, t);
+        };
+        // camera: punch-ins on #video-zoom (one property owner)
+        const cam = (t, scale, d = 0.18, ease = "power3.out") =>
+          tl.to("#video-zoom", { scale, duration: d, ease }, t);
+        const shake = (t, amt = 22, n = 6) => {
+          for (let i = 0; i < n; i++) {
+            const k = 1 - i / n;
+            tl.to("#video-shake", { x: (i % 2 ? -1 : 1) * amt * k, y: (i % 3 - 1) * amt * 0.6 * k, duration: 0.04, ease: "none" }, t + i * 0.04);
+          }
+          tl.to("#video-shake", { x: 0, y: 0, duration: 0.05, ease: "none" }, t + n * 0.04);
+        };
+        const splitChars = (sel) => {
+          const el = $(sel); const txt = el.textContent; el.textContent = "";
+          for (const c of txt) { const s = document.createElement("span"); s.className = "ch"; s.textContent = c === " " ? " " : c; el.appendChild(s); }
+          return sel + " .ch";
+        };
+
+        tl.set("#video-zoom", { scale: 1, transformOrigin: "50% 32%" }, 0);
+        tl.set("#video-grade", { filter: "grayscale(0) contrast(1)" }, 0);
+
+        // progress bar
+        tl.fromTo("#progress-fill", { scaleX: 0, transformOrigin: "0% 50%" }, { scaleX: 1, duration: 30.3, ease: "none" }, 0);
+
+        // ── cut accents ──────────────────────────────────────────────────
+        flash(0.8, 1); cam(0.8, 1.12, 0.01); cam(0.82, 1.0, 0.5, "power3.out");
+        flash(10.6); flash(13.45); flash(20.0, 1); flash(26.73);
+
+        // ── camera rhythm ────────────────────────────────────────────────
+        cam(2.0, 1.07); cam(3.2, 1.0, 0.3);
+        cam(4.88, 1.14, 0.12); cam(5.7, 1.0, 0.35);
+        cam(8.3, 1.06); cam(10.0, 1.13, 0.12);
+        cam(10.6, 1.0, 0.01); cam(12.16, 1.08);
+        cam(13.45, 1.0, 0.01); cam(15.28, 1.1, 0.12); cam(16.5, 1.0, 0.3);
+        cam(19.0, 1.06, 0.4, "power2.inOut");
+        cam(20.0, 1.18, 0.01); cam(20.02, 1.06, 1.2, "power2.out");
+        cam(21.76, 1.14, 0.1); cam(22.6, 1.02, 0.4);
+        cam(23.36, 1.08, 3.3, "none");
+        cam(26.73, 1.12, 0.01); cam(26.75, 1.0, 1.5, "power2.out");
+        shake(4.88, 16, 5); shake(15.62, 14, 5); shake(20.96, 18, 5); shake(21.76, 28, 7);
+
+        // ── B1 · LinkedIn articles ───────────────────────────────────────
+        wipe("#b1-tag", 1.95, 0.25);
+        [["#b1-a1", -8], ["#b1-a2", 3], ["#b1-a3", 9]].forEach(([s, r], i) => {
+          tl.fromTo(s, { opacity: 0, y: 520, rotation: r * 3 }, { opacity: 1, y: 0, rotation: r, duration: 0.42, ease: "back.out(1.5)" }, 2.02 + i * 0.12);
+        });
+        tl.to(["#b1-a1", "#b1-a2", "#b1-a3"], { y: -60, opacity: 0, duration: 0.22, ease: "power2.in", stagger: 0.04 }, 3.05);
+        out("#b1-tag", 3.05);
+
+        // ── B2 · polarity ────────────────────────────────────────────────
+        tl.fromTo("#b2-l", { x: -560 }, { x: 0, duration: 0.35, ease: "power4.out" }, 3.62);
+        tl.fromTo("#b2-r", { x: 560 }, { x: 0, duration: 0.35, ease: "power4.out" }, 3.72);
+        slam("#b2-word", 4.88, { from: 2.4, rot: -3 });
+        tl.to("#b2-l", { x: -70, duration: 0.25, ease: "power3.out" }, 4.9);
+        tl.to("#b2-r", { x: 70, duration: 0.25, ease: "power3.out" }, 4.9);
+        tl.to("#b2-l", { x: -600, duration: 0.3, ease: "power3.in" }, 5.4);
+        tl.to("#b2-r", { x: 600, duration: 0.3, ease: "power3.in" }, 5.4);
+        out("#b2-word", 5.45, 0.2, { scale: 0.7 });
+
+        // ── B3 · the debate ──────────────────────────────────────────────
+        wipe("#b3-tag", 5.9, 0.25);
+        pop("#b3-l", 6.1, { rot: -4 });
+        pop("#b3-r", 6.4, { rot: 4 });
+        slam("#b3-vs", 6.55, { from: 2.2 });
+        ["#b3-l .dot", "#b3-r .dot"].forEach((s, k) => {
+          tl.fromTo(s, { y: 0 }, { y: -16, duration: 0.16, ease: "sine.inOut", yoyo: true, repeat: 3, stagger: 0.08 }, 6.5 + k * 0.1);
+        });
+        out(["#b3-l", "#b3-r", "#b3-vs", "#b3-tag"], 7.42, 0.18);
+
+        // ── B4 · today vs 10 years ago ───────────────────────────────────
+        tl.fromTo("#tl-line", { scaleX: 0, transformOrigin: "100% 50%" }, { scaleX: 1, duration: 0.55, ease: "power3.inOut" }, 7.76);
+        pop("#b4-today-dot", 8.3); rise("#b4-today", 8.3, { dist: 40 });
+        pop("#b4-past-dot", 9.04);
+        tl.fromTo("#b4-mover", { opacity: 0 }, { opacity: 1, duration: 0.06 }, 9.04);
+        tl.to("#b4-mover", { x: -832, duration: 0.95, ease: "power2.inOut" }, 9.1);
+        slam("#b4-ten", 10.0, { from: 1.6 });
+        (function () {
+          const o = { v: 0 };
+          tl.fromTo(o, { v: 0 }, { v: 10, duration: 0.3, immediateRender: false, ease: "power2.out",
+            onUpdate: () => { $("#b4-num").textContent = String(Math.round(o.v)); } }, 10.0);
+        })();
+        wipe("#b4-ago", 10.16, 0.2);
+        out(["#tl-line", "#b4-today-dot", "#b4-today", "#b4-past-dot", "#b4-mover", "#b4-ten", "#b4-ago"], 10.42, 0.15);
+
+        // ── B5 · ads look different (style swaps) ────────────────────────
+        tl.fromTo("#b5-a", { opacity: 0, scale: 0.6, rotation: -4 }, { opacity: 1, scale: 1, rotation: -4, duration: 0.18, ease: "back.out(2)" }, 10.64);
+        tl.set("#b5-a", { opacity: 0 }, 10.9);
+        tl.fromTo("#b5-b", { opacity: 0, rotation: 3 }, { opacity: 1, rotation: 3, duration: 0.01 }, 10.9);
+        tl.set("#b5-b", { opacity: 0 }, 11.04);
+        tl.fromTo("#b5-c", { opacity: 0, scale: 1.3, rotation: -2 }, { opacity: 1, scale: 1, rotation: -2, duration: 0.14, ease: "power4.out" }, 11.04);
+        slam("#b5-sub", 11.2, { from: 1.5 });
+        [[-14, 0], [12, 4], [-6, -3], [0, 0]].forEach(([x, y], i) => tl.set("#b5-sub", { x, y }, 11.26 + i * 0.05));
+        out(["#b5-c", "#b5-sub"], 11.45, 0.12);
+
+        // ── B6 · social media rules the roost ────────────────────────────
+        slam("#b6-w1", 11.68, { from: 1.7 });
+        slam("#b6-w2", 11.92, { from: 1.7 });
+        tl.fromTo("#b6-crown", { opacity: 0, y: -520, rotation: -25 }, { opacity: 1, y: 0, rotation: -12, duration: 0.42, ease: "bounce.out" }, 12.0);
+        wipe("#b6-roost", 12.3, 0.25);
+        pop("#b6-c1", 12.2, { rot: 6 }); pop("#b6-p1", 12.35, { rot: -6 });
+        pop("#b6-h1", 12.45, { rot: -10 }); pop("#b6-h2", 12.6, { rot: 12 });
+        tl.to(["#b6-h1", "#b6-h2"], { y: -180, opacity: 0, duration: 0.8, ease: "power1.in", stagger: 0.1 }, 12.6);
+        rise("#b6-obv", 13.05, { dist: 30, d: 0.2 });
+        out(["#b6-crown", "#b6-title", "#b6-roost", "#b6-obv", "#b6-c1", "#b6-p1"], 13.3, 0.12);
+
+        // ── B7 · one consistent thread → snaps ───────────────────────────
+        rise("#b7-t1", 14.2, { dist: 60 });
+        draw("#b7-pl", 14.3, 0.55, "power1.in");
+        draw("#b7-pr", 14.85, 0.45, "power1.out");
+        slam("#b7-t2", 15.28, { from: 1.8 });
+        tl.fromTo("#b7-spark", { opacity: 0, scale: 0.2 }, { opacity: 1, scale: 1.6, duration: 0.12, ease: "power4.out" }, 15.62);
+        tl.to("#b7-spark", { opacity: 0, scale: 2.2, duration: 0.3, ease: "power2.out" }, 15.74);
+        tl.fromTo("#b7-left", { rotation: 0, y: 0 }, { rotation: 14, y: 70, duration: 0.5, ease: "back.in(1.2)", transformOrigin: "0% 50%" }, 15.62);
+        tl.fromTo("#b7-right", { rotation: 0, y: 0 }, { rotation: -14, y: 70, duration: 0.5, ease: "back.in(1.2)", transformOrigin: "100% 50%" }, 15.62);
+        [[-18, 0], [14, 0], [-8, 0], [0, 0]].forEach(([x], i) => tl.set("#b7-t2", { x }, 15.66 + i * 0.05));
+        tl.to("#b7-t2", { color: "#ff3b5c", duration: 0.1 }, 15.66);
+        out(["#b7-t1", "#b7-t2", "#b7-left", "#b7-right"], 16.25, 0.2);
+
+        // ── B8 · classical branding ──────────────────────────────────────
+        tl.fromTo("#book", { opacity: 0, y: 420, rotation: 6 }, { opacity: 1, y: 0, rotation: -3, duration: 0.45, ease: "power4.out" }, 16.6);
+        tl.fromTo("#b8-w1", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.3, ease: "power3.out" }, 17.26);
+        tl.fromTo("#b8-w2", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.3, ease: "power3.out" }, 17.74);
+        draw("#b8-ul", 17.8, 0.25);
+        tl.fromTo("#stamp-old", { opacity: 0, scale: 2.6, rotation: -8 }, { opacity: 1, scale: 1, rotation: -8, duration: 0.18, ease: "power4.in" }, 17.95);
+        tl.to("#book", { y: 500, rotation: 8, opacity: 0, duration: 0.3, ease: "power3.in" }, 18.1);
+
+        // ── B9 · question marks ──────────────────────────────────────────
+        pop("#b9-q1", 18.45, { rot: -14 }); pop("#b9-q2", 18.72, { rot: 12 }); pop("#b9-q3", 19.0, { rot: 8 });
+        tl.to(["#b9-q1", "#b9-q2", "#b9-q3"], { y: -30, duration: 0.5, ease: "sine.inOut" }, 19.3);
+        out(["#b9-q1", "#b9-q2", "#b9-q3"], 19.8, 0.15, { scale: 1.4 });
+
+        // ── B10 · HERO ───────────────────────────────────────────────────
+        tl.to("#scrim-hero", { opacity: 1, duration: 0.15, ease: "power2.out" }, 20.0);
+        slam("#b10-w1", 20.08, { from: 2.2 });
+        slam("#b10-w2", 20.24, { from: 2.2 });
+        slam("#b10-w3", 20.58, { from: 2.2 });
+        tl.fromTo("#b10-w4", { opacity: 0, scale: 3, rotation: -8 }, { opacity: 1, scale: 1, rotation: -3, duration: 0.2, ease: "power4.in" }, 20.9);
+        tl.to("#b10-stack", { scale: 1.25, opacity: 0, duration: 0.2, ease: "power2.in" }, 21.12);
+        tl.to("#scrim-hero", { opacity: 0, duration: 0.2, ease: "power2.in" }, 21.12);
+
+        // ── B11 · CLEARLY stamp ──────────────────────────────────────────
+        rise("#b11-pre", 21.3, { dist: 40, d: 0.2 });
+        tl.fromTo("#b11-stamp", { opacity: 0, scale: 3.2, rotation: -16 }, { opacity: 1, scale: 1, rotation: -7, duration: 0.18, ease: "power4.in" }, 21.6);
+        pop("#b11-has", 22.1, { rot: 4 });
+        out(["#b11-pre", "#b11-stamp", "#b11-has"], 22.3, 0.18, { y: -40 });
+
+        // ── lower third ──────────────────────────────────────────────────
+        wipe("#lt-name-wrap", 21.45, 0.35);
+        tl.fromTo("#lt-role", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.3, ease: "power3.out" }, 21.7);
+        out("#lt", 25.1, 0.25, { x: -40 });
+
+        // ── B12 · going digital ──────────────────────────────────────────
+        tl.fromTo("#dig-panel", { opacity: 0, scaleY: 0.1, transformOrigin: "50% 50%" }, { opacity: 1, scaleY: 1, duration: 0.3, ease: "power4.out" }, 22.55);
+        tl.from(splitChars("#b12-type"), { opacity: 0, duration: 0.01, stagger: 0.035 }, 22.9);
+        tl.fromTo("#b12-px .px", { opacity: 0, y: 40, scale: 0.2 }, { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: "back.out(2)", stagger: { each: 0.04, from: "center" } }, 23.36);
+        tl.to("#b12-px .px", { y: -70, opacity: 0, duration: 0.6, ease: "power1.in", stagger: { each: 0.05, from: "edges" } }, 24.3);
+        tl.fromTo("#dig-fill", { scaleX: 0, transformOrigin: "0% 50%" }, { scaleX: 1, duration: 2.85, ease: "power1.inOut" }, 23.4);
+        (function () {
+          const o = { v: 0 };
+          tl.fromTo(o, { v: 0 }, { v: 100, duration: 2.85, immediateRender: false, ease: "power1.inOut",
+            onUpdate: () => { $("#b12-pct").textContent = Math.round(o.v) + "%"; } }, 23.4);
+        })();
+        tl.fromTo("#b12-status", { opacity: 0 }, { opacity: 1, duration: 0.1 }, 25.84);
+        tl.to("#dig-panel", { borderColor: "#3cff7a", duration: 0.1 }, 26.24);
+        tl.fromTo("#b12-pct", { scale: 1.6, color: "#3cff7a" }, { scale: 1, color: "#ffffff", duration: 0.25, ease: "power4.out", immediateRender: false }, 26.24);
+        tl.to("#dig-panel", { opacity: 0, scale: 0.9, duration: 0.2, ease: "power2.in" }, 26.5);
+
+        // ── B13 · we've lost that (desaturate + dissolve) ────────────────
+        tl.to("#video-grade", { filter: "grayscale(1) contrast(1.15)", duration: 1.0, ease: "power2.out" }, 26.8);
+        tl.fromTo("#b13-some", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }, 26.8);
+        slam("#b13-lost", 27.24, { from: 1.6 });
+        const thatChars = splitChars("#b13-that");
+        slam("#b13-that", 27.84, { from: 1.8, d: 0.16 });
+        const drift = [[-60, -90, -30], [-20, -140, 20], [30, -110, -25], [70, -160, 35], [110, -80, 40]];
+        document.querySelectorAll("#b13-that .ch").forEach((el, i) => {
+          const [x, y, r] = drift[i % drift.length];
+          tl.to(el, { x, y, rotation: r, opacity: 0, duration: 0.3, ease: "power2.in" }, 28.0 + i * 0.02);
+        });
+        out(["#b13-some", "#b13-lost"], 28.02, 0.22, { y: -40 });
+
+        // ── B14 · end card ───────────────────────────────────────────────
+        tl.fromTo("#end-bg", { clipPath: "circle(0% at 50% 50%)" }, { clipPath: "circle(80% at 50% 50%)", duration: 0.35, ease: "power3.out" }, 28.25);
+        tl.fromTo("#b14-kick", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 28.45);
+        slam("#b14-t1", 28.55, { from: 1.6 });
+        tl.fromTo("#b14-t2", { opacity: 0, scale: 2.4, rotation: -6 }, { opacity: 1, scale: 1, rotation: -2, duration: 0.2, ease: "power4.in" }, 28.72);
+        pop("#b14-yes", 29.0, { rot: -3 }); pop("#b14-no", 29.12, { rot: 3 });
+        rise("#b14-cta", 29.3, { dist: 30 });
+        tl.fromTo("#b14-yes", { scale: 1 }, { scale: 1.08, duration: 0.25, ease: "sine.inOut", yoyo: true, repeat: 1, immediateRender: false }, 29.6);
+        tl.fromTo("#b14-brand", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 29.4);
+
+        // ── kinetic captions ─────────────────────────────────────────────
+        // "|" starts a new caption group. Times from the Parakeet word-level transcript.
+        const WORDS = [
+          [0.84, "So"], [0.96, "we"], [1.2, "see"], "|", [1.44, "all"], [1.72, "these"], "|", [2.0, "LinkedIn"], [2.56, "articles"], "|",
+          [3.2, "where"], [3.7, "there's"], "|", [4.0, "always"], [4.32, "this"], "|", [4.88, "polarity"], "|",
+          [5.72, "like,"], [6.4, "discussion"], "|", [6.96, "is"], [7.12, "all"], [7.4, "about"], "|",
+          [7.76, "whether"], [8.3, "today"], "|", [8.88, "as"], [9.04, "compared"], [9.36, "to"], "|", [9.52, "what"], [9.68, "it"], [9.76, "was"], "|",
+          [10.0, "ten"], [10.16, "years"], [10.32, "ago"], "|",
+          // 10.6–11.55 hidden: ADS billboard spells it out
+          // 11.6–13.45 hidden: SOCIAL MEDIA graphic spells it out
+          [13.52, "there"], [13.68, "may"], [13.92, "not"], [14.08, "be"], "|",
+          // 14.2–16.4 hidden: ONE CONSISTENT THREAD graphic
+          [16.0, "how"], [16.28, "we"], [16.48, "all"], [16.72, "learned"], "|",
+          // 17.2–18.35 hidden: CLASSICAL BRANDING book
+          [18.4, "so"], [18.56, "what"], [18.64, "do"], [18.72, "you"], "|", [18.8, "have"], [18.9, "to"], [19.04, "say"], "|", [19.44, "on"], [19.76, "that?"], "|",
+          // 20.0–22.45 hidden: HERO + CLEARLY
+          [22.56, "the"], [22.64, "whole"], [22.88, "thing"], [23.12, "about"], "|",
+          [24.08, "the"], [24.24, "whole"], [24.56, "campaigns"], "|",
+          [25.1, "and"], [25.2, "everything"], "|", [25.84, "going"], [26.24, "digital"], "|",
+        ];
+        const GROUP_END = { "0": 1.42, "5": 5.55, "11": 10.55, "12": 14.18, "13": 17.2, "16": 19.95, "17": 23.34, "20": 26.66 };
+        const groups = []; let cur = [];
+        WORDS.forEach((w) => { if (w === "|") { groups.push(cur); cur = []; } else cur.push(w); });
+        if (cur.length) groups.push(cur);
+        const host = $("#captions");
+        groups.forEach((g, gi) => {
+          const div = document.createElement("div");
+          div.className = "cap"; div.id = "cap-" + gi;
+          g.forEach(([, txt], wi) => { const s = document.createElement("span"); s.className = "w"; s.id = "cap-" + gi + "-" + wi; s.textContent = txt; div.appendChild(s); });
+          host.appendChild(div);
+          const start = g[0][0];
+          const next = groups[gi + 1] ? groups[gi + 1][0][0] : start + 1.2;
+          const end = GROUP_END[String(gi)] !== undefined ? GROUP_END[String(gi)] : Math.min(next, g[g.length - 1][0] + 0.9);
+          tl.fromTo("#cap-" + gi, { opacity: 0 }, { opacity: 1, duration: 0.01 }, start - 0.02);
+          g.forEach(([t], wi) => {
+            const id = "#cap-" + gi + "-" + wi;
+            tl.fromTo(id, { opacity: 0, scale: 0.55, y: 26 }, { opacity: 1, scale: 1, y: 0, duration: 0.16, ease: "back.out(2.6)" }, t);
+            tl.fromTo(id, { backgroundColor: "rgba(255,225,26,0)", color: "#ffffff" }, { backgroundColor: "rgba(255,225,26,1)", color: "#0b0b0f", duration: 0.05 }, t);
+            const tNext = g[wi + 1] ? g[wi + 1][0] : end;
+            if (g[wi + 1]) tl.to(id, { backgroundColor: "rgba(255,225,26,0)", color: "#ffffff", duration: 0.05 }, tNext);
+          });
+          tl.to("#cap-" + gi, { opacity: 0, duration: 0.06 }, end);
+        });
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
