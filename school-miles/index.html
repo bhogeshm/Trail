@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Montserrat"; font-weight: 500; font-style: normal; font-display: block; src: url("assets/fonts/montserrat-latin-500-normal.woff2") format("woff2"); }
+      @font-face { font-family: "Montserrat"; font-weight: 700; font-style: normal; font-display: block; src: url("assets/fonts/montserrat-latin-700-normal.woff2") format("woff2"); }
+      @font-face { font-family: "Montserrat"; font-weight: 800; font-style: normal; font-display: block; src: url("assets/fonts/montserrat-latin-800-normal.woff2") format("woff2"); }
+      :root {
+        --accent: #d6232f; /* Wealth First red, used sparingly */
+        --ink: #0d0b1f;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #000;
+        font-family: "Montserrat", sans-serif;
+        color: #fff;
+      }
+
+      /* Footage */
+      video.shot {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+      }
+      video.shot.soft { z-index: 2; }
+      video.shot.card { z-index: 3; }
+
+      /* Legibility: bottom scrim + gentle vignette over footage */
+      #scrim {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        pointer-events: none;
+        background:
+          linear-gradient(0deg, rgba(8, 6, 20, 0.86) 0%, rgba(8, 6, 20, 0.55) 22%, rgba(8, 6, 20, 0) 44%),
+          radial-gradient(ellipse 120% 85% at 50% 45%, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.38) 100%);
+      }
+      #banner-dim {
+        position: absolute;
+        inset: 0;
+        z-index: 6;
+        background: rgba(10, 8, 28, 0.72);
+      }
+
+      /* Title cards */
+      .title {
+        position: absolute;
+        left: 88px;
+        right: 88px;
+        bottom: 360px;
+        z-index: 10;
+      }
+      .rule {
+        display: block;
+        width: 96px;
+        height: 6px;
+        background: var(--accent);
+        margin-bottom: 34px;
+        transform-origin: 0 50%;
+      }
+      .mask { display: block; overflow: hidden; padding-bottom: 6px; }
+      .head {
+        display: block;
+        font-weight: 800;
+        font-size: 104px;
+        line-height: 1.02;
+        letter-spacing: 0.01em;
+        text-shadow: 0 4px 30px rgba(0, 0, 0, 0.35);
+      }
+      .head.phrase { font-size: 80px; }
+      .sub {
+        display: block;
+        margin-top: 22px;
+        font-weight: 500;
+        font-size: 38px;
+        line-height: 1.3;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+        color: rgba(255, 255, 255, 0.92);
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.45);
+      }
+
+      /* Closing lockup */
+      #t6 {
+        position: absolute;
+        inset: 0;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      #t6 .kicker {
+        display: block;
+        font-weight: 700;
+        font-size: 30px;
+        letter-spacing: 0.42em;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 28px;
+      }
+      #t6 .head { font-size: 112px; letter-spacing: 0.02em; white-space: nowrap; }
+      #t6 .rule { margin: 40px auto 36px; transform-origin: 50% 50%; }
+      #t6 .sub { margin-top: 0; font-size: 40px; letter-spacing: 0.1em; }
+
+      #fade {
+        position: absolute;
+        inset: 0;
+        z-index: 40;
+        background: #000;
+        opacity: 0;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="26.8"
+      data-width="1080"
+      data-height="1920"
+    >
+      <!-- ============ PICTURE (track 0/1) ============ -->
+      <!-- Block 1 · awareness session -->
+      <video id="v01" class="clip shot" src="assets/clips/c01.mp4" muted playsinline data-start="0" data-duration="3" data-track-index="0"></video>
+      <!-- Block 2 · session collages -->
+      <video id="v02" class="clip shot" src="assets/clips/c02.mp4" muted playsinline data-start="3" data-duration="2" data-track-index="0"></video>
+      <video id="v03" class="clip shot" src="assets/clips/c03.mp4" muted playsinline data-start="5" data-duration="2" data-track-index="0"></video>
+      <!-- Block 3 · kit distribution -->
+      <video id="v04" class="clip shot" src="assets/clips/c04.mp4" muted playsinline data-start="7" data-duration="1.3" data-track-index="0"></video>
+      <video id="v05" class="clip shot" src="assets/clips/c05.mp4" muted playsinline data-start="8.3" data-duration="1.05" data-track-index="0"></video>
+      <video id="v06" class="clip shot" src="assets/clips/c06.mp4" muted playsinline data-start="9.35" data-duration="1.05" data-track-index="0"></video>
+      <video id="v07" class="clip shot" src="assets/clips/c07.mp4" muted playsinline data-start="10.4" data-duration="0.6" data-track-index="0"></video>
+      <!-- Block 4 · girls with their kits -->
+      <video id="v08" class="clip shot" src="assets/clips/c08.mp4" muted playsinline data-start="11" data-duration="2.2" data-track-index="0"></video>
+      <video id="v09" class="clip shot" src="assets/clips/c09.mp4" muted playsinline data-start="13.2" data-duration="2.8" data-track-index="0"></video>
+      <!-- Block 5 · classroom -->
+      <video id="v10" class="clip shot" src="assets/clips/c10.mp4" muted playsinline data-start="16" data-duration="2" data-track-index="0"></video>
+      <video id="v11" class="clip shot" src="assets/clips/c11.mp4" muted playsinline data-start="18" data-duration="2" data-track-index="0"></video>
+      <!-- Block 6 · campaign banner (dissolves in) -->
+      <video id="v12" class="clip shot soft" src="assets/clips/c12.mp4" muted playsinline data-start="19.6" data-duration="3.4" data-track-index="1"></video>
+      <!-- Block 7 · CSR end card (dissolves in) -->
+      <video id="v13" class="clip shot card" src="assets/clips/c13.mp4" muted playsinline data-start="22.5" data-duration="4.3" data-track-index="0"></video>
+
+      <div id="scrim" class="clip" data-start="0" data-duration="22.7" data-track-index="2"></div>
+      <div id="banner-dim" class="clip" data-start="19.6" data-duration="3.4" data-track-index="3"></div>
+
+      <!-- ============ TITLES (track 4) ============ -->
+      <div id="t1" class="clip title" data-start="0" data-duration="3" data-track-index="4">
+        <i class="rule"></i>
+        <span class="mask"><span class="head phrase">EVERY GIRL DESERVES</span></span>
+        <span class="mask"><span class="sub">TO LEARN WITHOUT INTERRUPTION.</span></span>
+      </div>
+      <div id="t2" class="clip title" data-start="3" data-duration="4" data-track-index="4">
+        <i class="rule"></i>
+        <span class="mask"><span class="head">KNOWLEDGE</span></span>
+        <span class="mask"><span class="sub">THAT PREPARES HER.</span></span>
+      </div>
+      <div id="t3" class="clip title" data-start="7" data-duration="4" data-track-index="4">
+        <i class="rule"></i>
+        <span class="mask"><span class="head">SUPPORT</span></span>
+        <span class="mask"><span class="sub">THAT EMPOWERS HER.</span></span>
+      </div>
+      <div id="t4" class="clip title" data-start="11" data-duration="5" data-track-index="4">
+        <i class="rule"></i>
+        <span class="mask"><span class="head">CONFIDENCE</span></span>
+        <span class="mask"><span class="sub">THAT KEEPS HER MOVING FORWARD.</span></span>
+      </div>
+      <div id="t5" class="clip title" data-start="16" data-duration="4" data-track-index="4">
+        <i class="rule"></i>
+        <span class="mask"><span class="head phrase">BECAUSE EVERY</span></span>
+        <span class="mask"><span class="sub">SCHOOL DAY MATTERS.</span></span>
+      </div>
+      <div id="t6" class="clip" data-start="20" data-duration="2.7" data-track-index="4">
+        <span class="mask"><span class="kicker">UNIPADS FOUNDATION</span></span>
+        <span class="mask"><span class="head">SCHOOL MILES</span></span>
+        <i class="rule"></i>
+        <span class="mask"><span class="sub">A MILE TOWARDS HER FUTURE</span></span>
+      </div>
+
+      <div id="fade" class="clip" data-start="26.2" data-duration="0.6" data-track-index="5"></div>
+
+      <!-- ============ SOUND ============ -->
+      <audio id="score" src="assets/score.m4a" data-start="0" data-duration="26.8" data-volume="1" data-track-index="6"></audio>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+
+      // --- Slow, steady push-ins on every shot (subtle, documentary feel)
+      const shots = [
+        ["#v01", 0, 3], ["#v02", 3, 2], ["#v03", 5, 2], ["#v04", 7, 1.3], ["#v05", 8.3, 1.05],
+        ["#v06", 9.35, 1.05], ["#v07", 10.4, 0.6], ["#v08", 11, 2.2], ["#v09", 13.2, 2.8],
+        ["#v10", 16, 2], ["#v11", 18, 2],
+      ];
+      shots.forEach(([sel, t, d], i) => {
+        const from = i % 2 ? 1.07 : 1.02;
+        const to = i % 2 ? 1.02 : 1.07;
+        tl.fromTo(sel, { scale: from }, { scale: to, duration: d, ease: "none" }, t);
+      });
+
+      // Banner: dissolve in, slow push, softened behind the lockup
+      tl.fromTo("#v12", { opacity: 0, scale: 1.12, filter: "blur(0px)" }, { opacity: 1, duration: 0.4, ease: "power1.inOut" }, 19.6);
+      tl.to("#v12", { scale: 1.2, duration: 3.4, ease: "none" }, 19.6);
+      tl.to("#v12", { filter: "blur(10px)", duration: 0.8, ease: "power2.out" }, 19.9);
+      tl.fromTo("#banner-dim", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power1.inOut" }, 19.6);
+
+      // End card: clean cross-dissolve
+      tl.fromTo("#v13", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power1.inOut" }, 22.5);
+      tl.fromTo("#scrim", { opacity: 1 }, { opacity: 0, duration: 0.2 }, 22.5);
+
+      // --- Title cards: rule draws, headline rises from a mask, sub follows
+      const cards = [
+        ["#t1", 0, 3], ["#t2", 3, 4], ["#t3", 7, 4], ["#t4", 11, 5], ["#t5", 16, 4],
+      ];
+      cards.forEach(([id, t, d]) => {
+        const inT = t === 0 ? 0.25 : t + 0.08;
+        tl.fromTo(`${id} .rule`, { scaleX: 0 }, { scaleX: 1, duration: 0.55, ease: "power3.out" }, inT);
+        tl.fromTo(`${id} .head`, { yPercent: 105 }, { yPercent: 0, duration: 0.75, ease: "power3.out" }, inT + 0.08);
+        tl.fromTo(`${id} .sub`, { yPercent: 110, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.7, ease: "power3.out" }, inT + 0.22);
+        const outT = t + d - 0.32;
+        tl.to(`${id} .rule, ${id} .head, ${id} .sub`, { opacity: 0, y: -14, duration: 0.28, ease: "power2.in" }, outT);
+      });
+
+      // Closing lockup
+      tl.fromTo("#t6 .kicker", { yPercent: 110, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, 20.1);
+      tl.fromTo("#t6 .head", { yPercent: 105 }, { yPercent: 0, duration: 0.8, ease: "power3.out" }, 20.2);
+      tl.fromTo("#t6 .rule", { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "power3.out" }, 20.5);
+      tl.fromTo("#t6 .sub", { yPercent: 110, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.7, ease: "power3.out" }, 20.6);
+      tl.to("#t6 .kicker, #t6 .head, #t6 .rule, #t6 .sub", { opacity: 0, duration: 0.3, ease: "power1.in" }, 22.35);
+
+      // Final fade to black
+      tl.fromTo("#fade", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power1.in" }, 26.2);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
