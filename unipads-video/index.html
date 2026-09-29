@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Plus Jakarta Sans"; font-weight: 400; font-style: normal; font-display: block; src: url("assets/fonts/plus-jakarta-sans-latin-400-normal.woff2") format("woff2"); }
+      @font-face { font-family: "Plus Jakarta Sans"; font-weight: 600; font-style: normal; font-display: block; src: url("assets/fonts/plus-jakarta-sans-latin-600-normal.woff2") format("woff2"); }
+      @font-face { font-family: "Plus Jakarta Sans"; font-weight: 800; font-style: normal; font-display: block; src: url("assets/fonts/plus-jakarta-sans-latin-800-normal.woff2") format("woff2"); }
+      :root {
+        --ink: #1e1b4b;
+        --brand: #3f3a9c;
+        --pink: #e8578a;
+        --lilac: #c9b8ff;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #0c0a24;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family: "Plus Jakarta Sans", Inter, ui-sans-serif, system-ui, sans-serif;
+        color: #fff;
+      }
+      .clip {
+        position: absolute;
+        inset: 0;
+      }
+      .scene {
+        overflow: hidden;
+        clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+      }
+      .scene img {
+        position: absolute;
+        inset: -4%;
+        width: 108%;
+        height: 108%;
+        object-fit: cover;
+        will-change: transform;
+      }
+      .scene .shade {
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(180deg, rgba(12, 10, 36, 0.55) 0%, rgba(12, 10, 36, 0) 22%),
+          linear-gradient(0deg, rgba(20, 14, 60, 0.92) 0%, rgba(30, 20, 80, 0.45) 30%, rgba(0, 0, 0, 0) 55%);
+      }
+      .caption {
+        position: absolute;
+        left: 80px;
+        right: 80px;
+        bottom: 250px;
+      }
+      .kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 18px;
+        font-size: 30px;
+        font-weight: 600;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        color: var(--lilac);
+      }
+      .kicker::before {
+        content: "";
+        width: 64px;
+        height: 4px;
+        border-radius: 2px;
+        background: var(--pink);
+      }
+      .word {
+        margin-top: 18px;
+        font-size: 148px;
+        line-height: 0.95;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        overflow: hidden;
+      }
+      .word span {
+        display: inline-block;
+      }
+      .word em {
+        font-style: normal;
+        color: var(--pink);
+      }
+
+      /* Persistent chrome */
+      #topbar {
+        position: absolute;
+        top: 90px;
+        bottom: auto;
+        left: 80px;
+        right: 80px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 28px;
+        font-weight: 600;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        z-index: 20;
+      }
+      #topbar .dot {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: var(--pink);
+        margin-right: 16px;
+        vertical-align: middle;
+      }
+      #progress {
+        position: absolute;
+        left: 80px;
+        right: 80px;
+        top: auto;
+        bottom: 150px;
+        height: 6px;
+        border-radius: 3px;
+        background: rgba(255, 255, 255, 0.2);
+        overflow: hidden;
+        z-index: 20;
+      }
+      #progress i {
+        display: block;
+        height: 100%;
+        width: 100%;
+        transform-origin: 0 50%;
+        background: linear-gradient(90deg, var(--pink), var(--lilac));
+      }
+      #flash {
+        background: #fff;
+        opacity: 0;
+        z-index: 30;
+        mix-blend-mode: soft-light;
+      }
+      #vignette {
+        z-index: 25;
+        background: radial-gradient(ellipse at 50% 45%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.45) 100%);
+        pointer-events: none;
+      }
+
+      /* End card */
+      #endcard {
+        z-index: 40;
+        background:
+          radial-gradient(circle at 20% 15%, rgba(232, 87, 138, 0.55), rgba(0, 0, 0, 0) 45%),
+          radial-gradient(circle at 85% 80%, rgba(201, 184, 255, 0.45), rgba(0, 0, 0, 0) 50%),
+          linear-gradient(160deg, #2a2477 0%, #16123f 100%);
+        clip-path: circle(0% at 50% 50%);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 0 90px;
+      }
+      #endcard .brand {
+        font-size: 96px;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+      }
+      #endcard .brand sup {
+        font-size: 36px;
+        vertical-align: top;
+      }
+      #endcard .found {
+        font-size: 40px;
+        font-weight: 600;
+        color: var(--pink);
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        margin-top: 4px;
+      }
+      #endcard .rule {
+        width: 180px;
+        height: 6px;
+        border-radius: 3px;
+        margin: 60px 0;
+        background: linear-gradient(90deg, var(--pink), var(--lilac));
+        transform-origin: 0 50%;
+      }
+      #endcard .program {
+        font-size: 34px;
+        font-weight: 600;
+        letter-spacing: 0.36em;
+        text-transform: uppercase;
+        color: var(--lilac);
+      }
+      #endcard .tagline {
+        margin-top: 22px;
+        font-size: 92px;
+        line-height: 1.02;
+        font-weight: 800;
+        letter-spacing: -0.035em;
+      }
+      #endcard .tagline em {
+        font-style: normal;
+        color: var(--pink);
+      }
+      #endcard .csr {
+        margin-top: 90px;
+        font-size: 30px;
+        font-weight: 400;
+        letter-spacing: 0.08em;
+        color: rgba(255, 255, 255, 0.78);
+      }
+      #endcard .csr b {
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: 0.14em;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="4.9"
+      data-width="1080"
+      data-height="1920"
+    >
+      <!-- Scenes: each cut lands on a 2-beat boundary (160 BPM → 0.75s) -->
+      <div id="s1" class="clip scene" data-start="0" data-duration="0.75" data-track-index="0">
+        <img src="assets/photo1.jpg" alt="" style="object-position: 40% 50%" />
+        <div class="shade"></div>
+        <div class="caption">
+          <div class="kicker">The School Miles</div>
+          <div class="word"><span>Breaking</span><br /><span>the <em>silence</em></span></div>
+        </div>
+      </div>
+      <div id="s2" class="clip scene" data-start="0.6" data-duration="0.9" data-track-index="1">
+        <img src="assets/photo3.jpg" alt="" style="object-position: 55% 45%" />
+        <div class="shade"></div>
+        <div class="caption">
+          <div class="kicker">Hands-on learning</div>
+          <div class="word"><span>Real</span><br /><span><em>awareness</em></span></div>
+        </div>
+      </div>
+      <div id="s3" class="clip scene" data-start="1.35" data-duration="0.9" data-track-index="2">
+        <img src="assets/photo4.jpg" alt="" style="object-position: 50% 40%" />
+        <div class="shade"></div>
+        <div class="caption">
+          <div class="kicker">Expert-led sessions</div>
+          <div class="word"><span>Health</span><br /><span>&amp; <em>hygiene</em></span></div>
+        </div>
+      </div>
+      <div id="s4" class="clip scene" data-start="2.1" data-duration="0.9" data-track-index="3">
+        <img src="assets/photo5.jpg" alt="" style="object-position: 70% 45%" />
+        <div class="shade"></div>
+        <div class="caption">
+          <div class="kicker">Confidence, every day</div>
+          <div class="word"><span>Dignity</span><br /><span>for <em>her</em></span></div>
+        </div>
+      </div>
+      <div id="s5" class="clip scene" data-start="2.85" data-duration="1.1" data-track-index="4">
+        <img src="assets/photo2.jpg" alt="" style="object-position: 50% 55%" />
+        <div class="shade"></div>
+        <div class="caption">
+          <div class="kicker">Hundreds of girls</div>
+          <div class="word"><span>One</span><br /><span><em>mission</em></span></div>
+        </div>
+      </div>
+
+      <div id="vignette" class="clip" data-start="0" data-duration="3.95" data-track-index="5"></div>
+
+      <div id="topbar" class="clip" data-start="0" data-duration="3.95" data-track-index="6">
+        <span><span class="dot"></span>Unipads Foundation</span>
+        <span>CSR · 2026</span>
+      </div>
+      <div id="progress" class="clip" data-start="0" data-duration="3.95" data-track-index="7"><i></i></div>
+
+      <div id="flash" class="clip" data-start="0" data-duration="4.9" data-track-index="8"></div>
+
+      <div id="endcard" class="clip" data-start="3.6" data-duration="1.3" data-track-index="9">
+        <div class="brand">Unipads<sup>®</sup></div>
+        <div class="found">Foundation</div>
+        <div class="rule"></div>
+        <div class="program">The School Miles</div>
+        <div class="tagline">Periods won't stop<br />her <em>education</em><br />anymore.</div>
+        <div class="csr">A CSR initiative by <b>WEALTH FIRST</b></div>
+      </div>
+
+      <audio
+        id="bgm"
+        src="assets/bgm.mp3"
+        data-start="0"
+        data-duration="4.9"
+        data-track-index="10"
+        data-volume="1"
+      ></audio>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.set("#flash", { opacity: 0 }, 0);
+      const BEAT = 0.375;
+      const FULL = "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)";
+
+      // Scene choreography: [id, cut time, wipe direction]
+      const scenes = [
+        ["#s1", 0, null],
+        ["#s2", 0.75, "up"],
+        ["#s3", 1.5, "left"],
+        ["#s4", 2.25, "up"],
+        ["#s5", 3.0, "right"],
+      ];
+      const hidden = {
+        up: "polygon(0% 100%, 100% 115%, 100% 100%, 0% 100%)",
+        left: "polygon(100% 0%, 100% 0%, 100% 100%, 115% 100%)",
+        right: "polygon(0% 0%, -15% 0%, 0% 100%, 0% 100%)",
+      };
+
+      scenes.forEach(([id, t, dir], i) => {
+        const img = id + " img";
+        const words = id + " .word span";
+        const kicker = id + " .kicker";
+        const start = dir ? t - 0.15 : 0;
+
+        // Diagonal wipe in, landing exactly on the cut
+        if (dir) {
+          tl.fromTo(id, { clipPath: hidden[dir] }, { clipPath: FULL, duration: 0.15, ease: "power3.in" }, start);
+        }
+        // Ken Burns: alternating push-in / pull-out with a slight drift
+        const zoomIn = i % 2 === 0;
+        tl.fromTo(
+          img,
+          { scale: zoomIn ? 1.0 : 1.14, xPercent: zoomIn ? -1 : 1, rotation: zoomIn ? -0.6 : 0.6 },
+          { scale: zoomIn ? 1.14 : 1.0, xPercent: zoomIn ? 1 : -1, rotation: 0, duration: 1.0, ease: "none" },
+          start
+        );
+        // Kinetic type
+        tl.fromTo(kicker, { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.3, ease: "power3.out" }, t + 0.02);
+        tl.fromTo(
+          words,
+          { yPercent: 110, opacity: 0 },
+          { yPercent: 0, opacity: 1, duration: 0.4, ease: "expo.out", stagger: 0.07 },
+          t + 0.04
+        );
+        // Flash + punch on each cut
+        if (dir) {
+          tl.fromTo("#flash", { opacity: 0.55 }, { opacity: 0, duration: 0.22, ease: "power2.out", immediateRender: false }, t);
+        }
+      });
+
+      tl.fromTo("#topbar", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 0.05);
+      tl.fromTo("#progress i", { scaleX: 0 }, { scaleX: 1, duration: 3.75, ease: "none" }, 0);
+
+      // End card: iris open on the impact beat
+      tl.fromTo(
+        "#endcard",
+        { clipPath: "circle(0% at 50% 60%)" },
+        { clipPath: "circle(120% at 50% 60%)", duration: 0.35, ease: "power3.in" },
+        3.4
+      );
+      tl.fromTo("#flash", { opacity: 0.8 }, { opacity: 0, duration: 0.35, ease: "power2.out", immediateRender: false }, 3.75);
+      tl.fromTo("#endcard .brand", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.4, ease: "expo.out" }, 3.72);
+      tl.fromTo("#endcard .found", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: "expo.out" }, 3.78);
+      tl.fromTo("#endcard .rule", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "power3.out" }, 3.85);
+      tl.fromTo("#endcard .program", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.5, ease: "expo.out" }, 3.85);
+      tl.fromTo("#endcard .tagline", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.5, ease: "expo.out" }, 3.92);
+      tl.fromTo("#endcard .csr", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" }, 4.1);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
