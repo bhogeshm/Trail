@@ -1,44 +1,48 @@
-# Navratri — cinematic sound design & score
+# Navratri: cinematic sound design (no background music)
 
 - `navratri_final.mp4`: the finished film. It's 1920×1080 at 30 fps, 46.8 s long, with a 2.35:1 letterbox, rendered with HyperFrames.
-- `navratri_score_mix.wav`: the full mix on its own (48 kHz, −13 LUFS, −1.5 dBTP).
-- `stems/`: separate music, drums and SFX stems, so you can remix them in any editor.
+- `navratri_sound_design_mix.wav`: the full mix on its own (48 kHz, about −13 LUFS).
+- `stems/`: three separate tracks, so you can rebalance them in any editor.
+  - `foreground_fx`: close-up effects.
+  - `rhythm_perc`: the on-screen dhol, dandiya, claps and ghungroo.
+  - `ambience`: background air and crowd.
 
-All of the audio is synthesized from code in `audio/`. It uses no samples or stock libraries, so it has no licensing strings attached.
+There's no background music. The rhythm comes only from what's on screen: the dhol player, the claps, the dandiya
+sticks, the ghungroo (anklet bells) and the footsteps. All of it follows the 120 BPM grid that the cuts are locked to.
+Every sound is synthesized in code in `audio/`, with no samples, so there are no licensing issues.
 
-## The edit (beat-locked)
-The original cut already sat almost on a 120 BPM / 2-second bar grid. Every cut was
-snapped onto that grid, with a beat every 0.5 s starting at 0.1 s. Each shot is trimmed by a few frames or slowed slightly (at most 11%, on the dandiya
-and DJ shots). The last frame is held for 2 s so the film can resolve. See `audio/edit.py`.
+Each hit was timed by stepping through the frames and measuring motion and brightness. The times below are film times.
 
-## Cue sheet
 | Time | Picture | Sound |
 |---|---|---|
-| 0.0 | Girl in the van | Letterbox curtain opens. Tanpura drone, airy pad, van cabin tone |
-| 1.0 / 1.5 / **2.0** | Basket falls | **tap · tap · THUMP**: deep woody knocks, then the basket lands exactly on frame 60. Sub hit, wicker crunch, then marigolds patter and bounce |
-| 3.67–5.2 | Blue indicator | Relay **tick** (lamp on) and **tock** (lamp off), synced to each blink |
-| 5.6 | Tyre on gravel | Weight thump + stones crunching |
-| 7.6 | Gurkha on wet rangoli | Wet tyre roll, engine idle, heartbeat dhol |
-| 10.1 | Traveller door | Latch click + swing; a riser and dhol roll build to… |
-| **11.6** | Dhol close-up | **DROP**: a beat of silence, then impact + warm light flash. Full garba groove starts (dhol dhum/tak, dandiya clacks, bass, harmonium) |
-| 13.6 | Women clapping | Claps come forward; the shehnai + flute hook enters |
-| 15.6 | Dandiya cross | Hero stick **CLACK** with ghungroo jingle |
-| 19.1 | DJ | Four-on-the-floor kick, sidechain pump, off-beat supersaw stabs |
-| 21.1 / 23.1 | Gurkha | Engine rev, then headlight snap with a cool light flash |
-| 23.35 | Garba ground | Crowd cheer + cymbal |
-| 25.1 | Durga temple | Breakdown: temple bell, aarti hand-bell, shankh (conch), alaap on the shehnai |
-| 28.0 → **28.1** | Blackout → aerial | Dhol roll, a 0.1 s vacuum, then **BOOM**. Searchlight whooshes, second drop |
-| 34.1 / 36.9 | Solo dancer / couple | Skirt-spin whoosh / gulal colour-burst *poof* + pink flash |
-| 37.6 | DJ stage | Cheer, the hook repeats an octave up |
-| 40.6 | Headlight + marigold | Music falls away; the indicator clicks return (echoing the opening) under a riser |
-| **42.6** | Fleet line-up | Finale: impact, dhol “DHA… DHA-DHAAA”, lights-on thunk, bell, conch, D-major chord ringing out. Letterbox closes |
+| 0.0 | Girl in the van | Cabin room tone, dupatta rustle, bangles |
+| 1.0 / 1.5 / **2.00** | Basket falls | **tap · tap · THUMP**. The basket hits the ground on frame 60, followed by wicker crunch, the basket settling (2.27) and 18 marigolds bouncing and rolling away |
+| 3.67 / 4.17 / 4.67 / 5.17 | Blue indicator | Relay **tick** when the lamp goes on, **tock** when it goes off. The ticking carries on softly under the next shot to keep the pulse |
+| 5.6 | Tyre on gravel | Weight thump, gravel crunch, stones popping from the tread |
+| 7.6 / 9.15 | Gurkha on wet rangoli | Wet tyre roll, diesel idle, **rangoli powder puff**. A distant festival dhol starts to be heard |
+| 10.35 / 10.68 / **11.30** | Traveller door | Two footsteps, the door swings, **door slam and latch**, then a suck-in to silence |
+| **11.6** / 11.9 / 13.07 | Dhol close-up | Impact + cheer. The dholi plays: the visible stick strikes land on those three frames, and the full garba pattern plays around them |
+| 14.62 / 14.93 / 15.17 / 15.42 | Five women | Footsteps and anklets on each step, arm swishes, then **5-person claps with bangles**, a little out of unison, on each measured hand contact |
+| 15.65 → **16.07** | Dandiya cross | Stick swing whoosh, then the **CLACK** at contact, the bells on the sticks shaking, and the ribbons fluttering |
+| 16.88 / 17.55 / 17.85 / 18.2 / 18.6 | Blue van | Sliding door rolls open and thunks. Dancers hop out, with a footfall and anklet burst each. Cheer, then sticks raised together |
+| 19.3–19.6 / 20.0 / 20.3–20.9 | DJ | Mixer clicks, arm whoosh, **stage lights switch** (hit + LED hum), crowd roar, fist-pump accents |
+| 21.50 / 22.00 / **23.09** | Gurkha | Amber indicator tick/tock, engine rev, **headlight snap** |
+| 23.35 | Whole garba ground | Big cheer, mass claps on every beat, dandiya and ghungroo from the crowd |
+| 25.1–27.9 | Durga temple | Temple bell, **shankh** (conch), aarti hand-bell, the seated musicians' dhol, **manjira** (hand cymbals), dancers' ghungroo and claps, all in a temple reverb |
+| **28.1** | Blackout → aerial | 0.1 s of silence, then a **BOOM**. High-altitude wind, searchlight sweeps, a distant crowd garba below |
+| 31.1–33.7 | Pink smoke dandiya | Smoke-cannon hiss, then the hero pair's six stick strikes, the crowd's dandiya and dhol |
+| 34.47 / 34.85 / 35.23 | Solo dancer | Overhead stick clacks, steps with anklets, a **skirt spin** at 35.0 |
+| 36.7 / **36.85** / 37.12 / 37.4 | Couple | Stick strikes. The strike at 36.85 bursts the **gulal** (powder poof, bangles, a small cheer) |
+| 37.6–40.6 | Main stage | Crowd roar, gulal throws, skirt twirls, the full festival rhythm |
+| 41.30 / 41.73 / 42.17 | Headlight + marigold | **The hush.** The festival falls far away and the indicator ticks ring out on their own, echoing the opening |
+| **42.6** | Fleet line-up | Impact, lights-on thunk, cheer, dhol, dandiya and claps together on "DHA… DHA-DHAAA", then a bell as the letterbox closes |
 
 ## Re-rendering
 ```bash
 pip install numpy scipy pillow
-cd audio && bash master.sh                 # -> mix.wav (+ stems)
-python3 tools/mkedit.py                    # expects in.mp4 + audio/edit.py alongside; -> edit.mp4
+cd audio && bash master_sd.sh              # -> mix.wav + stems (needs edit.py from this folder)
+python3 tools/mkedit.py                    # beat-locked picture edit -> edit.mp4 (needs the source video as in.mp4)
 # copy edit.mp4 + mix.wav + gsap.min.js (npm i gsap) into hyperframes/assets/
 cd hyperframes && HYPERFRAMES_BROWSER_PATH=<chrome> npx hyperframes render -q high -o out.mp4
 ```
-To change timing or levels, edit `audio/score.py`. Each cue is one line, and the `sfx.add(..., time, gain, pan)` arguments control it.
+Every cue is one `add(bus, sound, time, gain, pan, ...)` line in `audio/sd.py`, so moving or rebalancing a sound is a one-line edit.
