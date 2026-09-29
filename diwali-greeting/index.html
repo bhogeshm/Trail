@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=1080, height=1920" />
+  <title>Happy Diwali Greeting</title>
+  <link rel="stylesheet" href="fonts/fonts.css" />
+  <style>
+    :root {
+      --ivory: #f1ebe1;
+      --ivory-deep: #e7ddcd;
+      --terracotta: #8a4336;
+      --brown: #4f3127;
+      --gold: #b69457;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      background: var(--ivory);
+    }
+    #stage {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      background:
+        radial-gradient(120% 70% at 78% 28%, #f7f2ea 0%, #f1ebe1 45%, #e9e0d2 100%);
+    }
+    .layer {
+      position: absolute;
+      inset: 0;
+      width: 1080px;
+      height: 1920px;
+    }
+    svg { display: block; }
+
+    /* ---------- typography (reserved open ivory area) ---------- */
+    #copy {
+      position: absolute;
+      left: 300px;
+      right: 50px;
+      top: 360px;
+      text-align: center;
+      color: var(--brown);
+    }
+    .message {
+      font-family: "Jost", "Helvetica Neue", Arial, sans-serif;
+      font-weight: 300;
+      font-size: 44px;
+      line-height: 1.52;
+      letter-spacing: 0.015em;
+      color: #5b3b2f;
+      margin: 0;
+    }
+    .message .line { display: block; }
+    .greeting {
+      font-family: "Playfair Display", Georgia, serif;
+      font-weight: 400;
+      font-size: 104px;
+      line-height: 1;
+      white-space: nowrap;
+      letter-spacing: 0.005em;
+      color: var(--terracotta);
+      margin: 54px 0 0;
+    }
+    .rule {
+      width: 170px;
+      height: 14px;
+      margin: 40px auto 30px;
+    }
+    .signature { margin: 0; }
+    .sig-name {
+      display: block;
+      font-family: "Jost", "Helvetica Neue", Arial, sans-serif;
+      font-weight: 500;
+      font-size: 36px;
+      letter-spacing: 0.03em;
+      color: var(--brown);
+    }
+    .sig-title {
+      display: block;
+      margin-top: 8px;
+      font-family: "Jost", "Helvetica Neue", Arial, sans-serif;
+      font-weight: 300;
+      font-size: 28px;
+      letter-spacing: 0.08em;
+      color: #6a4a3c;
+    }
+
+    /* initial states (GSAP drives everything from here) */
+    .wave, .diya-wrap, .flame-part, .mandala, .reveal, .rule { opacity: 0; }
+  </style>
+</head>
+<body>
+<div id="stage" data-composition-id="diwali" data-start="0" data-duration="10" data-width="1080" data-height="1920">
+
+  <!-- ================= ARTWORK ================= -->
+  <svg class="layer" viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <!-- paper gradients -->
+      <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#e6dac4" />
+        <stop offset="0.55" stop-color="#d8c6a4" />
+        <stop offset="1" stop-color="#c9b089" />
+      </linearGradient>
+      <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#d9c29a" />
+        <stop offset="0.5" stop-color="#c6a773" />
+        <stop offset="1" stop-color="#a9874f" />
+      </linearGradient>
+      <linearGradient id="g3" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#e9dfcd" />
+        <stop offset="0.6" stop-color="#dccdb2" />
+        <stop offset="1" stop-color="#cdb893" />
+      </linearGradient>
+      <linearGradient id="g4" x1="0" y1="0" x2="1" y2="0.6">
+        <stop offset="0" stop-color="#a38a74" />
+        <stop offset="0.45" stop-color="#bba58f" />
+        <stop offset="1" stop-color="#d6c6b2" />
+      </linearGradient>
+      <linearGradient id="g5" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#b9a38c" />
+        <stop offset="0.5" stop-color="#d9cbb8" />
+        <stop offset="1" stop-color="#ece3d5" />
+      </linearGradient>
+      <linearGradient id="edgeGold" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#9c7a3e" />
+        <stop offset="1" stop-color="#6f5226" />
+      </linearGradient>
+
+      <!-- soft paper shadow -->
+      <filter id="paper" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="14" />
+        <feOffset dx="10" dy="16" result="blur" />
+        <feComponentTransfer><feFuncA type="linear" slope="0.28" /></feComponentTransfer>
+        <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+      </filter>
+      <filter id="paperSoft" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="9" />
+        <feOffset dx="4" dy="10" />
+        <feComponentTransfer><feFuncA type="linear" slope="0.22" /></feComponentTransfer>
+        <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+      </filter>
+
+      <clipPath id="clipL4">
+        <path d="M-320 150 L 0 150 C 110 360, -10 560, 50 800 C 110 1080, 240 1340, 500 1510 C 720 1650, 930 1690, 1080 1700 L 1320 1920 L 1320 2160 L -320 2160 L -320 0 Z" />
+      </clipPath>
+    </defs>
+
+    <!-- faint mandala: top-right corner -->
+    <g class="mandala" id="mandalaTR" transform="translate(1010 60)" fill="none" stroke="#b7a28c" stroke-width="1.6" stroke-linecap="round"></g>
+    <!-- faint mandala: small ornaments in open field -->
+    <g class="mandala" id="mandalaMid" transform="translate(965 1180)" fill="none" stroke="#bfab95" stroke-width="1.3"></g>
+    
+    <!-- ===== layered paper curves (back to front) ===== -->
+    <g class="wave" id="w1" filter="url(#paper)">
+      <path fill="url(#g1)" d="M-320 -200 L 0 -200 L 350 0 C 440 250, 250 430, 290 720 C 330 1000, 450 1200, 720 1320 C 900 1400, 1000 1430, 1080 1440 L 1320 1450 L 1320 1920 L 1320 2160 L -320 2160 L -320 0 Z" />
+    </g>
+    <g class="wave" id="w2" filter="url(#paper)">
+      <path fill="url(#edgeGold)" d="M-320 -200 L 0 -200 L 262 0 C 350 260, 150 440, 206 724 C 262 1010, 390 1224, 660 1366 C 850 1462, 985 1508, 1080 1522 L 1320 1920 L 1320 2160 L -320 2160 L -320 0 Z" />
+      <path fill="url(#g2)" d="M-320 -200 L 0 -200 L 252 0 C 340 260, 140 440, 196 726 C 252 1014, 380 1232, 650 1374 C 842 1470, 980 1516, 1080 1530 L 1320 1920 L 1320 2160 L -320 2160 L -320 0 Z" />
+    </g>
+    <g class="wave" id="w3" filter="url(#paper)">
+      <path fill="url(#g3)" d="M-320 -200 L 0 -200 L 172 0 C 256 280, 64 470, 120 750 C 176 1036, 316 1280, 574 1428 C 770 1538, 950 1584, 1080 1604 L 1320 1920 L 1320 2160 L -320 2160 L -320 0 Z" />
+    </g>
+    <g class="wave" id="w4" filter="url(#paper)">
+      <path fill="url(#g4)" d="M-320 150 L 0 150 C 110 360, -10 560, 50 800 C 110 1080, 240 1340, 500 1510 C 720 1650, 930 1690, 1080 1700 L 1320 1920 L 1320 2160 L -320 2160 L -320 0 Z" />
+      <!-- fine feather-like line texture -->
+      <g clip-path="url(#clipL4)" id="feather" stroke="#efe6da" stroke-opacity="0.35" stroke-width="1.2" fill="none"></g>
+    </g>
+    <g class="wave" id="w5" filter="url(#paperSoft)">
+      <path fill="url(#edgeGold)" d="M-320 1470 L 0 1470 C 220 1640, 520 1760, 780 1804 C 920 1828, 1010 1832, 1080 1830 L 1320 1920 L 1320 2160 L -320 2160 L -320 0 Z" opacity="0.9" />
+      <path fill="url(#g5)" d="M-320 1480 L 0 1480 C 220 1650, 520 1770, 780 1814 C 920 1838, 1010 1842, 1080 1840 L 1320 1920 L 1320 2160 L -320 2160 L -320 0 Z" />
+    </g>
+
+    <!-- faint mandala: bottom-left corner (over the soft paper) -->
+    <g class="mandala" id="mandalaBL" transform="translate(70 1860)" fill="none" stroke="#f3ebdf" stroke-opacity="0.75" stroke-width="1.6"></g>
+  </svg>
+
+  <!-- ================= DIYA ================= -->
+  <div class="diya-wrap" id="diya" style="position:absolute; left:300px; top:1110px; width:560px; height:560px;">
+    <svg viewBox="0 0 560 560" width="560" height="560" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="overflow:visible">
+      <defs>
+        <linearGradient id="bowl" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#8f4b3e" />
+          <stop offset="0.6" stop-color="#7a3a2f" />
+          <stop offset="1" stop-color="#5f2b23" />
+        </linearGradient>
+        <linearGradient id="bowlSheen" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#000" stop-opacity="0.18" />
+          <stop offset="0.35" stop-color="#fff" stop-opacity="0.06" />
+          <stop offset="0.7" stop-color="#000" stop-opacity="0" />
+          <stop offset="1" stop-color="#000" stop-opacity="0.22" />
+        </linearGradient>
+        <linearGradient id="opening" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#2a1612" />
+          <stop offset="1" stop-color="#4a241d" />
+        </linearGradient>
+        <linearGradient id="fOuter" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#b98579" />
+          <stop offset="1" stop-color="#8e5549" />
+        </linearGradient>
+        <linearGradient id="fMid" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#c46a36" />
+          <stop offset="1" stop-color="#9c4a26" />
+        </linearGradient>
+        <linearGradient id="fInner" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#f6b449" />
+          <stop offset="1" stop-color="#e58a2c" />
+        </linearGradient>
+        <radialGradient id="fCore" cx="0.5" cy="0.72" r="0.6">
+          <stop offset="0" stop-color="#fffdf6" />
+          <stop offset="1" stop-color="#fbe7bf" />
+        </radialGradient>
+        <radialGradient id="warm" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stop-color="#f3b458" stop-opacity="0.22" />
+          <stop offset="1" stop-color="#f3b458" stop-opacity="0" />
+        </radialGradient>
+        <filter id="diyaShadow" x="-30%" y="-30%" width="160%" height="170%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="16" />
+          <feOffset dx="8" dy="22" />
+          <feComponentTransfer><feFuncA type="linear" slope="0.32" /></feComponentTransfer>
+          <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
+        <filter id="flameShadow" x="-50%" y="-30%" width="200%" height="160%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="6" />
+          <feOffset dx="4" dy="8" />
+          <feComponentTransfer><feFuncA type="linear" slope="0.25" /></feComponentTransfer>
+          <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
+        <clipPath id="bowlClip">
+          <path d="M10 300 C 90 286, 190 300, 280 300 C 370 300, 470 286, 550 300 C 530 440, 420 520, 280 522 C 140 520, 30 440, 10 300 Z" />
+        </clipPath>
+      </defs>
+
+      <!-- very restrained warm light -->
+      <circle id="warmth" cx="280" cy="170" r="190" fill="url(#warm)" class="flame-part" />
+
+      <!-- flame: nested paper-cut teardrops -->
+      <g id="flame" transform="translate(280 292)" filter="url(#flameShadow)">
+        <path class="flame-part" id="fl1" fill="url(#fOuter)" d="M0 -262 C 26 -200, 86 -140, 86 -76 C 86 -30, 50 0, 0 0 C -50 0, -86 -30, -86 -76 C -86 -140, -26 -200, 0 -262 Z" />
+        <path class="flame-part" id="fl2" fill="url(#fMid)" d="M0 -214 C 20 -164, 64 -116, 64 -64 C 64 -26, 36 -2, 0 -2 C -36 -2, -64 -26, -64 -64 C -64 -116, -20 -164, 0 -214 Z" />
+        <path class="flame-part" id="fl3" fill="url(#fInner)" d="M0 -168 C 14 -128, 44 -92, 44 -52 C 44 -22, 24 -4, 0 -4 C -24 -4, -44 -22, -44 -52 C -44 -92, -14 -128, 0 -168 Z" />
+        <g id="coreWrap">
+          <path class="flame-part" id="fl4" fill="url(#fCore)" d="M0 -110 C 8 -86, 24 -64, 24 -38 C 24 -18, 13 -6, 0 -6 C -13 -6, -24 -18, -24 -38 C -24 -64, -8 -86, 0 -110 Z" />
+        </g>
+      </g>
+
+      <!-- bowl -->
+      <g filter="url(#diyaShadow)">
+        <path fill="url(#bowl)" d="M10 300 C 90 286, 190 300, 280 300 C 370 300, 470 286, 550 300 C 530 440, 420 520, 280 522 C 140 520, 30 440, 10 300 Z" />
+        <path fill="url(#bowlSheen)" d="M10 300 C 90 286, 190 300, 280 300 C 370 300, 470 286, 550 300 C 530 440, 420 520, 280 522 C 140 520, 30 440, 10 300 Z" />
+        <!-- dark opening / rim -->
+        <path fill="url(#opening)" d="M10 300 C 70 262, 180 250, 280 250 C 380 250, 490 262, 550 300 C 470 286, 370 300, 280 300 C 190 300, 90 286, 10 300 Z" />
+        <path fill="none" stroke="#a45c4c" stroke-width="2" d="M10 300 C 90 286, 190 300, 280 300 C 370 300, 470 286, 550 300" />
+        <!-- ornamental pattern -->
+        <g id="pattern" clip-path="url(#bowlClip)" fill="none" stroke="#e2c3b0" stroke-opacity="0.85" stroke-width="1.6"></g>
+      </g>
+    </svg>
+  </div>
+
+  <!-- ================= TYPOGRAPHY ================= -->
+  <div id="copy">
+    <p class="message">
+      <span class="line reveal msg">Wishing you renewed</span>
+      <span class="line reveal msg">opportunities, progress</span>
+      <span class="line reveal msg">and continued success</span>
+    </p>
+    <h1 class="greeting reveal" id="greeting">Happy Diwali!</h1>
+    <svg class="rule" id="rule" viewBox="0 0 170 14" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <line x1="0" y1="7" x2="72" y2="7" stroke="#b69457" stroke-width="1.4" />
+      <path d="M85 1 L91 7 L85 13 L79 7 Z" fill="#b69457" />
+      <line x1="98" y1="7" x2="170" y2="7" stroke="#b69457" stroke-width="1.4" />
+    </svg>
+    <p class="signature">
+      <span class="sig-name reveal" id="sigName">Prasan Firodia,</span>
+      <span class="sig-title reveal" id="sigTitle">Managing Director</span>
+    </p>
+  </div>
+
+  <script src="vendor/gsap.min.js"></script>
+  <script src="ornaments.js"></script>
+  <script>
+    (function () {
+      var tl = gsap.timeline({ paused: true, defaults: { ease: "sine.out" } });
+
+      // ---- 0–3s : artwork assembles ----
+      tl.fromTo("#w1", { opacity: 0, x: -140, y: -40 }, { opacity: 1, x: 0, y: 0, duration: 2.4, ease: "power2.out" }, 0.0);
+      tl.fromTo("#w2", { opacity: 0, x: -160, y: 30 },  { opacity: 1, x: 0, y: 0, duration: 2.3, ease: "power2.out" }, 0.18);
+      tl.fromTo("#w3", { opacity: 0, x: -180, y: 60 },  { opacity: 1, x: 0, y: 0, duration: 2.2, ease: "power2.out" }, 0.36);
+      tl.fromTo("#w4", { opacity: 0, x: -200, y: 90 },  { opacity: 1, x: 0, y: 0, duration: 2.1, ease: "power2.out" }, 0.54);
+      tl.fromTo("#w5", { opacity: 0, x: 60,   y: 140 }, { opacity: 1, x: 0, y: 0, duration: 2.0, ease: "power2.out" }, 0.72);
+
+      tl.fromTo("#diya", { opacity: 0, y: 34 }, { opacity: 1, y: 0, duration: 1.8, ease: "power2.out" }, 0.9);
+
+      // nested flame reveal, growing gently from its base
+      var flames = ["#fl1", "#fl2", "#fl3", "#fl4"];
+      flames.forEach(function (sel, i) {
+        tl.fromTo(sel,
+          { opacity: 0, scale: 0.55, transformOrigin: "50% 100%" },
+          { opacity: 1, scale: 1, duration: 1.1, ease: "power2.out" },
+          1.55 + i * 0.22);
+      });
+      tl.fromTo("#warmth", { opacity: 0 }, { opacity: 1, duration: 1.4 }, 2.2);
+
+      // mandala line-art draws in gradually
+      tl.fromTo(".mandala", { opacity: 0 }, { opacity: 1, duration: 1.6, stagger: 0.2 }, 0.8);
+      tl.fromTo(".mandala [pathLength]", { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 2.0, ease: "power1.inOut" }, 0.8);
+
+      // ---- 3–5s : message ----
+      tl.fromTo(".msg", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 1.4, stagger: 0.28, ease: "power2.out" }, 3.0);
+
+      // ---- 5–6s : greeting ----
+      tl.fromTo("#greeting", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" }, 5.0);
+      tl.fromTo("#rule", { opacity: 0, scaleX: 0.3 }, { opacity: 1, scaleX: 1, duration: 1.0, ease: "power2.out" }, 5.55);
+
+      // ---- 6–7s : signature ----
+      tl.fromTo("#sigName",  { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 1.0, ease: "power2.out" }, 6.0);
+      tl.fromTo("#sigTitle", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 1.0, ease: "power2.out" }, 6.25);
+
+      // ---- flicker: extremely subtle, only the small inner core, deterministic ----
+      var seed = 7;
+      function rand() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+      var t = 2.9;
+      while (t < 9.9) {
+        var d = 0.18 + rand() * 0.22;
+        tl.to("#coreWrap", {
+          scaleY: 0.955 + rand() * 0.07,
+          scaleX: 0.985 + rand() * 0.03,
+          opacity: 0.9 + rand() * 0.1,
+          transformOrigin: "50% 100%",
+          duration: d,
+          ease: "sine.inOut"
+        }, t);
+        t += d;
+      }
+      tl.to("#coreWrap", { scaleY: 1, scaleX: 1, opacity: 1, duration: 10 - t, ease: "sine.inOut" }, t);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["diwali"] = tl;
+    })();
+  </script>
+</div>
+</body>
+</html>
