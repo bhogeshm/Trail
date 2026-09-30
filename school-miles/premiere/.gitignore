@@ -1,0 +1,4 @@
+*.zip
+*.mov
+pkg/media/
+pkg/fonts/

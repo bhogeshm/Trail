@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Montserrat"; font-weight: 500; font-style: normal; font-display: block; src: url("assets/fonts/montserrat-latin-500-normal.woff2") format("woff2"); }
+      @font-face { font-family: "Montserrat"; font-weight: 700; font-style: normal; font-display: block; src: url("assets/fonts/montserrat-latin-700-normal.woff2") format("woff2"); }
+      @font-face { font-family: "Montserrat"; font-weight: 800; font-style: normal; font-display: block; src: url("assets/fonts/montserrat-latin-800-normal.woff2") format("woff2"); }
+      :root {
+        --accent: #d6232f; /* Wealth First red, used sparingly */
+        --ink: #0d0b1f;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: transparent;
+        font-family: "Montserrat", sans-serif;
+        color: #fff;
+      }
+
+      /* Footage */
+      video.shot {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+      }
+      video.shot.soft { z-index: 2; }
+      video.shot.card { z-index: 3; }
+
+      /* Legibility: bottom scrim + gentle vignette over footage */
+      #scrim {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        pointer-events: none;
+        background:
+          linear-gradient(0deg, rgba(8, 6, 20, 0.86) 0%, rgba(8, 6, 20, 0.55) 22%, rgba(8, 6, 20, 0) 44%),
+          radial-gradient(ellipse 120% 85% at 50% 45%, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.38) 100%);
+      }
+      #banner-dim {
+        position: absolute;
+        inset: 0;
+        z-index: 6;
+        background: rgba(10, 8, 28, 0.72);
+      }
+
+      /* Title cards */
+      .title {
+        position: absolute;
+        left: 88px;
+        right: 88px;
+        bottom: 360px;
+        z-index: 10;
+      }
+      .rule {
+        display: block;
+        width: 96px;
+        height: 6px;
+        background: var(--accent);
+        margin-bottom: 34px;
+        transform-origin: 0 50%;
+      }
+      .mask { display: block; overflow: hidden; padding-bottom: 6px; }
+      .head {
+        display: block;
+        font-weight: 800;
+        font-size: 104px;
+        line-height: 1.02;
+        letter-spacing: 0.01em;
+        text-shadow: 0 4px 30px rgba(0, 0, 0, 0.35);
+      }
+      .head.phrase { font-size: 80px; }
+      .sub {
+        display: block;
+        margin-top: 22px;
+        font-weight: 500;
+        font-size: 38px;
+        line-height: 1.3;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+        color: rgba(255, 255, 255, 0.92);
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.45);
+      }
+
+      /* Closing lockup */
+      #t6 {
+        position: absolute;
+        inset: 0;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      #t6 .kicker {
+        display: block;
+        font-weight: 700;
+        font-size: 30px;
+        letter-spacing: 0.42em;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 28px;
+      }
+      #t6 .head { font-size: 112px; letter-spacing: 0.02em; white-space: nowrap; }
+      #t6 .rule { margin: 40px auto 36px; transform-origin: 50% 50%; }
+      #t6 .sub { margin-top: 0; font-size: 40px; letter-spacing: 0.1em; }
+
+      #fade {
+        position: absolute;
+        inset: 0;
+        z-index: 40;
+        background: #000;
+        opacity: 0;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="26.8"
+      data-width="1080"
+      data-height="1920"
+    >
+      <!-- ============ PICTURE (track 0/1) ============ -->
+      <!-- Block 1 · awareness session -->
+      <!-- Block 2 · session collages -->
+      <!-- Block 3 · kit distribution -->
+      <!-- Block 4 · girls with their kits -->
+      <!-- Block 5 · classroom -->
+      <!-- Block 6 · campaign banner (dissolves in) -->
+      <!-- Block 7 · CSR end card (dissolves in) -->
+
+      <div id="scrim" class="clip" data-start="0" data-duration="22.7" data-track-index="2"></div>
+      <div id="banner-dim" class="clip" data-start="19.6" data-duration="3.4" data-track-index="3"></div>
+
+      <!-- ============ TITLES (track 4) ============ -->
+
+
+      <!-- ============ SOUND ============ -->
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+
+
+      // Banner: dissolve in, slow push, softened behind the lockup
+
+
+      tl.fromTo("#banner-dim", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power1.inOut" }, 19.6);
+
+      // End card: clean cross-dissolve
+      tl.fromTo("#scrim", { opacity: 1 }, { opacity: 0, duration: 0.2 }, 22.5);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
