@@ -1,0 +1,190 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face { font-family: "Manrope"; src: url("assets/fonts/manrope-latin-500-normal.woff2") format("woff2"); font-weight: 500; }
+        @font-face { font-family: "Manrope"; src: url("assets/fonts/manrope-latin-600-normal.woff2") format("woff2"); font-weight: 600; }
+        @font-face { font-family: "Manrope"; src: url("assets/fonts/manrope-latin-700-normal.woff2") format("woff2"); font-weight: 700; }
+        @font-face { font-family: "Manrope"; src: url("assets/fonts/manrope-latin-800-normal.woff2") format("woff2"); font-weight: 800; }
+        @font-face { font-family: "Space Grotesk"; src: url("assets/fonts/space-grotesk-latin-500-normal.woff2") format("woff2"); font-weight: 500; }
+        @font-face { font-family: "Space Grotesk"; src: url("assets/fonts/space-grotesk-latin-700-normal.woff2") format("woff2"); font-weight: 700; }
+        @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/jetbrains-mono-latin-500-normal.woff2") format("woff2"); font-weight: 500; }
+        #s2-root {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+          background: #050605;
+          font-family: "Space Grotesk", sans-serif;
+          color: #f4f5f2;
+        }
+        #s2-frozen {
+          position: absolute;
+          inset: 0;
+        }
+        .s2-fw {
+          position: absolute;
+          display: block;
+          font-weight: 700;
+          letter-spacing: -0.04em;
+          line-height: 1;
+          white-space: nowrap;
+          color: #59605b;
+        }
+        #s2-q,
+        #s2-ans {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
+        .s2-line {
+          display: block;
+          font-weight: 700;
+          letter-spacing: -0.045em;
+          line-height: 1.05;
+          white-space: nowrap;
+          overflow: hidden;
+          padding: 0 0.04em 0.06em;
+        }
+        .s2-ch {
+          display: inline-block;
+        }
+        #s2-qline {
+          font-size: 200px;
+        }
+        #s2-l1 {
+          font-size: 104px;
+          color: #c9cfca;
+          margin-bottom: 6px;
+        }
+        #s2-l2wrap {
+          position: relative;
+          display: block;
+        }
+        #s2-l2,
+        #s2-l2g {
+          font-size: 228px;
+        }
+        #s2-l2g {
+          position: absolute;
+          left: 0;
+          top: 0;
+          color: #3ddc84;
+          clip-path: inset(0 100% 0 0);
+        }
+        #s2-bar {
+          position: absolute;
+          left: 0.04em;
+          right: 0.04em;
+          bottom: -6px;
+          height: 22px;
+          border-radius: 11px;
+          background: #3ddc84;
+          transform-origin: 0 50%;
+          box-shadow: 0 0 40px rgba(61, 220, 132, 0.6);
+        }
+        #s2-dot {
+          position: absolute;
+          left: 870px;
+          top: 450px;
+          width: 180px;
+          height: 180px;
+          border-radius: 50%;
+          background: #2f6b43;
+          box-shadow: 0 0 80px rgba(61, 220, 132, 0.45);
+        }
+        #s2-flash {
+          position: absolute;
+          inset: 0;
+          background: #fff;
+        }
+      </style>
+
+      <div id="s2-root" data-composition-id="s2-insight" data-width="1920" data-height="1080">
+        <div id="s2-frozen">
+          <div id="s2-f1" class="s2-fw" style="left:120px;top:150px;font-size:150px">NO COLLECTOR</div>
+          <div id="s2-f2" class="s2-fw" style="left:230px;top:420px;font-size:140px">NO CLEAR DISPOSAL</div>
+          <div id="s2-f3" class="s2-fw" style="left:760px;top:700px;font-size:176px">NO BACKUP</div>
+        </div>
+
+        <div id="s2-q">
+          <div id="s2-qline" class="s2-line" data-split>WHAT DO I DO?</div>
+        </div>
+
+        <div id="s2-ans">
+          <div id="s2-l1" class="s2-line" data-split>WHAT IF WASTE HAD A</div>
+          <div id="s2-l2wrap">
+            <div id="s2-l2" class="s2-line" data-split>NEXT STEP?</div>
+            <div id="s2-l2g" class="s2-line">NEXT STEP?</div>
+            <div id="s2-bar"></div>
+          </div>
+        </div>
+
+        <div id="s2-dot"></div>
+        <div id="s2-flash"></div>
+      </div>
+
+      <script>
+        (function () {
+          const root = document.getElementById("s2-root");
+          root.querySelectorAll("[data-split]").forEach(function (el) {
+            const txt = el.textContent;
+            el.textContent = "";
+            for (const c of txt) {
+              const s = document.createElement("span");
+              s.className = "s2-ch";
+              s.textContent = c === " " ? " " : c;
+              el.appendChild(s);
+            }
+          });
+
+          const tl = gsap.timeline({ paused: true });
+          const S = "#s2-root ";
+
+          // freeze: flash decays, chaos drains to grey, then scatters
+          tl.fromTo(S + "#s2-flash", { opacity: 0.85 }, { opacity: 0, duration: 0.3, ease: "power2.out" }, 0);
+          tl.set(S + "#s2-frozen", { scale: 1.08 }, 0);
+          tl.set(S + "#s2-f1", { rotation: -5 }, 0);
+          tl.set(S + "#s2-f2", { rotation: 3 }, 0);
+          tl.set(S + "#s2-f3", { rotation: -3 }, 0);
+          tl.to(S + "#s2-f1", { x: -900, y: -260, rotation: -18, opacity: 0, filter: "blur(16px)", duration: 0.45, ease: "power3.in" }, 0.2);
+          tl.to(S + "#s2-f2", { x: 1100, y: 40, rotation: 12, opacity: 0, filter: "blur(16px)", duration: 0.45, ease: "power3.in" }, 0.24);
+          tl.to(S + "#s2-f3", { x: -200, y: 520, rotation: -14, opacity: 0, filter: "blur(16px)", duration: 0.45, ease: "power3.in" }, 0.28);
+
+          // WHAT DO I DO?
+          const q = S + "#s2-qline .s2-ch";
+          tl.fromTo(q, { yPercent: 110 }, { yPercent: 0, duration: 0.5, ease: "power4.out", stagger: 0.025 }, 0.42);
+          tl.fromTo(S + "#s2-qline", { scale: 0.96 }, { scale: 1.02, duration: 1.3, ease: "none" }, 0.42);
+          tl.to(q, { yPercent: -110, duration: 0.3, ease: "power3.in", stagger: 0.015 }, 1.5);
+
+          // WHAT IF WASTE HAD A / NEXT STEP?
+          tl.fromTo(S + "#s2-l1 .s2-ch", { yPercent: 110 }, { yPercent: 0, duration: 0.45, ease: "power4.out", stagger: 0.018 }, 1.74);
+          tl.fromTo(S + "#s2-l2 .s2-ch", { yPercent: 110 }, { yPercent: 0, duration: 0.5, ease: "power4.out", stagger: 0.03 }, 2.02);
+          tl.fromTo(S + "#s2-bar", { scaleX: 0 }, { scaleX: 1, duration: 0.42, ease: "expo.inOut" }, 2.48);
+          tl.fromTo(S + "#s2-l2g", { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 0.42, ease: "expo.inOut" }, 2.5);
+          tl.fromTo(S + "#s2-l2wrap", { scale: 1 }, { scale: 1.05, duration: 1.0, ease: "power1.out" }, 2.5);
+
+          // collapse NEXT STEP into the green seed of the logo
+          tl.to(S + "#s2-l1", { opacity: 0, y: -40, duration: 0.3, ease: "power2.in" }, 3.25);
+          tl.to(S + "#s2-l2wrap", { y: -62, duration: 0.3, ease: "power2.inOut" }, 3.3);
+          tl.to(S + "#s2-l2wrap", { scaleX: 0.02, scaleY: 0.4, opacity: 0, duration: 0.32, ease: "expo.in" }, 3.6);
+          tl.fromTo(S + "#s2-dot", { scale: 0 }, { scale: 1, duration: 0.2, ease: "back.out(2)" }, 3.8);
+
+          // retire layers once they leave frame so they never stack with live text
+          tl.set(S + "#s2-frozen", { autoAlpha: 0 }, 0.8);
+          tl.set(S + "#s2-ans", { autoAlpha: 0 }, 0);
+          tl.set(S + "#s2-ans", { autoAlpha: 1 }, 1.72);
+          tl.set(S + "#s2-q", { autoAlpha: 0 }, 1.84);
+
+          window.__timelines["s2-insight"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

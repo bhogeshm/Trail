@@ -1,0 +1,175 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face { font-family: "Manrope"; src: url("assets/fonts/manrope-latin-500-normal.woff2") format("woff2"); font-weight: 500; }
+        @font-face { font-family: "Manrope"; src: url("assets/fonts/manrope-latin-600-normal.woff2") format("woff2"); font-weight: 600; }
+        @font-face { font-family: "Manrope"; src: url("assets/fonts/manrope-latin-700-normal.woff2") format("woff2"); font-weight: 700; }
+        @font-face { font-family: "Manrope"; src: url("assets/fonts/manrope-latin-800-normal.woff2") format("woff2"); font-weight: 800; }
+        @font-face { font-family: "Space Grotesk"; src: url("assets/fonts/space-grotesk-latin-500-normal.woff2") format("woff2"); font-weight: 500; }
+        @font-face { font-family: "Space Grotesk"; src: url("assets/fonts/space-grotesk-latin-700-normal.woff2") format("woff2"); font-weight: 700; }
+        @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/jetbrains-mono-latin-500-normal.woff2") format("woff2"); font-weight: 500; }
+        #s7-root {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+          background: radial-gradient(ellipse 70% 70% at 50% 46%, #12351f 0%, #08150d 55%, #040805 100%);
+          font-family: "Manrope", sans-serif;
+          color: #f4f5f2;
+        }
+        #s7-stage {
+          position: absolute;
+          inset: 0;
+        }
+        #s7-lockup {
+          position: absolute;
+          left: 420px;
+          top: 330px;
+          width: 1080px;
+          height: 190px;
+          display: flex;
+          align-items: center;
+          gap: 40px;
+        }
+        #s7-mark {
+          flex: 0 0 190px;
+          width: 190px;
+          height: 190px;
+          border-radius: 50%;
+          background: #2f6b43;
+          color: #fff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 0 120px rgba(61, 220, 132, 0.45);
+        }
+        #s7-icon {
+          display: block;
+          width: 106px;
+          height: 106px;
+        }
+        #s7-word {
+          display: block;
+          width: 850px;
+          font-size: 160px;
+          font-weight: 800;
+          letter-spacing: -0.045em;
+          line-height: 1;
+          white-space: nowrap;
+          clip-path: inset(0 100% 0 0);
+        }
+        #s7-word b {
+          color: #3ddc84;
+          font-weight: 800;
+        }
+        .s7-ring {
+          position: absolute;
+          left: 420px;
+          top: 330px;
+          width: 190px;
+          height: 190px;
+          border-radius: 50%;
+          border: 3px solid #3ddc84;
+          opacity: 0;
+        }
+        #s7-tag {
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 590px;
+          display: flex;
+          justify-content: center;
+          gap: 15px;
+          font-size: 52px;
+          font-weight: 700;
+          letter-spacing: -0.02em;
+          color: #f4f5f2;
+        }
+        .s7-tw {
+          display: inline-block;
+        }
+        #s7-small {
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 700px;
+          text-align: center;
+          font-family: "JetBrains Mono", monospace;
+          font-size: 27px;
+          font-weight: 500;
+          letter-spacing: 0.2em;
+          color: #7fd69a;
+          text-transform: uppercase;
+        }
+        #s7-rule {
+          position: absolute;
+          left: 860px;
+          top: 676px;
+          width: 200px;
+          height: 3px;
+          background: #3ddc84;
+          transform-origin: 50% 50%;
+        }
+        #s7-flash {
+          position: absolute;
+          inset: 0;
+          background: #d9ffe8;
+          opacity: 0;
+        }
+      </style>
+
+      <div id="s7-root" data-composition-id="s7-final" data-width="1920" data-height="1080">
+        <div id="s7-stage">
+          <div id="s7-r1" class="s7-ring"></div>
+          <div id="s7-r2" class="s7-ring"></div>
+          <div id="s7-lockup">
+            <div id="s7-mark"><span id="s7-icon" data-icon="recycle" data-stroke="2.2"></span></div>
+            <div id="s7-word">Waste<b>Wise</b></div>
+          </div>
+          <div id="s7-tag">
+            <span class="s7-tw">Your</span><span class="s7-tw">waste</span><span class="s7-tw">should</span><span class="s7-tw">always</span><span class="s7-tw">have</span><span class="s7-tw">a</span><span class="s7-tw">reliable</span><span class="s7-tw">path.</span>
+          </div>
+          <div id="s7-rule"></div>
+          <div id="s7-small">Dispose better. Recycle more. Waste less.</div>
+        </div>
+        <div id="s7-flash"></div>
+      </div>
+
+      <script>
+        (function () {
+          window.wwIcons(document.getElementById("s7-root"));
+          const tl = gsap.timeline({ paused: true });
+          const S = "#s7-root ";
+
+          // impact: the seed blooms into the mark at frame centre
+          tl.fromTo(S + "#s7-flash", { opacity: 0.7 }, { opacity: 0, duration: 0.4, ease: "power2.out" }, 0);
+          tl.fromTo(S + "#s7-mark", { x: 445, scale: 0.63 }, { scale: 1, duration: 0.4, ease: "back.out(3)" }, 0);
+          tl.fromTo(S + "#s7-icon", { rotation: -240, scale: 0.2 }, { rotation: 0, scale: 1, duration: 0.7, ease: "back.out(1.6)" }, 0);
+          tl.fromTo(S + "#s7-r1", { x: 445, scale: 1, opacity: 1 }, { scale: 4.5, opacity: 0, duration: 1.0, ease: "power2.out" }, 0.02);
+          tl.fromTo(S + "#s7-r2", { x: 445, scale: 1, opacity: 0.7 }, { scale: 7, opacity: 0, duration: 1.3, ease: "power2.out" }, 0.12);
+          tl.fromTo(S + "#s7-stage", { scale: 1 }, { scale: 1.04, duration: 3, ease: "none" }, 0);
+
+          // lockup
+          tl.to(S + "#s7-mark", { x: 0, duration: 0.5, ease: "expo.inOut" }, 0.35);
+          tl.to(S + "#s7-word", { clipPath: "inset(0 0% 0 0)", duration: 0.5, ease: "expo.inOut" }, 0.45);
+          tl.fromTo(S + "#s7-word", { x: -60 }, { x: 0, duration: 0.6, ease: "expo.out" }, 0.45);
+
+          // promise + sign-off
+          tl.fromTo(S + ".s7-tw", { opacity: 0, y: 34 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out", stagger: 0.04 }, 0.85);
+          tl.fromTo(S + "#s7-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "expo.out" }, 1.35);
+          tl.fromTo(S + "#s7-small", { opacity: 0, scale: 1.12 }, { opacity: 1, scale: 1, duration: 0.6, ease: "power3.out" }, 1.4);
+
+          // final impact beat
+          tl.to(S + "#s7-mark", { keyframes: [{ scale: 1.1, duration: 0.08 }, { scale: 1, duration: 0.3, ease: "back.out(3)" }] }, 2.5);
+          tl.to(S + "#s7-flash", { keyframes: [{ opacity: 0.18, duration: 0.05 }, { opacity: 0, duration: 0.3 }] }, 2.5);
+
+          window.__timelines["s7-final"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>WasteWise — 30s Hackathon Film</title>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <script src="assets/icons.js"></script>
+    <style>
+@font-face { font-family: "Manrope"; src: url("assets/fonts/manrope-latin-500-normal.woff2") format("woff2"); font-weight: 500; }
+@font-face { font-family: "Manrope"; src: url("assets/fonts/manrope-latin-600-normal.woff2") format("woff2"); font-weight: 600; }
+@font-face { font-family: "Manrope"; src: url("assets/fonts/manrope-latin-700-normal.woff2") format("woff2"); font-weight: 700; }
+@font-face { font-family: "Manrope"; src: url("assets/fonts/manrope-latin-800-normal.woff2") format("woff2"); font-weight: 800; }
+@font-face { font-family: "Space Grotesk"; src: url("assets/fonts/space-grotesk-latin-500-normal.woff2") format("woff2"); font-weight: 500; }
+@font-face { font-family: "Space Grotesk"; src: url("assets/fonts/space-grotesk-latin-700-normal.woff2") format("woff2"); font-weight: 700; }
+@font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/jetbrains-mono-latin-500-normal.woff2") format("woff2"); font-weight: 500; }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #050605;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #050605;
+        font-family: "Manrope", sans-serif;
+      }
+      #root > div[data-composition-src] {
+        position: absolute;
+        inset: 0;
+      }
+      #fx-grain {
+        position: absolute;
+        inset: 0;
+        z-index: 50;
+        pointer-events: none;
+        opacity: 0.07;
+        mix-blend-mode: overlay;
+      }
+      #fx-vignette {
+        position: absolute;
+        inset: 0;
+        z-index: 51;
+        pointer-events: none;
+        background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.28) 100%);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="30" data-width="1920" data-height="1080">
+      <!-- 00–04 THE PROBLEM -->
+      <div id="el-problem" data-composition-id="s1-problem" data-composition-src="compositions/s1-problem.html"
+        data-start="0" data-duration="4" data-track-index="1" data-width="1920" data-height="1080"></div>
+      <!-- 04–08 THE INSIGHT -->
+      <div id="el-insight" data-composition-id="s2-insight" data-composition-src="compositions/s2-insight.html"
+        data-start="4" data-duration="4" data-track-index="1" data-width="1920" data-height="1080"></div>
+      <!-- 08–12 WASTEWISE -->
+      <div id="el-brand" data-composition-id="s3-brand" data-composition-src="compositions/s3-brand.html"
+        data-start="8" data-duration="4" data-track-index="1" data-width="1920" data-height="1080"></div>
+      <!-- 12–19 HOW IT WORKS -->
+      <div id="el-flow" data-composition-id="s4-flow" data-composition-src="compositions/s4-flow.html"
+        data-start="12" data-duration="7" data-track-index="1" data-width="1920" data-height="1080"></div>
+      <!-- 19–23 THE DIFFERENTIATOR -->
+      <div id="el-backup" data-composition-id="s5-backup" data-composition-src="compositions/s5-backup.html"
+        data-start="19" data-duration="4" data-track-index="1" data-width="1920" data-height="1080"></div>
+      <!-- 23–27 AI + IMPACT -->
+      <div id="el-pipeline" data-composition-id="s6-pipeline" data-composition-src="compositions/s6-pipeline.html"
+        data-start="23" data-duration="4" data-track-index="1" data-width="1920" data-height="1080"></div>
+      <!-- 27–30 FINAL -->
+      <div id="el-final" data-composition-id="s7-final" data-composition-src="compositions/s7-final.html"
+        data-start="27" data-duration="3" data-track-index="1" data-width="1920" data-height="1080"></div>
+
+      <!-- Finishing layers over every scene -->
+      <svg id="fx-grain" class="clip" data-start="0" data-duration="30" data-track-index="5" viewBox="0 0 1920 1080" preserveAspectRatio="none">
+        <filter id="fx-noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4" stitchTiles="stitch" /></filter>
+        <rect width="1920" height="1080" filter="url(#fx-noise)" />
+      </svg>
+      <div id="fx-vignette" class="clip" data-start="0" data-duration="30" data-track-index="6"></div>
+
+      <!-- Audio: score, sound design, voiceover -->
+      <audio id="a-score" src="assets/music/score.wav" data-start="0" data-duration="30" data-track-index="10" data-volume="0.3"></audio>
+      <audio id="a-sfx" src="assets/music/sfx.wav" data-start="0" data-duration="30" data-track-index="11" data-volume="0.42"></audio>
+      <audio id="a-vo1" src="assets/vo/vo1.wav" data-start="0.2" data-duration="2.9" data-track-index="12" data-volume="1"></audio>
+      <audio id="a-vo2" src="assets/vo/vo2.wav" data-start="4.3" data-duration="3.46" data-track-index="12" data-volume="1"></audio>
+      <audio id="a-vo3" src="assets/vo/vo3.wav" data-start="8.25" data-duration="2.05" data-track-index="12" data-volume="1"></audio>
+      <audio id="a-vo4" src="assets/vo/vo4.wav" data-start="12.15" data-duration="5.02" data-track-index="12" data-volume="1"></audio>
+      <audio id="a-vo5" src="assets/vo/vo5.wav" data-start="19.25" data-duration="3.2" data-track-index="12" data-volume="1"></audio>
+      <audio id="a-vo6" src="assets/vo/vo6.wav" data-start="23.1" data-duration="3.76" data-track-index="12" data-volume="1"></audio>
+      <audio id="a-vo7" src="assets/vo/vo7.wav" data-start="27.6" data-duration="1.24" data-track-index="12" data-volume="1"></audio>
+    </div>
+    <script>
+      window.__timelines["main"] = gsap.timeline({ paused: true });
+    </script>
+  </body>
+</html>

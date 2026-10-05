@@ -1,0 +1,739 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face { font-family: "Manrope"; src: url("assets/fonts/manrope-latin-500-normal.woff2") format("woff2"); font-weight: 500; }
+        @font-face { font-family: "Manrope"; src: url("assets/fonts/manrope-latin-600-normal.woff2") format("woff2"); font-weight: 600; }
+        @font-face { font-family: "Manrope"; src: url("assets/fonts/manrope-latin-700-normal.woff2") format("woff2"); font-weight: 700; }
+        @font-face { font-family: "Manrope"; src: url("assets/fonts/manrope-latin-800-normal.woff2") format("woff2"); font-weight: 800; }
+        @font-face { font-family: "Space Grotesk"; src: url("assets/fonts/space-grotesk-latin-500-normal.woff2") format("woff2"); font-weight: 500; }
+        @font-face { font-family: "Space Grotesk"; src: url("assets/fonts/space-grotesk-latin-700-normal.woff2") format("woff2"); font-weight: 700; }
+        @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/jetbrains-mono-latin-500-normal.woff2") format("woff2"); font-weight: 500; }
+        #s4-root {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+          background-color: #eef0ec;
+          background-image: radial-gradient(rgba(19, 26, 21, 0.07) 1.5px, transparent 1.5px);
+          background-size: 36px 36px;
+          font-family: "Manrope", sans-serif;
+          color: #131a15;
+        }
+        #s4-persp {
+          position: absolute;
+          left: 300px;
+          top: 60px;
+          width: 500px;
+          height: 960px;
+          perspective: 1800px;
+        }
+        #s4-phone {
+          position: absolute;
+          left: 30px;
+          top: 10px;
+          width: 440px;
+          height: 940px;
+          border-radius: 66px;
+          background: #121512;
+          padding: 12px;
+          box-shadow: 0 60px 120px rgba(19, 40, 26, 0.28), 0 10px 30px rgba(0, 0, 0, 0.18);
+        }
+        #s4-screen {
+          position: relative;
+          width: 416px;
+          height: 916px;
+          border-radius: 54px;
+          background: #f4f5f2;
+          overflow: hidden;
+        }
+        .s4-scr {
+          position: absolute;
+          inset: 0;
+          padding: 30px 26px;
+          background: #f4f5f2;
+        }
+        .s4-row {
+          display: flex;
+          align-items: center;
+        }
+        .s4-ic {
+          display: block;
+          flex: 0 0 auto;
+        }
+        .s4-white {
+          background: #fff;
+          border: 1.5px solid #e4e6e2;
+          border-radius: 22px;
+        }
+        .s4-gray {
+          color: #626763;
+        }
+        /* screen A — home */
+        #s4-loc {
+          font-size: 15px;
+          font-weight: 600;
+          gap: 6px;
+          margin-top: 16px;
+        }
+        #s4-bell {
+          position: absolute;
+          right: 24px;
+          top: 40px;
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          background: #fff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+        }
+        #s4-hi {
+          font-size: 27px;
+          font-weight: 800;
+          letter-spacing: -0.02em;
+          margin-top: 4px;
+        }
+        #s4-hero {
+          margin-top: 20px;
+          background: #27503a;
+          border-radius: 28px;
+          padding: 24px 22px;
+        }
+        #s4-hero h3 {
+          font-size: 27px;
+          font-weight: 800;
+          line-height: 1.15;
+          letter-spacing: -0.02em;
+          color: #fff;
+        }
+        #s4-search {
+          position: relative;
+          margin-top: 18px;
+          height: 48px;
+          border-radius: 999px;
+          background: #fff;
+          padding: 0 16px;
+          gap: 10px;
+          font-size: 15px;
+          font-weight: 600;
+        }
+        #s4-ph {
+          color: #858a86;
+        }
+        #s4-typed {
+          position: absolute;
+          left: 46px;
+          top: 0;
+          height: 48px;
+          display: flex;
+          align-items: center;
+          color: #131a15;
+          font-weight: 700;
+        }
+        #s4-typed span {
+          display: inline-block;
+          opacity: 0;
+        }
+        #s4-caret {
+          display: inline-block;
+          width: 2px;
+          height: 20px;
+          background: #2f6b43;
+          margin-left: 2px;
+        }
+        #s4-tiles {
+          margin-top: 16px;
+          display: flex;
+          gap: 9px;
+        }
+        .s4-tile {
+          flex: 1 1 0;
+          height: 82px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          font-size: 14px;
+          font-weight: 700;
+          color: #131a15;
+        }
+        .s4-tile .s4-ic {
+          width: 24px;
+          height: 24px;
+          color: #2f6b43;
+        }
+        .s4-h4 {
+          font-size: 19px;
+          font-weight: 800;
+          margin-top: 22px;
+          letter-spacing: -0.01em;
+        }
+        #s4-svc {
+          margin-top: 12px;
+          padding: 16px;
+          gap: 14px;
+        }
+        .s4-av {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          background: #e3f1e4;
+          color: #2f6b43;
+          font-weight: 800;
+          font-size: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex: 0 0 auto;
+        }
+        .s4-name {
+          font-size: 16px;
+          font-weight: 800;
+        }
+        .s4-small {
+          font-size: 12.5px;
+          font-weight: 500;
+          margin-top: 2px;
+        }
+        .s4-active {
+          margin-left: auto;
+          font-size: 14px;
+          font-weight: 700;
+          color: #2d7a47;
+          gap: 6px;
+        }
+        .s4-dotg {
+          width: 9px;
+          height: 9px;
+          border-radius: 50%;
+          background: #3a9b5a;
+        }
+        #s4-duo {
+          margin-top: 12px;
+          display: flex;
+          gap: 10px;
+        }
+        #s4-duo > div {
+          flex: 1 1 0;
+          padding: 16px;
+        }
+        .s4-big {
+          font-size: 24px;
+          font-weight: 800;
+          margin-top: 4px;
+        }
+        /* screen B — result */
+        .s4-head {
+          gap: 14px;
+          margin-top: 10px;
+        }
+        .s4-back {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          background: #fff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+          flex: 0 0 auto;
+        }
+        .s4-title {
+          font-size: 28px;
+          font-weight: 800;
+          letter-spacing: -0.02em;
+          line-height: 1.1;
+        }
+        .s4-sub {
+          font-size: 14.5px;
+          font-weight: 500;
+          color: #626763;
+          margin-top: 3px;
+        }
+        #s4-badge {
+          margin-top: 20px;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 9px 16px;
+          border-radius: 999px;
+          background: #e3f1e4;
+          color: #2f6b43;
+          font-size: 16px;
+          font-weight: 800;
+        }
+        .s4-hint {
+          margin-top: 16px;
+          font-size: 15px;
+          font-weight: 600;
+          color: #626763;
+        }
+        .s4-opt {
+          margin-top: 12px;
+          padding: 16px;
+          gap: 14px;
+          height: 86px;
+          position: relative;
+        }
+        .s4-optic {
+          width: 50px;
+          height: 50px;
+          border-radius: 16px;
+          background: #e3f1e4;
+          color: #2f6b43;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex: 0 0 auto;
+        }
+        .s4-optic .s4-ic {
+          width: 24px;
+          height: 24px;
+        }
+        .s4-rec {
+          position: absolute;
+          right: 14px;
+          top: 12px;
+          font-size: 11px;
+          font-weight: 800;
+          letter-spacing: 0.04em;
+          color: #fff;
+          background: #2f6b43;
+          border-radius: 999px;
+          padding: 3px 9px;
+        }
+        /* screen C — book pickup */
+        #s4-coll {
+          margin-top: 20px;
+          padding: 18px 20px;
+        }
+        .s4-lbl {
+          font-size: 17px;
+          font-weight: 700;
+          margin-top: 22px;
+        }
+        #s4-slots {
+          margin-top: 12px;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+        }
+        .s4-slot {
+          height: 52px;
+          border-radius: 999px;
+          background: #fff;
+          border: 2px solid #e0e2de;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 14.5px;
+          font-weight: 600;
+        }
+        #s4-fee {
+          margin-top: 14px;
+          padding: 18px 20px;
+          justify-content: space-between;
+          font-size: 16px;
+          font-weight: 600;
+        }
+        #s4-confirm {
+          position: relative;
+          margin-top: 16px;
+          height: 64px;
+          border-radius: 999px;
+          background: #3a7548;
+          color: #fff;
+          font-size: 20px;
+          font-weight: 800;
+          overflow: hidden;
+        }
+        .s4-cl {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+        }
+        #s4-tap {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 64px;
+          height: 64px;
+          margin: -32px 0 0 -32px;
+          border-radius: 50%;
+          background: rgba(47, 107, 67, 0.28);
+          border: 3px solid rgba(47, 107, 67, 0.75);
+          opacity: 0;
+        }
+
+        /* ---------- kinetic column ---------- */
+        #s4-kin {
+          position: absolute;
+          left: 960px;
+          top: 0;
+          width: 900px;
+          height: 1080px;
+        }
+        .s4-k {
+          position: absolute;
+          left: 0;
+          display: block;
+          font-family: "Space Grotesk", sans-serif;
+          font-weight: 700;
+          letter-spacing: -0.045em;
+          line-height: 1;
+          white-space: nowrap;
+        }
+        #s4-k1 {
+          top: 170px;
+          font-size: 112px;
+        }
+        #s4-k2 {
+          top: 430px;
+          font-size: 150px;
+        }
+        #s4-k3 {
+          top: 720px;
+          font-size: 136px;
+          color: #2f6b43;
+          display: flex;
+          align-items: center;
+          gap: 24px;
+        }
+        #s4-k3 .s4-ic {
+          width: 120px;
+          height: 120px;
+        }
+        .s4-arrow {
+          position: absolute;
+          left: 20px;
+          width: 74px;
+          height: 74px;
+          color: #3a9b5a;
+        }
+        #s4-a1 {
+          top: 316px;
+        }
+        #s4-a2 {
+          top: 610px;
+        }
+        #s4-rlabel {
+          position: absolute;
+          left: 6px;
+          top: 250px;
+          font-family: "JetBrains Mono", monospace;
+          font-size: 24px;
+          font-weight: 500;
+          letter-spacing: 0.14em;
+          color: #2f6b43;
+        }
+        #s4-opts {
+          position: absolute;
+          left: 0;
+          top: 310px;
+          display: flex;
+          gap: 30px;
+        }
+        .s4-bt {
+          width: 262px;
+          height: 330px;
+          border-radius: 36px;
+          background: #fff;
+          border: 2px solid #e2e4e0;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          padding: 34px 30px;
+          box-shadow: 0 30px 60px rgba(19, 40, 26, 0.08);
+        }
+        .s4-btic {
+          width: 96px;
+          height: 96px;
+          border-radius: 50%;
+          background: #e3f1e4;
+          color: #2f6b43;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .s4-btic .s4-ic {
+          width: 46px;
+          height: 46px;
+        }
+        .s4-btt {
+          font-family: "Space Grotesk", sans-serif;
+          font-size: 50px;
+          font-weight: 700;
+          letter-spacing: -0.04em;
+        }
+        .s4-btd {
+          font-size: 20px;
+          font-weight: 600;
+          color: #626763;
+          margin-top: 6px;
+        }
+        #s4-book {
+          position: absolute;
+          left: 0;
+          top: 330px;
+          font-family: "Space Grotesk", sans-serif;
+          font-size: 156px;
+          font-weight: 700;
+          letter-spacing: -0.05em;
+          line-height: 1;
+          white-space: nowrap;
+          overflow: hidden;
+          padding-bottom: 10px;
+        }
+        .s4-bw {
+          display: inline-block;
+        }
+        #s4-chips {
+          position: absolute;
+          left: 4px;
+          top: 540px;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+        .s4-chip {
+          display: inline-flex;
+          align-self: flex-start;
+          align-items: center;
+          gap: 12px;
+          font-size: 30px;
+          font-weight: 700;
+          padding: 16px 26px;
+          border-radius: 999px;
+          background: #fff;
+          border: 2px solid #e2e4e0;
+        }
+        .s4-chip .s4-ic {
+          width: 28px;
+          height: 28px;
+          color: #2f6b43;
+        }
+        #s4-done {
+          background: #2f6b43;
+          border-color: #2f6b43;
+          color: #fff;
+        }
+        #s4-done .s4-ic {
+          color: #fff;
+        }
+      </style>
+
+      <div id="s4-root" data-composition-id="s4-flow" data-width="1920" data-height="1080">
+        <div id="s4-persp">
+          <div id="s4-phone">
+            <div id="s4-screen">
+              <!-- A: resident home -->
+              <div id="s4-scrA" class="s4-scr">
+                <div id="s4-loc" class="s4-row s4-gray"><span class="s4-ic" data-icon="pin" style="width:17px;height:17px"></span>Kharadi, Pune</div>
+                <div id="s4-bell"><span class="s4-ic" data-icon="bell" style="width:22px;height:22px"></span></div>
+                <div id="s4-hi">Hi Ananya</div>
+                <div id="s4-hero">
+                  <h3>What do you want to do with your waste?</h3>
+                  <div id="s4-search" class="s4-row">
+                    <span class="s4-ic s4-gray" data-icon="search" style="width:20px;height:20px"></span>
+                    <span id="s4-ph">I have plastic, e-waste, food…</span>
+                    <div id="s4-typed"><span>p</span><span>l</span><span>a</span><span>s</span><span>t</span><span>i</span><span>c</span><span>&nbsp;</span><span>b</span><span>o</span><span>t</span><span>t</span><span>l</span><span>e</span><span>s</span><i id="s4-caret"></i></div>
+                  </div>
+                </div>
+                <div id="s4-tiles">
+                  <div class="s4-tile s4-white"><span class="s4-ic" data-icon="trash"></span>Dispose</div>
+                  <div class="s4-tile s4-white"><span class="s4-ic" data-icon="truck"></span>Pickup</div>
+                  <div class="s4-tile s4-white"><span class="s4-ic" data-icon="wallet"></span>Sell</div>
+                  <div class="s4-tile s4-white"><span class="s4-ic" data-icon="compass"></span>Explore</div>
+                </div>
+                <div class="s4-h4">Your waste service</div>
+                <div id="s4-svc" class="s4-row s4-white">
+                  <div class="s4-av">R</div>
+                  <div>
+                    <div class="s4-name">Raj Waste Services</div>
+                    <div class="s4-small s4-gray">Next pickup: Tomorrow 8–10 AM</div>
+                  </div>
+                  <div class="s4-active s4-row"><i class="s4-dotg"></i>Active</div>
+                </div>
+                <div id="s4-duo">
+                  <div class="s4-white"><div class="s4-small s4-gray" style="font-size:14px">Green Wallet</div><div class="s4-big">₹340</div></div>
+                  <div class="s4-white"><div class="s4-small s4-gray" style="font-size:14px">Missed pickup?</div><div class="s4-big" style="color:#c8473b;font-size:21px">Report issue</div></div>
+                </div>
+              </div>
+
+              <!-- B: recommendation -->
+              <div id="s4-scrB" class="s4-scr">
+                <div class="s4-head s4-row">
+                  <div class="s4-back"><span class="s4-ic" data-icon="left" style="width:22px;height:22px"></span></div>
+                  <div><div class="s4-title">Plastic</div><div class="s4-sub">PET bottles · approx. 2 kg</div></div>
+                </div>
+                <div id="s4-badge"><span class="s4-ic" data-icon="recycle" style="width:20px;height:20px"></span>Recyclable</div>
+                <div class="s4-hint">Here’s the best next step for it</div>
+                <div id="s4-oSell" class="s4-opt s4-row s4-white">
+                  <div class="s4-optic"><span class="s4-ic" data-icon="wallet"></span></div>
+                  <div><div class="s4-name">Sell</div><div class="s4-small s4-gray">To a scrap dealer · ~₹12/kg</div></div>
+                </div>
+                <div id="s4-oColl" class="s4-opt s4-row s4-white">
+                  <div class="s4-optic"><span class="s4-ic" data-icon="truck"></span></div>
+                  <div><div class="s4-name">Collect</div><div class="s4-small s4-gray">Book a doorstep pickup</div></div>
+                  <div class="s4-rec">BEST</div>
+                </div>
+                <div id="s4-oFind" class="s4-opt s4-row s4-white">
+                  <div class="s4-optic"><span class="s4-ic" data-icon="pin"></span></div>
+                  <div><div class="s4-name">Find</div><div class="s4-small s4-gray">Nearest drop-off · 1.2 km</div></div>
+                </div>
+              </div>
+
+              <!-- C: book pickup -->
+              <div id="s4-scrC" class="s4-scr">
+                <div class="s4-head s4-row">
+                  <div class="s4-back"><span class="s4-ic" data-icon="left" style="width:22px;height:22px"></span></div>
+                  <div><div class="s4-title">Book pickup</div><div class="s4-sub">Plastic · Flat 304, Eon Heights</div></div>
+                </div>
+                <div id="s4-coll" class="s4-white">
+                  <div class="s4-gray" style="font-size:15px;font-weight:600">Collector</div>
+                  <div class="s4-name s4-row" style="font-size:18px;gap:6px;margin-top:4px">Raj Waste Services · <span class="s4-ic" data-icon="star" style="width:17px;height:17px"></span> 4.8</div>
+                </div>
+                <div class="s4-lbl">Choose a time slot</div>
+                <div id="s4-slots">
+                  <div id="s4-slot1" class="s4-slot">Tomorrow, 8–10 AM</div>
+                  <div class="s4-slot">Tomorrow, 10–12 PM</div>
+                  <div class="s4-slot">Tomorrow, 4–6 PM</div>
+                  <div class="s4-slot">Thu, 8–10 AM</div>
+                </div>
+                <div id="s4-fee" class="s4-row s4-white"><span>Pickup fee</span><b>Included in plan</b></div>
+                <div id="s4-confirm">
+                  <div id="s4-cl1" class="s4-cl">Confirm pickup</div>
+                  <div id="s4-cl2" class="s4-cl"><span class="s4-ic" data-icon="check" data-stroke="3" style="width:24px;height:24px"></span>Pickup booked</div>
+                </div>
+              </div>
+
+              <div id="s4-tap"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="s4-kin">
+          <div id="s4-k1" class="s4-k">I HAVE WASTE</div>
+          <span id="s4-a1" class="s4-arrow" data-icon="down" data-stroke="2.6"></span>
+          <div id="s4-k2" class="s4-k">PLASTIC</div>
+          <span id="s4-a2" class="s4-arrow" data-icon="down" data-stroke="2.6"></span>
+          <div id="s4-k3" class="s4-k"><span class="s4-ic" data-icon="recycle" data-stroke="2.4"></span>RECYCLABLE</div>
+
+          <div id="s4-rlabel">WASTEWISE RECOMMENDS →</div>
+          <div id="s4-opts">
+            <div id="s4-t1" class="s4-bt"><div class="s4-btic"><span class="s4-ic" data-icon="wallet"></span></div><div><div class="s4-btt">SELL</div><div class="s4-btd">Earn from scrap</div></div></div>
+            <div id="s4-t2" class="s4-bt"><div class="s4-btic"><span class="s4-ic" data-icon="truck"></span></div><div><div class="s4-btt">COLLECT</div><div class="s4-btd">Doorstep pickup</div></div></div>
+            <div id="s4-t3" class="s4-bt"><div class="s4-btic"><span class="s4-ic" data-icon="pin"></span></div><div><div class="s4-btt">FIND</div><div class="s4-btd">Nearest drop-off</div></div></div>
+          </div>
+
+          <div id="s4-book"><span class="s4-bw">BOOK</span> <span class="s4-bw" style="color:#2f6b43">PICKUP</span></div>
+          <div id="s4-chips">
+            <div id="s4-ch1" class="s4-chip"><span class="s4-ic" data-icon="truck"></span>Raj Waste Services · ★ 4.8</div>
+            <div id="s4-ch2" class="s4-chip"><span class="s4-ic" data-icon="check" data-stroke="3"></span>Tomorrow, 8–10 AM</div>
+            <div id="s4-done" class="s4-chip"><span class="s4-ic" data-icon="check" data-stroke="3"></span>Pickup booked</div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          window.wwIcons(document.getElementById("s4-root"));
+          const tl = gsap.timeline({ paused: true });
+          const S = "#s4-root ";
+
+          // phone glides in, slowly squares up to camera
+          tl.fromTo(S + "#s4-phone", { y: 900, rotationY: -28, rotationX: 10 },
+            { y: 0, rotationY: -12, rotationX: 4, duration: 0.7, ease: "expo.out" }, 0);
+          tl.to(S + "#s4-phone", { rotationY: -3, rotationX: 0, duration: 6.3, ease: "sine.inOut" }, 0.7);
+          tl.set(S + "#s4-scrB", { xPercent: 100 }, 0);
+          tl.set(S + "#s4-scrC", { xPercent: 100 }, 0);
+          tl.set(S + "#s4-cl2", { yPercent: 100 }, 0);
+
+          // tap the search bar and type
+          const tap = S + "#s4-tap";
+          function tapAt(x, y, t) {
+            tl.set(tap, { x: x, y: y }, t - 0.01);
+            tl.fromTo(tap, { opacity: 0.95, scale: 0.4 }, { immediateRender: false, opacity: 0, scale: 1.6, duration: 0.45, ease: "power2.out" }, t);
+          }
+          tapAt(200, 240, 0.4);
+          tl.set(S + "#s4-ph", { opacity: 0 }, 0.5);
+          tl.set(S + "#s4-caret", { opacity: 0 }, 0);
+          tl.set(S + "#s4-caret", { opacity: 1 }, 0.5);
+          gsap.utils.toArray(S + "#s4-typed span").forEach(function (el, i) {
+            tl.set(el, { opacity: 1 }, 0.55 + i * 0.045);
+          });
+
+          // kinetic chain: I HAVE WASTE ↓ PLASTIC ↓ RECYCLABLE
+          tl.fromTo(S + "#s4-k1", { opacity: 0, x: 120 }, { opacity: 1, x: 0, duration: 0.45, ease: "expo.out" }, 0.3);
+          tl.fromTo(S + "#s4-a1", { opacity: 0, y: -40 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(2)" }, 0.85);
+          tl.fromTo(S + "#s4-k2", { opacity: 0, scale: 1.6, filter: "blur(10px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.3, ease: "power4.out" }, 1.0);
+          tl.fromTo(S + "#s4-a2", { opacity: 0, y: -40 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(2)" }, 1.55);
+          tl.fromTo(S + "#s4-k3", { opacity: 0, scale: 1.6, filter: "blur(10px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.3, ease: "power4.out" }, 1.7);
+          tl.fromTo(S + "#s4-k3 .s4-ic", { rotation: -200 }, { rotation: 0, duration: 0.7, ease: "back.out(1.6)" }, 1.7);
+          tl.to([S + "#s4-k1", S + "#s4-a1", S + "#s4-k2", S + "#s4-a2", S + "#s4-k3"],
+            { y: -160, opacity: 0, duration: 0.3, ease: "power3.in", stagger: 0.03 }, 2.2);
+
+          // phone: result screen slides in
+          tl.to(S + "#s4-scrA", { xPercent: -30, duration: 0.45, ease: "expo.inOut" }, 2.25);
+          tl.to(S + "#s4-scrB", { xPercent: 0, duration: 0.45, ease: "expo.inOut" }, 2.25);
+          tl.fromTo(S + "#s4-badge", { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, ease: "back.out(2.5)" }, 2.6);
+          tl.fromTo([S + "#s4-oSell", S + "#s4-oColl", S + "#s4-oFind"], { opacity: 0, y: 30 },
+            { opacity: 1, y: 0, duration: 0.35, ease: "power3.out", stagger: 0.12 }, 2.7);
+
+          // SELL / COLLECT / FIND tiles
+          tl.fromTo(S + "#s4-rlabel", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.35, ease: "power3.out" }, 2.4);
+          tl.fromTo([S + "#s4-t1", S + "#s4-t2", S + "#s4-t3"], { opacity: 0, y: 140, rotation: 4 },
+            { opacity: 1, y: 0, rotation: 0, duration: 0.5, ease: "expo.out", stagger: 0.12 }, 2.45);
+
+          // recommendation: COLLECT
+          tl.to([S + "#s4-t1", S + "#s4-t3"], { opacity: 0.35, scale: 0.94, duration: 0.3, ease: "power2.out" }, 3.6);
+          tl.to(S + "#s4-t2", { backgroundColor: "#2f6b43", borderColor: "#2f6b43", color: "#ffffff", scale: 1.07, y: -16, duration: 0.3, ease: "back.out(2)" }, 3.6);
+          tl.to(S + "#s4-t2 .s4-btd", { color: "#cfe9d6", duration: 0.3 }, 3.6);
+          tl.to(S + "#s4-t2 .s4-btic", { backgroundColor: "#3ddc84", color: "#0d2a18", duration: 0.3 }, 3.6);
+          tl.to(S + "#s4-oColl", { borderColor: "#2f6b43", backgroundColor: "#f1f8f2", duration: 0.25 }, 3.75);
+          tapAt(208, 330, 3.9);
+
+          // phone: book pickup screen
+          tl.to(S + "#s4-scrB", { xPercent: -30, duration: 0.45, ease: "expo.inOut" }, 4.15);
+          tl.to(S + "#s4-scrC", { xPercent: 0, duration: 0.45, ease: "expo.inOut" }, 4.15);
+          tl.to([S + "#s4-rlabel", S + "#s4-opts"], { opacity: 0, y: -60, duration: 0.3, ease: "power3.in" }, 4.1);
+
+          // BOOK PICKUP
+          tl.fromTo(S + "#s4-book .s4-bw", { yPercent: 110 }, { yPercent: 0, duration: 0.5, ease: "power4.out", stagger: 0.08 }, 4.4);
+          tl.fromTo(S + "#s4-ch1", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }, 4.75);
+          tapAt(114, 278, 5.25);
+          tl.to(S + "#s4-slot1", { backgroundColor: "#e3f1e4", borderColor: "#3a7548", color: "#1f5a35", duration: 0.2 }, 5.3);
+          tl.fromTo(S + "#s4-ch2", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" }, 5.35);
+
+          // confirm
+          tapAt(208, 488, 6.15);
+          tl.to(S + "#s4-confirm", { scale: 0.95, duration: 0.08, ease: "power2.out" }, 6.15);
+          tl.to(S + "#s4-confirm", { scale: 1, duration: 0.25, ease: "back.out(3)" }, 6.23);
+          tl.to(S + "#s4-cl1", { yPercent: -100, duration: 0.3, ease: "expo.inOut" }, 6.25);
+          tl.to(S + "#s4-cl2", { yPercent: 0, duration: 0.3, ease: "expo.inOut" }, 6.25);
+          tl.fromTo(S + "#s4-done", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2.5)" }, 6.3);
+
+          // only the live phone screen / kinetic group is visible
+          tl.set([S + "#s4-scrB", S + "#s4-scrC", S + "#s4-book", S + "#s4-chips", S + "#s4-rlabel", S + "#s4-opts"], { autoAlpha: 0 }, 0);
+          tl.set([S + "#s4-scrB", S + "#s4-rlabel", S + "#s4-opts"], { autoAlpha: 1 }, 2.24);
+          tl.set(S + "#s4-scrA", { autoAlpha: 0 }, 2.72);
+          tl.set([S + "#s4-scrC", S + "#s4-book", S + "#s4-chips"], { autoAlpha: 1 }, 4.14);
+          tl.set(S + "#s4-scrB", { autoAlpha: 0 }, 4.62);
+          tl.set([S + "#s4-k1", S + "#s4-k2", S + "#s4-k3", S + "#s4-a1", S + "#s4-a2"], { autoAlpha: 0 }, 2.6);
+          tl.set([S + "#s4-rlabel", S + "#s4-opts"], { autoAlpha: 0 }, 4.42);
+
+          window.__timelines["s4-flow"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>
