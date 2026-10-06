@@ -1,0 +1,1747 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait-4k">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=2160, height=3840" />
+    <title>NPAV Navratri — 9 Days Intro Reel</title>
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Gloock";
+        src: url("assets/fonts/Gloock-Regular.ttf") format("truetype");
+        font-weight: 400;
+      }
+      @font-face {
+        font-family: "Montserrat";
+        src: url("assets/fonts/Montserrat-400.ttf") format("truetype");
+        font-weight: 400;
+      }
+      @font-face {
+        font-family: "Montserrat";
+        src: url("assets/fonts/Montserrat-600.ttf") format("truetype");
+        font-weight: 600;
+      }
+      @font-face {
+        font-family: "Montserrat";
+        src: url("assets/fonts/Montserrat-800.ttf") format("truetype");
+        font-weight: 800;
+      }
+      :root {
+        --gold: #f5c766;
+        --gold-hi: #fff1c8;
+        --gold-lo: #b9822a;
+        --crimson: #a5142c;
+        --ink: #050204;
+        --cyan: #5cc8ff;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 2160px;
+        height: 3840px;
+        overflow: hidden;
+        background: #050204;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #050204;
+        font-family: "Montserrat", sans-serif;
+        color: #fff;
+      }
+      /* Untimed full-bleed layers */
+      .full {
+        position: absolute;
+        inset: 0;
+        width: 2160px;
+        height: 3840px;
+      }
+      #world {
+        z-index: 1;
+      }
+      #fx {
+        z-index: 8;
+        pointer-events: none;
+      }
+      #vignette {
+        z-index: 9;
+        background: radial-gradient(
+          ellipse 75% 60% at 50% 50%,
+          rgba(0, 0, 0, 0) 55%,
+          rgba(0, 0, 0, 0.55) 100%
+        );
+      }
+      #flash {
+        z-index: 20;
+        opacity: 0;
+        background: radial-gradient(
+          circle at 50% 50%,
+          #fffaf0 0%,
+          #ffe6ad 35%,
+          #f2b552 70%,
+          #c47a1e 100%
+        );
+      }
+      #blackout {
+        z-index: 9;
+        opacity: 0;
+        background: #000;
+      }
+      /* Timed layers: each clip holds a 1080x1920 design stage scaled 2x to 4K */
+      .clip {
+        position: absolute;
+        inset: 0;
+        width: 2160px;
+        height: 3840px;
+      }
+      .objects {
+        z-index: 5;
+      }
+      .texts {
+        z-index: 10;
+      }
+      .stage {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 1920px;
+        transform: scale(2);
+        transform-origin: 0 0;
+      }
+      .frame {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 1920px;
+      }
+      .row {
+        position: absolute;
+        left: 60px;
+        width: 960px;
+        text-align: center;
+        display: block;
+      }
+      .serif {
+        font-family: "Gloock", serif;
+        font-weight: 400;
+        line-height: 1;
+        letter-spacing: 0.01em;
+      }
+      .kicker {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.32em;
+        line-height: 1.15;
+      }
+      .gold {
+        color: #f7cf78;
+        background: linear-gradient(
+          180deg,
+          #fff4d2 0%,
+          #f9d585 38%,
+          #e0a443 68%,
+          #ffe7a6 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .glow {
+        filter: drop-shadow(0 0 18px rgba(255, 196, 92, 0.45))
+          drop-shadow(0 4px 2px rgba(40, 6, 10, 0.6));
+      }
+      .ivory {
+        color: #fff6e6;
+        text-shadow: 0 0 22px rgba(255, 200, 110, 0.35), 0 3px 3px rgba(20, 2, 6, 0.7);
+      }
+      .inl {
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+      /* Scene 2 node labels + shield */
+      #t2-labels {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 1920px;
+      }
+      .nlabel {
+        position: absolute;
+        width: 80px;
+        height: 30px;
+        margin-left: -40px;
+        margin-top: -15px;
+        text-align: center;
+        font-weight: 800;
+        font-size: 22px;
+        letter-spacing: 0.12em;
+        color: #ffe3a1;
+        text-shadow: 0 0 12px rgba(255, 190, 80, 0.8);
+      }
+      #t2-shield {
+        position: absolute;
+        left: 460px;
+        top: 920px;
+        width: 160px;
+        height: 180px;
+      }
+
+      /* Scene 3 voucher cards */
+      .card-wrap {
+        position: absolute;
+        top: 720px;
+        width: 430px;
+        height: 580px;
+      }
+      #o3-left {
+        left: 85px;
+      }
+      #o3-right {
+        left: 565px;
+      }
+      .card {
+        position: absolute;
+        inset: 0;
+        border-radius: 38px;
+        overflow: hidden;
+        background:
+          linear-gradient(160deg, rgba(255, 236, 196, 0.2) 0%, rgba(255, 255, 255, 0.04) 40%, rgba(255, 210, 140, 0.1) 100%),
+          linear-gradient(180deg, #3b0a14 0%, #1d050b 100%);
+        border: 2px solid rgba(255, 214, 140, 0.55);
+        box-shadow:
+          0 30px 60px rgba(0, 0, 0, 0.55),
+          inset 0 2px 0 rgba(255, 244, 210, 0.55),
+          inset 0 -30px 60px rgba(255, 170, 60, 0.08);
+      }
+      .card-glow {
+        position: absolute;
+        inset: -40px;
+        border-radius: 70px;
+        background: radial-gradient(ellipse at 50% 50%, rgba(255, 200, 100, 0.55), rgba(255, 170, 60, 0) 70%);
+        opacity: 0;
+      }
+      .card-sheen {
+        position: absolute;
+        top: -100px;
+        left: -260px;
+        width: 160px;
+        height: 800px;
+        background: linear-gradient(90deg, rgba(255, 240, 200, 0), rgba(255, 244, 214, 0.55), rgba(255, 240, 200, 0));
+        transform-origin: 50% 50%;
+        rotate: 18deg;
+      }
+      .card-edge {
+        position: absolute;
+        left: 30px;
+        right: 30px;
+        top: 0;
+        height: 3px;
+        background: linear-gradient(90deg, rgba(255, 220, 150, 0), #ffe3a1, rgba(255, 220, 150, 0));
+      }
+      .card-plat {
+        position: absolute;
+        top: 52px;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+      }
+      .card-plat span {
+        font-weight: 800;
+        font-size: 27px;
+        letter-spacing: 0.2em;
+        color: #fff4de;
+      }
+      .card-rule {
+        position: absolute;
+        top: 140px;
+        left: 70px;
+        width: 290px;
+        height: 2px;
+        background: linear-gradient(90deg, rgba(255, 210, 140, 0), rgba(255, 210, 140, 0.8), rgba(255, 210, 140, 0));
+      }
+      .card-num {
+        position: absolute;
+        top: 160px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        font-size: 230px;
+      }
+      .card-label {
+        position: absolute;
+        top: 420px;
+        left: 20px;
+        width: 390px;
+        text-align: center;
+        font-weight: 800;
+        font-size: 33px;
+        letter-spacing: 0.08em;
+        line-height: 1.2;
+        color: #fff6e6;
+      }
+      .card-chip {
+        position: absolute;
+        top: 500px;
+        left: 135px;
+        width: 160px;
+        height: 40px;
+        border-radius: 20px;
+        border: 1.5px solid rgba(255, 214, 140, 0.7);
+        text-align: center;
+        line-height: 37px;
+        font-weight: 800;
+        font-size: 17px;
+        letter-spacing: 0.3em;
+        color: #ffe3a1;
+      }
+
+      /* Scene 4 gift */
+      #o4-giftwrap {
+        position: absolute;
+        left: 300px;
+        top: 760px;
+        width: 480px;
+        height: 540px;
+      }
+      #o4-glow {
+        position: absolute;
+        left: 240px;
+        top: 720px;
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        background: radial-gradient(circle, #fff8e4 0%, #ffd889 30%, rgba(245, 170, 60, 0.55) 55%, rgba(200, 100, 20, 0) 72%);
+        opacity: 0;
+      }
+
+      /* Scene 5 watch */
+      #o5-watchwrap {
+        position: absolute;
+        left: 340px;
+        top: 530px;
+        width: 400px;
+        height: 820px;
+      }
+
+      /* Scene 6 CTA */
+      .scrim {
+        position: absolute;
+        left: 0;
+        width: 1080px;
+        height: 760px;
+        top: 520px;
+        background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(8, 2, 6, 0.6), rgba(8, 2, 6, 0) 100%);
+      }
+      .pill {
+        display: inline-block;
+        padding: 18px 40px;
+        border-radius: 60px;
+        border: 2px solid rgba(255, 214, 140, 0.85);
+        background: linear-gradient(180deg, rgba(120, 18, 34, 0.85), rgba(60, 6, 16, 0.85));
+        box-shadow: 0 0 40px rgba(255, 190, 90, 0.35), inset 0 1px 0 rgba(255, 240, 200, 0.6);
+        font-weight: 800;
+        font-size: 34px;
+        letter-spacing: 0.12em;
+        color: #fff4de;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="20"
+      data-width="2160"
+      data-height="3840"
+    >
+      <!-- Shared procedural world (Garba, rings, halos, light) — untimed, driven by the timeline -->
+      <canvas id="world" class="full" data-layout-allow-overflow width="2160" height="3840"></canvas>
+
+      <!-- ============ SCENE 01 — THE HOOK (0–3) ============ -->
+      <section id="t1" class="clip texts" data-start="0" data-duration="3.15" data-track-index="10">
+        <div class="stage">
+          <div id="t1-frame" class="frame">
+            <div id="t1-a" class="row kicker ivory" style="top: 290px; font-size: 46px">This</div>
+            <div id="t1-b" class="row glow" style="top: 360px">
+              <div class="serif gold" style="font-size: 168px">Navratri</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SCENE 02 — 9 DAYS / 9 DROPS (3–6) ============ -->
+      <section id="o2" class="clip objects" data-start="3" data-duration="3.15" data-track-index="5">
+        <div class="stage">
+          <div id="t2-labels"></div>
+          <div id="t2-shield">
+            <svg width="160" height="180" viewBox="0 0 160 180">
+              <defs>
+                <linearGradient id="shg" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#fff1c8" />
+                  <stop offset="0.5" stop-color="#f2bf5c" />
+                  <stop offset="1" stop-color="#a8701f" />
+                </linearGradient>
+                <radialGradient id="shb" cx="0.5" cy="0.45" r="0.6">
+                  <stop offset="0" stop-color="#5cc8ff" stop-opacity="0.45" />
+                  <stop offset="1" stop-color="#0a1830" stop-opacity="0.1" />
+                </radialGradient>
+              </defs>
+              <path d="M80 8 L146 32 V86 C146 128 116 158 80 172 C44 158 14 128 14 86 V32 Z" fill="url(#shb)" stroke="url(#shg)" stroke-width="6" />
+              <path d="M80 30 L126 47 V88 C126 118 106 140 80 151 C54 140 34 118 34 88 V47 Z" fill="none" stroke="#5cc8ff" stroke-opacity="0.55" stroke-width="2" />
+              <circle cx="80" cy="82" r="15" fill="url(#shg)" />
+              <path d="M73 92 L87 92 L91 124 L69 124 Z" fill="url(#shg)" />
+            </svg>
+          </div>
+        </div>
+      </section>
+      <section id="t2" class="clip texts" data-start="3.1" data-duration="3.05" data-track-index="11">
+        <div class="stage">
+          <div id="t2-frame" class="frame">
+            <div id="t2-a" class="row glow" style="top: 260px">
+              <div class="serif gold" style="font-size: 176px">9 Days.</div>
+            </div>
+            <div id="t2-b" class="row kicker ivory" style="top: 470px; font-size: 50px; letter-spacing: 0.14em">
+              9 Interactive Drops.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SCENE 03 — DAILY PRIZES (6–10) ============ -->
+      <section id="o3" class="clip objects" data-start="6" data-duration="4.05" data-track-index="6">
+        <div class="stage">
+          <div id="o3-frame" class="frame">
+            <div id="o3-left" class="card-wrap" data-layout-allow-overlap data-layout-allow-occlusion>
+              <div id="o3-glowL" class="card-glow"></div>
+              <div class="card">
+                <div class="card-edge"></div>
+                <div id="o3-sheenL" class="card-sheen" data-layout-allow-overflow></div>
+                <div class="card-plat">
+                  <svg width="44" height="44" viewBox="0 0 44 44">
+                    <rect x="3" y="3" width="38" height="38" rx="11" fill="none" stroke="#ffd98a" stroke-width="3.5" />
+                    <circle cx="22" cy="22" r="8.5" fill="none" stroke="#ffd98a" stroke-width="3.5" />
+                    <circle cx="32.5" cy="11.5" r="2.4" fill="#ffd98a" />
+                  </svg>
+                  <span>INSTAGRAM</span>
+                </div>
+                <div class="card-rule"></div>
+                <div class="card-num serif gold">1</div>
+                <div class="card-label">AMAZON VOUCHER</div>
+                <div class="card-chip">DAILY</div>
+              </div>
+            </div>
+            <div id="o3-right" class="card-wrap" data-layout-allow-overlap data-layout-allow-occlusion>
+              <div id="o3-glowR" class="card-glow"></div>
+              <div class="card">
+                <div class="card-edge"></div>
+                <div id="o3-sheenR" class="card-sheen" data-layout-allow-overflow></div>
+                <div class="card-plat">
+                  <svg width="44" height="44" viewBox="0 0 44 44">
+                    <circle cx="22" cy="22" r="19" fill="none" stroke="#ffd98a" stroke-width="3.5" />
+                    <path d="M24.5 36 V24.5 H29 L29.7 19.5 H24.5 V16.6 C24.5 15.2 25 14.3 27 14.3 H29.8 V9.9 C29.3 9.8 27.7 9.7 25.9 9.7 C22 9.7 19.5 12 19.5 16.2 V19.5 H15 V24.5 H19.5 V36" fill="#ffd98a" />
+                  </svg>
+                  <span>FACEBOOK</span>
+                </div>
+                <div class="card-rule"></div>
+                <div class="card-num serif gold">1</div>
+                <div class="card-label">AMAZON VOUCHER</div>
+                <div class="card-chip">DAILY</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="t3" class="clip texts" data-start="6.05" data-duration="3.95" data-track-index="12">
+        <div class="stage">
+          <div id="t3-frame" class="frame">
+            <div id="t3-a" class="row glow" style="top: 300px">
+              <div class="serif gold" style="font-size: 104px; line-height: 1.04">Exciting Prizes</div>
+              <div style="margin-top: 22px; height: 70px">
+                <span class="kicker ivory inl" style="font-size: 50px; letter-spacing: 0.16em">Every Day!</span>
+                <svg class="inl" width="62" height="62" viewBox="0 0 62 62" style="margin-left: 14px; margin-top: -10px">
+                  <rect x="7" y="25" width="48" height="31" rx="4" fill="#a5142c" stroke="#ffd98a" stroke-width="3" />
+                  <rect x="4" y="17" width="54" height="11" rx="3" fill="#c21a3a" stroke="#ffd98a" stroke-width="3" />
+                  <rect x="27" y="17" width="8" height="39" fill="#ffd98a" />
+                  <path d="M31 17 C24 4 12 8 17 14 C20 17 27 17 31 17 C35 17 42 17 45 14 C50 8 38 4 31 17 Z" fill="none" stroke="#ffd98a" stroke-width="3" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SCENE 04 — SURPRISE GIFT (10–14) ============ -->
+      <section id="o4" class="clip objects" data-start="10" data-duration="4.15" data-track-index="7">
+        <div class="stage">
+          <div id="o4-frame" class="frame">
+            <div id="o4-giftwrap">
+              <svg width="480" height="540" viewBox="0 0 480 540">
+                <defs>
+                  <linearGradient id="gbody" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stop-color="#4d0612" />
+                    <stop offset="0.35" stop-color="#9c1229" />
+                    <stop offset="0.6" stop-color="#b8182f" />
+                    <stop offset="1" stop-color="#3f040e" />
+                  </linearGradient>
+                  <linearGradient id="glid" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stop-color="#5e0816" />
+                    <stop offset="0.45" stop-color="#c41d36" />
+                    <stop offset="1" stop-color="#4a0510" />
+                  </linearGradient>
+                  <linearGradient id="gtop" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#7a0b1d" />
+                    <stop offset="1" stop-color="#d42a43" />
+                  </linearGradient>
+                  <linearGradient id="grib" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stop-color="#8a5a18" />
+                    <stop offset="0.3" stop-color="#e8b350" />
+                    <stop offset="0.5" stop-color="#fff0c0" />
+                    <stop offset="0.7" stop-color="#d79a35" />
+                    <stop offset="1" stop-color="#7a4c12" />
+                  </linearGradient>
+                  <linearGradient id="gbow" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#fff0c0" />
+                    <stop offset="0.5" stop-color="#e3a845" />
+                    <stop offset="1" stop-color="#8a5a18" />
+                  </linearGradient>
+                  <pattern id="gpat" width="36" height="36" patternUnits="userSpaceOnUse">
+                    <path d="M18 2 L34 18 L18 34 L2 18 Z" fill="none" stroke="#ffd98a" stroke-opacity="0.13" stroke-width="1.5" />
+                    <circle cx="18" cy="18" r="2" fill="#ffd98a" fill-opacity="0.18" />
+                  </pattern>
+                  <clipPath id="gribclip">
+                    <rect x="212" y="260" width="56" height="270" />
+                    <rect x="206" y="186" width="68" height="78" />
+                    <polygon points="214,186 266,186 262,146 218,146" />
+                  </clipPath>
+                </defs>
+                <!-- body -->
+                <rect x="58" y="258" width="364" height="272" rx="8" fill="url(#gbody)" />
+                <rect x="58" y="258" width="364" height="272" rx="8" fill="url(#gpat)" />
+                <!-- lid front -->
+                <rect x="38" y="186" width="404" height="80" rx="10" fill="url(#glid)" />
+                <rect x="38" y="186" width="404" height="80" rx="10" fill="url(#gpat)" />
+                <rect x="38" y="258" width="404" height="10" fill="#2a030a" opacity="0.55" />
+                <!-- lid top (perspective) -->
+                <polygon points="38,188 442,188 410,146 70,146" fill="url(#gtop)" />
+                <line x1="70" y1="146" x2="410" y2="146" stroke="#ff8e9c" stroke-opacity="0.5" stroke-width="2" />
+                <!-- ribbons -->
+                <g>
+                  <rect x="212" y="266" width="56" height="264" fill="url(#grib)" />
+                  <rect x="206" y="186" width="68" height="80" fill="url(#grib)" />
+                  <polygon points="206,188 274,188 264,146 216,146" fill="url(#grib)" />
+                </g>
+                <g clip-path="url(#gribclip)">
+                  <rect id="o4-sheen" x="150" y="100" width="44" height="460" fill="#fffbe8" opacity="0.85" transform="rotate(-20 172 330)" />
+                </g>
+                <!-- bow -->
+                <path d="M240 150 C200 70 120 70 140 120 C150 146 205 150 240 150 Z" fill="url(#gbow)" stroke="#7a4c12" stroke-width="2" />
+                <path d="M240 150 C280 70 360 70 340 120 C330 146 275 150 240 150 Z" fill="url(#gbow)" stroke="#7a4c12" stroke-width="2" />
+                <path d="M226 152 L196 214 L214 208 L222 226 L238 156 Z" fill="url(#grib)" />
+                <path d="M254 152 L284 214 L266 208 L258 226 L242 156 Z" fill="url(#grib)" />
+                <ellipse cx="240" cy="148" rx="20" ry="16" fill="url(#gbow)" stroke="#7a4c12" stroke-width="2" />
+                <ellipse cx="234" cy="142" rx="7" ry="4" fill="#fffbe8" opacity="0.8" />
+              </svg>
+            </div>
+            <div id="o4-glow"></div>
+          </div>
+        </div>
+      </section>
+      <section id="t4" class="clip texts" data-start="10.1" data-duration="4" data-track-index="13">
+        <div class="stage">
+          <div id="t4-frame" class="frame">
+            <div id="t4-a" class="row kicker ivory" style="top: 290px; font-size: 54px; letter-spacing: 0.4em">Plus…</div>
+            <div id="t4-b" class="row glow" style="top: 380px">
+              <span class="serif gold inl" style="font-size: 104px">A Surprise Gift!</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SCENE 05 — SMARTWATCH (14–17) ============ -->
+      <section id="o5" class="clip objects" data-start="14" data-duration="3.15" data-track-index="8">
+        <div class="stage">
+          <div id="o5-frame" class="frame">
+            <div id="o5-watchwrap" data-layout-allow-occlusion>
+              <div id="o5-spin" style="position:absolute;left:0;top:0;width:400px;height:820px">
+              <svg width="400" height="820" viewBox="0 0 400 820">
+                <defs>
+                  <linearGradient id="wcase" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#fff1c4" />
+                    <stop offset="0.22" stop-color="#c8953c" />
+                    <stop offset="0.45" stop-color="#f6dc9a" />
+                    <stop offset="0.7" stop-color="#8a6526" />
+                    <stop offset="1" stop-color="#e7c27a" />
+                  </linearGradient>
+                  <linearGradient id="wstrap" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0" stop-color="#0f0f14" />
+                    <stop offset="0.5" stop-color="#2e2d36" />
+                    <stop offset="1" stop-color="#0f0f14" />
+                  </linearGradient>
+                  <linearGradient id="wfadeT" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#fff" stop-opacity="0" />
+                    <stop offset="0.55" stop-color="#fff" stop-opacity="1" />
+                  </linearGradient>
+                  <linearGradient id="wfadeB" x1="0" y1="1" x2="0" y2="0">
+                    <stop offset="0" stop-color="#fff" stop-opacity="0" />
+                    <stop offset="0.55" stop-color="#fff" stop-opacity="1" />
+                  </linearGradient>
+                  <mask id="wmT"><rect x="0" y="0" width="400" height="260" fill="url(#wfadeT)" /></mask>
+                  <mask id="wmB"><rect x="0" y="560" width="400" height="260" fill="url(#wfadeB)" /></mask>
+                  <radialGradient id="wscreen" cx="0.45" cy="0.35" r="0.8">
+                    <stop offset="0" stop-color="#16203a" />
+                    <stop offset="1" stop-color="#04050a" />
+                  </radialGradient>
+                  <clipPath id="wglass"><rect x="72" y="222" width="256" height="366" rx="68" /></clipPath>
+                  <filter id="wblur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="10" /></filter>
+                  <filter id="wdot" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="3" /></filter>
+                </defs>
+                <!-- straps -->
+                <g mask="url(#wmT)">
+                  <path d="M112 0 H288 V200 H112 Z" fill="url(#wstrap)" />
+                  <path d="M124 0 V196 M276 0 V196" stroke="#d9a94e" stroke-opacity="0.55" stroke-width="2" stroke-dasharray="7 7" />
+                </g>
+                <g mask="url(#wmB)">
+                  <path d="M112 610 H288 V820 H112 Z" fill="url(#wstrap)" />
+                  <path d="M124 614 V820 M276 614 V820" stroke="#d9a94e" stroke-opacity="0.55" stroke-width="2" stroke-dasharray="7 7" />
+                </g>
+                <!-- cyan edge accent -->
+                <rect x="36" y="186" width="328" height="438" rx="100" fill="none" stroke="#5cc8ff" stroke-width="8" opacity="0.7" filter="url(#wblur)" />
+                <!-- case -->
+                <rect x="352" y="330" width="24" height="74" rx="9" fill="url(#wcase)" />
+                <rect x="356" y="430" width="16" height="52" rx="6" fill="url(#wcase)" />
+                <rect x="40" y="190" width="320" height="430" rx="96" fill="url(#wcase)" />
+                <rect x="54" y="204" width="292" height="402" rx="84" fill="#0a0a0d" />
+                <rect x="72" y="222" width="256" height="366" rx="68" fill="url(#wscreen)" />
+                <!-- screen UI -->
+                <g id="o5-dots"></g>
+                <path d="M200 322 L214 327 V338 C214 346 208 351 200 354 C192 351 186 346 186 338 V327 Z" fill="none" stroke="#5cc8ff" stroke-width="2.5" />
+                <text data-layout-allow-occlusion x="200" y="424" text-anchor="middle" font-family="Montserrat" font-weight="600" font-size="58" fill="#fff6e6" letter-spacing="1">09:09</text>
+                <text data-layout-allow-occlusion x="200" y="462" text-anchor="middle" font-family="Montserrat" font-weight="800" font-size="14" fill="#f5c766" letter-spacing="5">NAVRATRI</text>
+                <!-- glass rim light -->
+                <g clip-path="url(#wglass)">
+                  <rect id="o5-sheen" x="-120" y="140" width="60" height="560" fill="#ffffff" opacity="0.28" transform="rotate(24 200 405)" />
+                  <rect x="72" y="222" width="256" height="366" rx="68" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="3" />
+                </g>
+              </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="t5" class="clip texts" data-start="14.1" data-duration="2.95" data-track-index="14">
+        <div class="stage">
+          <div id="t5-frame" class="frame">
+            <div id="t5-a" class="row kicker ivory" style="top: 300px; font-size: 46px; letter-spacing: 0.18em">
+              Participate all 9 days
+            </div>
+            <div id="t5-b" class="row glow" style="top: 1390px">
+              <div class="kicker ivory" style="font-size: 40px; letter-spacing: 0.4em">Win a</div>
+              <div style="margin-top: 14px">
+                <span class="serif gold inl" style="font-size: 116px">Smartwatch</span>
+                <svg class="inl" width="56" height="56" viewBox="0 0 56 56" style="margin-left: 10px; margin-top: -60px">
+                  <path d="M28 2 C30 18 38 26 54 28 C38 30 30 38 28 54 C26 38 18 30 2 28 C18 26 26 18 28 2 Z" fill="#ffe3a1" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SCENE 06 — FINAL CTA (17–20) ============ -->
+      <section id="t6a" class="clip texts" data-start="17.05" data-duration="1" data-track-index="15">
+        <div class="stage">
+          <div id="t6a-frame" class="frame">
+            <div class="scrim"></div>
+            <div id="t6a-a" class="row glow" style="top: 760px">
+              <div class="serif gold" style="font-size: 150px; line-height: 1.02">Ready to Play?</div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="t6b" class="clip texts" data-start="18.05" data-duration="1.55" data-track-index="16">
+        <div class="stage">
+          <div id="t6b-frame" class="frame">
+            <div class="scrim"></div>
+            <div class="row" style="top: 600px">
+              <div class="kicker ivory" style="font-size: 42px; letter-spacing: 0.5em">Follow</div>
+              <div class="glow" style="margin-top: 16px"><div class="serif gold" style="font-size: 220px">NPAV</div></div>
+              <div class="kicker ivory" style="margin-top: 10px; font-size: 56px; letter-spacing: 0.2em">Cyber Security</div>
+              <div style="margin-top: 50px">
+                <span class="pill">DON'T MISS A SINGLE DROP!
+                  <svg class="inl" width="34" height="34" viewBox="0 0 56 56" style="margin-left: 8px; margin-top: -8px">
+                    <path d="M28 2 C30 18 38 26 54 28 C38 30 30 38 28 54 C26 38 18 30 2 28 C18 26 26 18 28 2 Z" fill="#ffe3a1" />
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="t6c" class="clip texts" data-start="18.05" data-duration="1.95" data-track-index="17">
+        <div class="stage">
+          <div style="position:absolute;left:0;top:1470px;width:1080px;height:160px;background:radial-gradient(ellipse 50% 50% at 50% 50%, rgba(10,2,6,0.82), rgba(10,2,6,0) 100%)"></div>
+          <div class="row" style="top: 1530px; font-weight: 600; font-size: 24px; letter-spacing: 0.32em; color: #e9dcc8">
+            TERMS &amp; CONDITIONS APPLY.
+          </div>
+        </div>
+      </section>
+
+      <!-- Front FX canvas (front-orbit particles, bursts), vignette, black, flash -->
+      <canvas id="fx" class="full" width="2160" height="3840"></canvas>
+      <div id="vignette" class="full"></div>
+      <div id="blackout" class="full"></div>
+      <div id="flash" class="full"></div>
+
+      <audio id="score" src="assets/audio/score.wav" data-start="0" data-duration="20" data-volume="1"></audio>
+    </div>
+
+    <script>
+      (function () {
+        // ---------- deterministic helpers ----------
+        function hash(a, b) {
+          var n = (a | 0) * 374761393 + (b | 0) * 668265263;
+          n = (n ^ (n >>> 13)) * 1274126177;
+          n = n ^ (n >>> 16);
+          return (n >>> 0) / 4294967295;
+        }
+        function clamp(v, a, b) {
+          return v < a ? a : v > b ? b : v;
+        }
+        function lerp(a, b, t) {
+          return a + (b - a) * t;
+        }
+        function smooth(e0, e1, x) {
+          var t = clamp((x - e0) / (e1 - e0), 0, 1);
+          return t * t * (3 - 2 * t);
+        }
+        function eio(t) {
+          t = clamp(t, 0, 1);
+          return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        }
+        function eout(t) {
+          t = clamp(t, 0, 1);
+          return 1 - Math.pow(1 - t, 3);
+        }
+        function frac(x) {
+          return x - Math.floor(x);
+        }
+        var TAU = Math.PI * 2;
+
+        // ---------- canvases ----------
+        var world = document.getElementById("world");
+        var fx = document.getElementById("fx");
+        var W = world.getContext("2d");
+        var F = fx.getContext("2d");
+
+        function sprite(r, g, b) {
+          var c = document.createElement("canvas");
+          c.width = c.height = 128;
+          var x = c.getContext("2d");
+          var gr = x.createRadialGradient(64, 64, 0, 64, 64, 64);
+          gr.addColorStop(0, "rgba(" + r + "," + g + "," + b + ",1)");
+          gr.addColorStop(0.25, "rgba(" + r + "," + g + "," + b + ",0.55)");
+          gr.addColorStop(0.6, "rgba(" + r + "," + g + "," + b + ",0.12)");
+          gr.addColorStop(1, "rgba(" + r + "," + g + "," + b + ",0)");
+          x.fillStyle = gr;
+          x.fillRect(0, 0, 128, 128);
+          return c;
+        }
+        var GOLD = sprite(255, 196, 92);
+        var WARM = sprite(255, 232, 180);
+        var CRIM = sprite(220, 30, 60);
+        var BLUE = sprite(92, 200, 255);
+        var WHITE = sprite(255, 250, 235);
+
+        var GA = 1; // scene alpha multiplier
+        function glow(ctx, x, y, r, spr, a) {
+          if (a <= 0.003 || r <= 0) return;
+          ctx.globalAlpha = clamp(a * GA, 0, 1);
+          ctx.drawImage(spr, x - r, y - r, r * 2, r * 2);
+        }
+        function alpha(ctx, a) {
+          ctx.globalAlpha = clamp(a * GA, 0, 1);
+        }
+
+        // Nine golden points — the hero device
+        function nine(ctx, cx, cy, rx, ry, rot, litFn, size, t) {
+          for (var i = 0; i < 9; i++) {
+            var a = -Math.PI / 2 + (i * TAU) / 9 + rot;
+            var x = cx + Math.cos(a) * rx;
+            var y = cy + Math.sin(a) * ry;
+            var l = litFn(i);
+            var tw = 0.85 + 0.15 * Math.sin(t * 5 + i * 1.7);
+            ctx.globalCompositeOperation = "lighter";
+            glow(ctx, x, y, size * 3.6, GOLD, (0.12 + 0.6 * l) * tw);
+            glow(ctx, x, y, size * 1.3, WARM, 0.15 + 0.85 * l);
+            ctx.globalCompositeOperation = "source-over";
+            alpha(ctx, 0.35 + 0.65 * l);
+            ctx.fillStyle = l > 0.5 ? "#fff6dc" : "#c9934a";
+            ctx.beginPath();
+            ctx.arc(x, y, size * (0.32 + 0.12 * l), 0, TAU);
+            ctx.fill();
+          }
+          ctx.globalAlpha = 1;
+        }
+
+        var SKIRTS = ["#b3122e", "#c2185b", "#e8781a", "#138a5e", "#2446a8", "#e3a92b", "#8e1fa0"];
+        var CHOLI = ["#e3a92b", "#1b6b8f", "#b3122e", "#f0d9a0", "#7a1030", "#138a5e"];
+
+        // ================= SCENE 1: aerial Garba =================
+        var RINGS1 = [148, 214, 280, 346, 412, 478];
+        function dancerTop(ctx, x, y, a, t, id, fade) {
+          var col = SKIRTS[id % SKIRTS.length];
+          var spin = t * (3.2 + hash(id, 3) * 2.2) + id * 1.3;
+          ctx.save();
+          ctx.translate(x, y);
+          ctx.globalCompositeOperation = "lighter";
+          glow(ctx, 0, 0, 30, GOLD, 0.16 * fade);
+          ctx.globalCompositeOperation = "source-over";
+          ctx.rotate(a + spin * 0.25);
+          // flared skirt (lobed)
+          alpha(ctx, fade);
+          ctx.beginPath();
+          var lobes = 9;
+          for (var k = 0; k <= 36; k++) {
+            var th = (k / 36) * TAU;
+            var r = 12.5 + 1.8 * Math.sin(th * lobes + spin * 2) + 1.2 * Math.sin(spin * 3);
+            var px = Math.cos(th) * r,
+              py = Math.sin(th) * r;
+            if (k === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.fillStyle = col;
+          ctx.fill();
+          ctx.lineWidth = 1.8;
+          ctx.strokeStyle = "rgba(255,214,140,0.85)";
+          ctx.stroke();
+          // arms + dandiya
+          var sw = Math.sin(t * 7 + id) * 0.5;
+          ctx.strokeStyle = "#7a4a30";
+          ctx.lineWidth = 2.6;
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(15 * Math.cos(sw), 15 * Math.sin(sw) - 3);
+          ctx.moveTo(0, 0);
+          ctx.lineTo(-15 * Math.cos(-sw), -15 * Math.sin(-sw) - 3);
+          ctx.stroke();
+          ctx.strokeStyle = "#ffd98a";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(15 * Math.cos(sw), 15 * Math.sin(sw) - 3);
+          ctx.lineTo(24 * Math.cos(sw + 0.5), 24 * Math.sin(sw + 0.5) - 3);
+          ctx.moveTo(-15 * Math.cos(-sw), -15 * Math.sin(-sw) - 3);
+          ctx.lineTo(-24 * Math.cos(-sw - 0.5), -24 * Math.sin(-sw - 0.5) - 3);
+          ctx.stroke();
+          // choli + head
+          ctx.fillStyle = CHOLI[id % CHOLI.length];
+          ctx.beginPath();
+          ctx.arc(0, 0, 6, 0, TAU);
+          ctx.fill();
+          ctx.fillStyle = "#140806";
+          ctx.beginPath();
+          ctx.arc(0, -1, 4.2, 0, TAU);
+          ctx.fill();
+          ctx.restore();
+        }
+
+        function drawS1(ctx, t) {
+          var u = clamp(t / 3.05, 0, 1);
+          var e = eio(u);
+          var k = 0.42 * Math.pow(2.3 / 0.42, e);
+          var rot = -0.55 + 0.6 * e;
+          var dig = smooth(2.1, 2.95, t);
+          ctx.save();
+          ctx.translate(540, 1010);
+          ctx.rotate(rot);
+          ctx.scale(k, k);
+          // floor
+          var fl = ctx.createRadialGradient(0, 0, 0, 0, 0, 1500);
+          fl.addColorStop(0, "#40091a");
+          fl.addColorStop(0.3, "#22060e");
+          fl.addColorStop(0.65, "#0d0306");
+          fl.addColorStop(1, "#040103");
+          alpha(ctx, 1);
+          ctx.fillStyle = fl;
+          ctx.fillRect(-3000, -3000, 6000, 6000);
+          ctx.globalCompositeOperation = "lighter";
+          for (var i = 0; i < 6; i++) {
+            var ang = i * 1.047 + t * 0.12;
+            glow(ctx, Math.cos(ang) * 560, Math.sin(ang) * 560, 460, i % 2 ? GOLD : CRIM, 0.22);
+          }
+          glow(ctx, 0, 0, 300, GOLD, 0.45);
+          ctx.globalCompositeOperation = "source-over";
+          // rangoli mandala at the centre
+          ctx.strokeStyle = "#ffd98a";
+          ctx.lineWidth = 1.4;
+          alpha(ctx, 0.45 * (1 - dig));
+          for (var j = 0; j < 3; j++) {
+            ctx.beginPath();
+            ctx.arc(0, 0, 34 + j * 26, 0, TAU);
+            ctx.stroke();
+          }
+          for (var p = 0; p < 12; p++) {
+            var pa = (p / 12) * TAU + t * 0.1;
+            ctx.beginPath();
+            ctx.ellipse(Math.cos(pa) * 70, Math.sin(pa) * 70, 18, 7, pa, 0, TAU);
+            ctx.stroke();
+          }
+          // festoon light spokes
+          ctx.globalCompositeOperation = "lighter";
+          for (var s = 0; s < 18; s++) {
+            var sa = (s / 18) * TAU;
+            for (var d = 540; d < 1500; d += 36) {
+              var tw = hash(s * 97 + d, Math.floor(t * 6));
+              glow(ctx, Math.cos(sa) * d, Math.sin(sa) * d, 11, (s + d / 36) % 3 ? WARM : CRIM, 0.45 + 0.4 * tw);
+            }
+          }
+          ctx.globalCompositeOperation = "source-over";
+          // spectators
+          ctx.fillStyle = "#1a0a0c";
+          for (var q = 0; q < 360; q++) {
+            var qa = hash(q, 11) * TAU;
+            var qr = 545 + hash(q, 12) * 150;
+            alpha(ctx, 0.8);
+            ctx.beginPath();
+            ctx.arc(Math.cos(qa) * qr, Math.sin(qa) * qr, 5 + hash(q, 13) * 2, 0, TAU);
+            ctx.fill();
+          }
+          // dancers
+          var id = 0;
+          for (var ri = 0; ri < RINGS1.length; ri++) {
+            var R = RINGS1[ri];
+            var n = Math.round((TAU * R) / 44);
+            var dir = ri % 2 ? -1 : 1;
+            var w = 0.34 * dir;
+            var fade = 1 - dig * (ri === 0 ? 0.9 : 0.7);
+            for (var m = 0; m < n; m++) {
+              var a = (m / n) * TAU + t * w + ri * 0.4;
+              dancerTop(ctx, Math.cos(a) * R, Math.sin(a) * R, a + Math.PI / 2, t, id++, fade);
+            }
+          }
+          // the Garba circle resolves into a digital ring
+          if (dig > 0) {
+            var R0 = RINGS1[0];
+            ctx.globalCompositeOperation = "lighter";
+            alpha(ctx, dig);
+            ctx.strokeStyle = "#ffd98a";
+            ctx.lineWidth = 3 / k + 1;
+            ctx.beginPath();
+            ctx.arc(0, 0, R0, 0, TAU);
+            ctx.stroke();
+            alpha(ctx, dig * 0.6);
+            ctx.strokeStyle = "#5cc8ff";
+            ctx.lineWidth = 1.2;
+            ctx.setLineDash([6, 8]);
+            ctx.beginPath();
+            ctx.arc(0, 0, R0 + 16, t * 0.4, t * 0.4 + TAU);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.globalCompositeOperation = "source-over";
+            ctx.restore();
+            ctx.save();
+            // nodes begin to emerge in screen space so they align with Scene 2
+            nine(ctx, 540, 1010, 340, 340, 0, function () {
+              return 0;
+            }, 26 * dig, t);
+          }
+          ctx.restore();
+        }
+
+        // ================= SCENE 2: nine nodes =================
+        var NODE_T = [];
+        for (var ni = 0; ni < 9; ni++) NODE_T.push(3.25 + ni * 0.17);
+        function nodeOn(i, t) {
+          return smooth(NODE_T[i], NODE_T[i] + 0.12, t);
+        }
+        function s2scale(t) {
+          var x = clamp((t - 3) / 3, 0, 1);
+          return 1 + 0.18 * (0.5 - 0.5 * Math.cos(Math.PI * x));
+        }
+        function drawS2(ctx, t) {
+          var g = s2scale(t);
+          var cx = 540,
+            cy = 1010,
+            R = 340 * g;
+          var bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, 1150);
+          bg.addColorStop(0, "#2c0712");
+          bg.addColorStop(0.5, "#120409");
+          bg.addColorStop(1, "#040103");
+          alpha(ctx, 1);
+          ctx.fillStyle = bg;
+          ctx.fillRect(0, 0, 1080, 1920);
+          var all = smooth(4.8, 4.9, t) * (0.6 + 0.4 * Math.exp(-(t - 4.9) * 2.5));
+          ctx.globalCompositeOperation = "lighter";
+          glow(ctx, cx, cy, 620 * g, CRIM, 0.35);
+          glow(ctx, cx, cy, 420 * g, GOLD, 0.12 + 0.25 * all);
+          // parallax tech rings
+          var layers = [
+            { r: 0.5, p: 1.35, c: "#5cc8ff", a: 0.35, dash: [3, 9], sp: 0.5 },
+            { r: 0.76, p: 1.2, c: "#ffd98a", a: 0.25, dash: [26, 10], sp: -0.3 },
+            { r: 1.26, p: 0.85, c: "#5cc8ff", a: 0.22, dash: [2, 14], sp: 0.18 },
+            { r: 1.55, p: 0.7, c: "#ffd98a", a: 0.12, dash: [], sp: 0 },
+          ];
+          for (var L = 0; L < layers.length; L++) {
+            var ly = layers[L];
+            var rr = 340 * ly.r * Math.pow(g, ly.p);
+            alpha(ctx, ly.a);
+            ctx.strokeStyle = ly.c;
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash(ly.dash);
+            ctx.beginPath();
+            ctx.arc(cx, cy, rr, t * ly.sp, t * ly.sp + TAU);
+            ctx.stroke();
+          }
+          ctx.setLineDash([]);
+          // tick marks
+          alpha(ctx, 0.3);
+          ctx.strokeStyle = "#ffd98a";
+          ctx.lineWidth = 1.2;
+          var tr = 340 * 1.12 * Math.pow(g, 0.95);
+          for (var tk = 0; tk < 72; tk++) {
+            var ta = (tk / 72) * TAU - t * 0.08;
+            var l1 = tk % 8 === 0 ? 14 : 6;
+            ctx.beginPath();
+            ctx.moveTo(cx + Math.cos(ta) * tr, cy + Math.sin(ta) * tr);
+            ctx.lineTo(cx + Math.cos(ta) * (tr + l1), cy + Math.sin(ta) * (tr + l1));
+            ctx.stroke();
+          }
+          // arcs connecting nodes + spokes
+          for (var i = 0; i < 9; i++) {
+            var on = nodeOn(i, t);
+            var a0 = -Math.PI / 2 + (i * TAU) / 9;
+            var a1 = a0 + TAU / 9;
+            var nextOn = i < 8 ? nodeOn(i + 1, t) : smooth(4.75, 4.85, t);
+            if (nextOn > 0) {
+              alpha(ctx, 0.9);
+              ctx.strokeStyle = "#ffcf6e";
+              ctx.lineWidth = 3;
+              ctx.beginPath();
+              ctx.arc(cx, cy, R, a0, a0 + (a1 - a0) * nextOn);
+              ctx.stroke();
+            }
+            alpha(ctx, 0.12 + 0.35 * on);
+            ctx.strokeStyle = "#5cc8ff";
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.moveTo(cx + Math.cos(a0) * R * 0.32, cy + Math.sin(a0) * R * 0.32);
+            ctx.lineTo(cx + Math.cos(a0) * R * 0.66, cy + Math.sin(a0) * R * 0.66);
+            ctx.stroke();
+            alpha(ctx, 0.4 * on);
+            ctx.fillStyle = "#5cc8ff";
+            ctx.fillRect(cx + Math.cos(a0) * R * 0.32 - 3, cy + Math.sin(a0) * R * 0.32 - 3, 6, 6);
+          }
+          // node rings
+          for (var j = 0; j < 9; j++) {
+            var o = nodeOn(j, t);
+            var aj = -Math.PI / 2 + (j * TAU) / 9;
+            var x = cx + Math.cos(aj) * R,
+              y = cy + Math.sin(aj) * R;
+            var pop = Math.exp(-Math.max(0, t - NODE_T[j]) * 6) * o;
+            glow(ctx, x, y, (95 + 70 * all + 60 * pop) * g, GOLD, 0.15 + 0.5 * o + 0.3 * all);
+            glow(ctx, x, y, 32 * g, WARM, o);
+            ctx.globalCompositeOperation = "source-over";
+            alpha(ctx, 0.5 + 0.5 * o);
+            ctx.strokeStyle = o > 0.3 ? "#ffe3a1" : "#9a7038";
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.arc(x, y, (26 + 6 * pop) * g, 0, TAU);
+            ctx.stroke();
+            alpha(ctx, 0.35 * o);
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(x, y, (38 + 30 * pop) * g, 0, TAU);
+            ctx.stroke();
+            alpha(ctx, o);
+            ctx.fillStyle = "#fff6dc";
+            ctx.beginPath();
+            ctx.arc(x, y, 11 * g, 0, TAU);
+            ctx.fill();
+            ctx.globalCompositeOperation = "lighter";
+          }
+          ctx.globalCompositeOperation = "source-over";
+        }
+
+        // ================= SCENE 3: prize halo =================
+        function drawS3(ctx, t) {
+          var cx = 540,
+            cy = 1010;
+          var bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, 1200);
+          bg.addColorStop(0, "#4c0c19");
+          bg.addColorStop(0.45, "#1c050a");
+          bg.addColorStop(1, "#050103");
+          alpha(ctx, 1);
+          ctx.fillStyle = bg;
+          ctx.fillRect(0, 0, 1080, 1920);
+          ctx.globalCompositeOperation = "lighter";
+          // soft rays
+          for (var r = 0; r < 24; r++) {
+            var ra = (r / 24) * TAU + t * 0.05;
+            alpha(ctx, 0.05 + 0.03 * Math.sin(t * 2 + r));
+            ctx.fillStyle = "#ffcf6e";
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + Math.cos(ra - 0.04) * 1400, cy + Math.sin(ra - 0.04) * 1400);
+            ctx.lineTo(cx + Math.cos(ra + 0.04) * 1400, cy + Math.sin(ra + 0.04) * 1400);
+            ctx.closePath();
+            ctx.fill();
+          }
+          glow(ctx, cx, cy, 700, CRIM, 0.4);
+          // the prize halo — nine points behind the cards
+          alpha(ctx, 0.3);
+          ctx.strokeStyle = "#ffd98a";
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(cx, cy, 470, 0, TAU);
+          ctx.stroke();
+          ctx.globalCompositeOperation = "source-over";
+          nine(ctx, cx, cy, 470, 470, t * 0.08, function () {
+            return 0.85;
+          }, 22, t);
+          // golden particles travelling between the cards
+          if (t > 7.05 && t < 9.6) {
+            var env = smooth(7.05, 7.4, t) * (1 - smooth(9.3, 9.6, t));
+            ctx.globalCompositeOperation = "lighter";
+            for (var i = 0; i < 54; i++) {
+              var p = frac(hash(i, 1) + (t - 7) * (0.35 + hash(i, 2) * 0.4));
+              var dirn = i % 2 ? 1 : -1;
+              var x0 = dirn > 0 ? 300 : 780,
+                x1 = dirn > 0 ? 780 : 300;
+              var x = lerp(x0, x1, p);
+              var y = 1010 + Math.sin(p * Math.PI) * (hash(i, 3) * 360 - 180) + Math.sin(t * 3 + i) * 8;
+              var s = 4 + hash(i, 4) * 9;
+              glow(ctx, x, y, s * 2.2, GOLD, env * Math.sin(p * Math.PI));
+              glow(ctx, x, y, s * 0.6, WHITE, env * Math.sin(p * Math.PI));
+            }
+            ctx.globalCompositeOperation = "source-over";
+          }
+          // merge light
+          var mg = smooth(9.5, 9.95, t);
+          if (mg > 0) {
+            ctx.globalCompositeOperation = "lighter";
+            glow(ctx, cx, cy, 120 + 900 * mg, WHITE, mg);
+            glow(ctx, cx, cy, 200 + 1200 * mg, GOLD, mg);
+            ctx.globalCompositeOperation = "source-over";
+          }
+        }
+
+        // ================= SCENE 4: gift + halo =================
+        function giftHaloOn(i, t) {
+          return smooth(10.95 + i * 0.19, 11.1 + i * 0.19, t);
+        }
+        function orbit(ctx, t, front) {
+          ctx.globalCompositeOperation = "lighter";
+          var env = smooth(10.4, 11.0, t);
+          for (var i = 0; i < 80; i++) {
+            var th = hash(i, 21) * TAU + (t - 10) * (0.7 + hash(i, 22) * 0.5);
+            var depth = Math.sin(th);
+            if (front ? depth < 0 : depth >= 0) continue;
+            var rx = 270 + hash(i, 23) * 90,
+              ry = 70 + hash(i, 24) * 40;
+            var x = 540 + Math.cos(th) * rx;
+            var y = 1060 + Math.sin(th) * ry - 60 + hash(i, 25) * 120 - 60 * Math.cos(th) * 0.2;
+            var s = 3 + hash(i, 26) * 6 + (front ? 2 : 0);
+            glow(ctx, x, y, s * 2.6, GOLD, env * (front ? 0.9 : 0.55));
+            glow(ctx, x, y, s * 0.7, WHITE, env * (front ? 0.9 : 0.5));
+          }
+          ctx.globalCompositeOperation = "source-over";
+        }
+        function drawS4(ctx, t) {
+          alpha(ctx, 1);
+          ctx.fillStyle = "#030103";
+          ctx.fillRect(0, 0, 1080, 1920);
+          var on = smooth(10.12, 10.6, t);
+          ctx.globalCompositeOperation = "lighter";
+          glow(ctx, 540, 1040, 650, CRIM, 0.38 * on);
+          // spotlight cone
+          var sg = ctx.createLinearGradient(0, -40, 0, 1300);
+          sg.addColorStop(0, "rgba(255,226,160,0.30)");
+          sg.addColorStop(1, "rgba(255,200,110,0.05)");
+          alpha(ctx, on);
+          ctx.fillStyle = sg;
+          ctx.beginPath();
+          ctx.moveTo(510, -40);
+          ctx.lineTo(570, -40);
+          ctx.lineTo(820, 1300);
+          ctx.lineTo(260, 1300);
+          ctx.closePath();
+          ctx.fill();
+          alpha(ctx, on * 0.7);
+          ctx.fillStyle = "rgba(255,210,130,0.25)";
+          ctx.beginPath();
+          ctx.ellipse(540, 1292, 290, 46, 0, 0, TAU);
+          ctx.fill();
+          // dust in beam
+          for (var d = 0; d < 46; d++) {
+            var yy = frac(hash(d, 31) - (t - 10) * 0.04 * (0.5 + hash(d, 32))) * 1300;
+            var spread = 30 + (yy / 1300) * 260;
+            var xx = 540 + (hash(d, 33) * 2 - 1) * spread;
+            glow(ctx, xx, yy, 5 + hash(d, 34) * 5, WARM, on * 0.35);
+          }
+          ctx.globalCompositeOperation = "source-over";
+          // the gift halo: nine points light sequentially
+          alpha(ctx, 0.22 * on);
+          ctx.strokeStyle = "#ffd98a";
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(540, 1010, 340, 0, TAU);
+          ctx.stroke();
+          nine(ctx, 540, 1010, 340, 340, 0, function (i) {
+            return giftHaloOn(i, t);
+          }, 24 * on, t);
+          orbit(ctx, t, false);
+        }
+
+        // ================= SCENE 5: smartwatch halo =================
+        function drawS5(ctx, t) {
+          var cx = 540,
+            cy = 940;
+          var bg = ctx.createRadialGradient(cx, cy, 0, cx, cy, 1200);
+          bg.addColorStop(0, "#2a0c18");
+          bg.addColorStop(0.5, "#0e0610");
+          bg.addColorStop(1, "#030206");
+          alpha(ctx, 1);
+          ctx.fillStyle = bg;
+          ctx.fillRect(0, 0, 1080, 1920);
+          ctx.globalCompositeOperation = "lighter";
+          glow(ctx, 0, 1920, 700, BLUE, 0.18);
+          glow(ctx, 1080, 0, 700, BLUE, 0.14);
+          var open = smooth(14.0, 14.5, t);
+          for (var r = 0; r < 18; r++) {
+            var ra = (r / 18) * TAU + t * 0.07;
+            alpha(ctx, (0.06 + 0.03 * Math.sin(t * 3 + r * 2)) * open);
+            ctx.fillStyle = "#ffcf6e";
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + Math.cos(ra - 0.05) * 1500, cy + Math.sin(ra - 0.05) * 1500);
+            ctx.lineTo(cx + Math.cos(ra + 0.05) * 1500, cy + Math.sin(ra + 0.05) * 1500);
+            ctx.closePath();
+            ctx.fill();
+          }
+          glow(ctx, cx, cy, 520, GOLD, 0.3 * open);
+          // cyber accents
+          var arcs = [
+            [380, 1.1, 0.4],
+            [410, 0.7, -0.3],
+            [440, 1.6, 0.22],
+          ];
+          for (var a = 0; a < arcs.length; a++) {
+            var st = t * arcs[a][2] + a * 2;
+            alpha(ctx, 0.55 * open);
+            ctx.strokeStyle = "#5cc8ff";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(cx, cy, arcs[a][0], st, st + arcs[a][1]);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(cx, cy, arcs[a][0], st + Math.PI, st + Math.PI + arcs[a][1] * 0.6);
+            ctx.stroke();
+          }
+          ctx.globalCompositeOperation = "source-over";
+          var halo = smooth(14.7, 15.45, t);
+          nine(ctx, cx, cy, 330, 330, t * 0.05, function () {
+            return 0.75 + 0.25 * Math.sin(t * 4);
+          }, 24 * halo, t);
+          // golden circular light expands from behind the watch
+          var ex = smooth(16.55, 17.05, t);
+          if (ex > 0) {
+            ctx.globalCompositeOperation = "lighter";
+            var rr = 200 + eout(ex) * 1300;
+            alpha(ctx, 0.9 * (1 - ex * 0.3));
+            ctx.strokeStyle = "#ffd98a";
+            ctx.lineWidth = 40 + 60 * ex;
+            ctx.beginPath();
+            ctx.arc(cx, cy, rr, 0, TAU);
+            ctx.stroke();
+            glow(ctx, cx, cy, rr * 1.3, GOLD, ex);
+            ctx.globalCompositeOperation = "source-over";
+          }
+        }
+
+        // ================= SCENE 6: Garba finale (perspective) =================
+        var CROWD = [];
+        (function () {
+          var rings = [
+            [4.2, 13, 0.42],
+            [6.6, 21, -0.34],
+            [9.0, 29, 0.28],
+            [11.6, 36, -0.2],
+          ];
+          var id = 0;
+          for (var i = 0; i < rings.length; i++) {
+            for (var j = 0; j < rings[i][1]; j++) {
+              CROWD.push({
+                R: rings[i][0] + (hash(id, 41) - 0.5) * 0.5,
+                a0: (j / rings[i][1]) * TAU + i * 0.3,
+                w: rings[i][2],
+                id: id,
+                male: hash(id, 42) < 0.28,
+                ph: hash(id, 43) * TAU,
+              });
+              id++;
+            }
+          }
+        })();
+        function figure(ctx, sx, sy, s, d, t, light) {
+          var id = d.id;
+          ctx.save();
+          ctx.translate(sx, sy);
+          ctx.scale(s / 100, s / 100);
+          var ph = t * TAU * 1.05 + d.ph;
+          var flare = 0.5 + 0.5 * Math.sin(ph);
+          var bob = Math.abs(Math.sin(ph)) * 6;
+          ctx.translate(0, -bob);
+          // floor shadow / light
+          ctx.globalCompositeOperation = "lighter";
+          glow(ctx, 0, bob, 70, GOLD, 0.18 * light);
+          ctx.globalCompositeOperation = "source-over";
+          alpha(ctx, 1);
+          var lean = Math.sin(ph * 0.5) * 6;
+          if (!d.male) {
+            var col = SKIRTS[id % SKIRTS.length];
+            var hw = 44 + 16 * flare;
+            ctx.fillStyle = col;
+            ctx.beginPath();
+            ctx.moveTo(-17, -96);
+            ctx.lineTo(17, -96);
+            ctx.quadraticCurveTo(hw * 0.7, -50, hw, -6);
+            ctx.quadraticCurveTo(0, 6 + 4 * flare, -hw, -6);
+            ctx.quadraticCurveTo(-hw * 0.7, -50, -17, -96);
+            ctx.fill();
+            ctx.strokeStyle = "#ffd98a";
+            ctx.lineWidth = 6;
+            ctx.beginPath();
+            ctx.moveTo(hw, -6);
+            ctx.quadraticCurveTo(0, 6 + 4 * flare, -hw, -6);
+            ctx.stroke();
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "rgba(255,214,140,0.5)";
+            ctx.beginPath();
+            ctx.moveTo(-hw * 0.55, -30);
+            ctx.quadraticCurveTo(0, -24, hw * 0.55, -30);
+            ctx.stroke();
+            ctx.fillStyle = CHOLI[id % CHOLI.length];
+            ctx.fillRect(-15 + lean * 0.3, -136, 30, 42);
+            // dupatta
+            ctx.fillStyle = "rgba(255,190,90,0.55)";
+            ctx.beginPath();
+            ctx.moveTo(-15 + lean * 0.3, -134);
+            ctx.lineTo(15 + lean * 0.3, -110);
+            ctx.lineTo(10 + lean * 0.3, -100);
+            ctx.lineTo(-15 + lean * 0.3, -124);
+            ctx.fill();
+          } else {
+            ctx.fillStyle = id % 2 ? "#f1e2c2" : "#e8781a";
+            ctx.beginPath();
+            ctx.moveTo(-18 + lean * 0.3, -138);
+            ctx.lineTo(18 + lean * 0.3, -138);
+            ctx.lineTo(28, -40);
+            ctx.lineTo(-28, -40);
+            ctx.closePath();
+            ctx.fill();
+            ctx.fillStyle = "#2a1410";
+            ctx.fillRect(-16, -42, 12, 42);
+            ctx.fillRect(4, -42, 12, 42);
+            ctx.strokeStyle = "#ffd98a";
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(-28, -40);
+            ctx.lineTo(28, -40);
+            ctx.stroke();
+          }
+          // arms with dandiya sticks (clap rhythm)
+          var up = Math.sin(ph * 2);
+          var hx = lean * 0.3;
+          var lhx = -34 + 10 * up,
+            lhy = -168 + 14 * up;
+          var rhx = 34 - 10 * up,
+            rhy = -150 - 18 * up;
+          ctx.strokeStyle = "#7d4b30";
+          ctx.lineWidth = 7;
+          ctx.lineCap = "round";
+          ctx.beginPath();
+          ctx.moveTo(-12 + hx, -130);
+          ctx.quadraticCurveTo(-34 + hx, -126, lhx + hx, lhy);
+          ctx.moveTo(12 + hx, -130);
+          ctx.quadraticCurveTo(34 + hx, -126, rhx + hx, rhy);
+          ctx.stroke();
+          ctx.strokeStyle = "#ffd98a";
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.moveTo(lhx + hx, lhy);
+          ctx.lineTo(lhx + hx + 18 + 10 * up, lhy - 26);
+          ctx.moveTo(rhx + hx, rhy);
+          ctx.lineTo(rhx + hx - 18 - 10 * up, rhy - 26);
+          ctx.stroke();
+          ctx.lineCap = "butt";
+          // head
+          ctx.fillStyle = "#1a0c08";
+          ctx.beginPath();
+          ctx.arc(hx, -150, 12, 0, TAU);
+          ctx.fill();
+          if (d.male) {
+            ctx.fillStyle = id % 3 ? "#c2185b" : "#e3a92b";
+            ctx.beginPath();
+            ctx.ellipse(hx, -160, 14, 7, 0, 0, TAU);
+            ctx.fill();
+          } else {
+            ctx.fillStyle = "#120806";
+            ctx.beginPath();
+            ctx.arc(hx - 6, -156, 7, 0, TAU);
+            ctx.fill();
+          }
+          // warm rim light
+          ctx.globalCompositeOperation = "lighter";
+          glow(ctx, hx, -150, 26, WARM, 0.18 * light);
+          ctx.globalCompositeOperation = "source-over";
+          ctx.restore();
+        }
+        function drawS6(ctx, t) {
+          var lt = clamp((t - 17) / 2.6, 0, 1);
+          var e = eio(lt);
+          var Zc = lerp(13.5, 10.8, e);
+          var H = lerp(3.0, 3.7, e);
+          var p = lerp(0.2, 0.24, e);
+          var FOC = 1100,
+            cx = 540,
+            cy = 1250;
+          var sp = Math.sin(p),
+            cp = Math.cos(p);
+          var energy = smooth(17.2, 19.0, t);
+          // sky
+          var sky = ctx.createLinearGradient(0, 0, 0, 1920);
+          sky.addColorStop(0, "#08030f");
+          sky.addColorStop(0.55, "#2a0712");
+          sky.addColorStop(0.7, "#45101a");
+          sky.addColorStop(1, "#1a0508");
+          alpha(ctx, 1);
+          ctx.fillStyle = sky;
+          ctx.fillRect(0, 0, 1080, 1920);
+          ctx.globalCompositeOperation = "lighter";
+          glow(ctx, 540, 1240, 760, CRIM, 0.5 + 0.2 * energy);
+          glow(ctx, 540, 1260, 420, GOLD, 0.25 + 0.3 * energy);
+          // bokeh
+          for (var b = 0; b < 26; b++) {
+            var bx = hash(b, 51) * 1080 + Math.sin(t * 0.6 + b) * 12;
+            var by = 120 + hash(b, 52) * 900;
+            glow(ctx, bx, by, 30 + hash(b, 53) * 60, b % 3 ? WARM : CRIM, 0.08 + 0.06 * energy);
+          }
+          // festoon string lights
+          for (var sI = 0; sI < 4; sI++) {
+            var base = 120 + sI * 150 - e * 40;
+            var sag = 90 + sI * 20;
+            for (var x = -40; x <= 1120; x += 34) {
+              var nx = (x - 540) / 600;
+              var y = base + sag * (1 - nx * nx) + sI * 10;
+              var tw = hash(sI * 1000 + x, Math.floor(t * 8));
+              glow(ctx, x, y, 12 + 4 * sI, (x / 34 + sI) % 3 ? WARM : CRIM, 0.45 + 0.35 * tw + 0.2 * energy);
+            }
+          }
+          ctx.globalCompositeOperation = "source-over";
+          // project crowd
+          var list = [];
+          for (var i = 0; i < CROWD.length; i++) {
+            var d = CROWD[i];
+            var a = d.a0 + t * d.w;
+            var X = Math.cos(a) * d.R;
+            var Z = Zc + Math.sin(a) * d.R;
+            var dy = -H,
+              dz = Z;
+            var zc = dy * -sp + dz * cp;
+            if (zc < 1.6) continue;
+            var yc = dy * cp + dz * sp;
+            list.push({ d: d, zc: zc, sx: cx + (FOC * X) / zc, sy: cy - (FOC * yc) / zc });
+          }
+          list.sort(function (m, n) {
+            return n.zc - m.zc;
+          });
+          // garbo lamp at the centre
+          var lz = -H * -sp + Zc * cp;
+          var ly = cy - (FOC * (-H * cp + Zc * sp)) / lz;
+          var drawnLamp = false;
+          for (var k = 0; k < list.length; k++) {
+            var it = list[k];
+            if (!drawnLamp && it.zc < lz) {
+              drawnLamp = true;
+              lamp(ctx, cx, ly, FOC / lz, t, energy);
+            }
+            var fog = clamp(1.25 - it.zc / 26, 0.25, 1);
+            GA = fog;
+            figure(ctx, it.sx, it.sy, FOC / it.zc, it.d, t, 0.6 + energy);
+            GA = 1;
+          }
+          if (!drawnLamp) lamp(ctx, cx, ly, FOC / lz, t, energy);
+          // nine golden points above the celebration
+          var appear = smooth(17.25, 17.9, t);
+          var ign = smooth(19.15, 19.25, t);
+          nine(ctx, 540, 470 - e * 30, 380, 62, t * 0.25, function () {
+            return 0.7 + 0.3 * ign;
+          }, 24 * appear * (1 + 0.5 * ign), t);
+          if (energy > 0) {
+            ctx.globalCompositeOperation = "lighter";
+            alpha(ctx, 0.12 * energy);
+            ctx.fillStyle = "#ffb85c";
+            ctx.fillRect(0, 0, 1080, 1920);
+            ctx.globalCompositeOperation = "source-over";
+          }
+        }
+        function lamp(ctx, x, y, s, t, energy) {
+          ctx.save();
+          ctx.translate(x, y);
+          ctx.scale(s / 100, s / 100);
+          ctx.globalCompositeOperation = "lighter";
+          glow(ctx, 0, -110, 160, GOLD, 0.6 + 0.3 * energy);
+          ctx.globalCompositeOperation = "source-over";
+          alpha(ctx, 1);
+          ctx.fillStyle = "#9c6a24";
+          ctx.beginPath();
+          ctx.moveTo(-26, 0);
+          ctx.lineTo(26, 0);
+          ctx.quadraticCurveTo(40, -60, 18, -95);
+          ctx.lineTo(-18, -95);
+          ctx.quadraticCurveTo(-40, -60, -26, 0);
+          ctx.fill();
+          ctx.globalCompositeOperation = "lighter";
+          for (var f = 0; f < 5; f++) {
+            var fx2 = -16 + f * 8;
+            glow(ctx, fx2, -104 - 6 * Math.sin(t * 9 + f), 16, WARM, 0.9);
+          }
+          ctx.globalCompositeOperation = "source-over";
+          ctx.restore();
+        }
+
+        // ================= global particles =================
+        function dust(ctx, t, amt) {
+          ctx.globalCompositeOperation = "lighter";
+          for (var i = 0; i < 110; i++) {
+            var x = hash(i, 61) * 1080 + Math.sin(t * 0.7 + i) * 24;
+            var y = frac(hash(i, 62) - t * (0.015 + hash(i, 63) * 0.03)) * 2000 - 40;
+            var blue = i % 5 === 0;
+            var s = 2 + hash(i, 64) * 5;
+            glow(ctx, x, y, s * 3, blue ? BLUE : GOLD, amt * (0.25 + 0.35 * hash(i, 65)));
+          }
+          ctx.globalCompositeOperation = "source-over";
+        }
+
+        function burst(ctx, t, t0, origins, n, speed, color) {
+          var lt = t - t0;
+          if (lt < 0 || lt > 1.3) return;
+          ctx.globalCompositeOperation = "lighter";
+          for (var o = 0; o < origins.length; o++) {
+            for (var i = 0; i < n; i++) {
+              var a = hash(o * 100 + i, 71) * TAU;
+              var v = speed * (0.4 + hash(o * 100 + i, 72) * 0.8);
+              var dd = v * (1 - Math.exp(-lt * 3)) / 3;
+              var x = origins[o][0] + Math.cos(a) * dd;
+              var y = origins[o][1] + Math.sin(a) * dd + lt * lt * 40;
+              var f = 1 - lt / 1.3;
+              glow(ctx, x, y, 10 * f + 3, color, f);
+              glow(ctx, x, y, 3 * f + 1, WHITE, f);
+            }
+          }
+          ctx.globalCompositeOperation = "source-over";
+        }
+        function ringPts(cx, cy, rx, ry, rot) {
+          var pts = [];
+          for (var i = 0; i < 9; i++) {
+            var a = -Math.PI / 2 + (i * TAU) / 9 + rot;
+            pts.push([cx + Math.cos(a) * rx, cy + Math.sin(a) * ry]);
+          }
+          return pts;
+        }
+
+        function win(t, a, b, fi, fo) {
+          if (t < a || t >= b) return 0;
+          var v = 1;
+          if (fi > 0) v *= smooth(a, a + fi, t);
+          if (fo > 0) v *= 1 - smooth(b - fo, b, t);
+          return v;
+        }
+
+        function draw(t) {
+          W.setTransform(2, 0, 0, 2, 0, 0);
+          W.globalAlpha = 1;
+          W.globalCompositeOperation = "source-over";
+          W.fillStyle = "#050204";
+          W.fillRect(0, 0, 1080, 1920);
+          var scenes = [
+            [drawS1, 0, 3.1, 0, 0.15],
+            [drawS2, 2.95, 6.15, 0.15, 0.12],
+            [drawS3, 6.0, 10.1, 0.08, 0.15],
+            [drawS4, 9.95, 14.15, 0.12, 0.12],
+            [drawS5, 14.0, 17.12, 0.06, 0.12],
+            [drawS6, 17.0, 19.6, 0.08, 0],
+          ];
+          for (var i = 0; i < scenes.length; i++) {
+            var sc = scenes[i];
+            var a = win(t, sc[1], sc[2], sc[3], sc[4]);
+            if (a > 0) {
+              GA = a;
+              W.save();
+              sc[0](W, t);
+              W.restore();
+            }
+          }
+          GA = 1;
+          if (t < 19.6) dust(W, t, t > 9.95 && t < 14 ? 0.35 : 0.8);
+
+          F.setTransform(2, 0, 0, 2, 0, 0);
+          F.clearRect(0, 0, 1080, 1920);
+          GA = 1;
+          var g = s2scale(t);
+          burst(F, t, 4.88, ringPts(540, 1010, 340 * g, 340 * g, 0), 10, 260, GOLD);
+          burst(F, t, 5.85, ringPts(540, 1010, 340 * g, 340 * g, 0), 22, 900, GOLD);
+          if (t > 10 && t < 14.15) {
+            GA = win(t, 10, 14.15, 0.1, 0.1);
+            orbit(F, t, true);
+            GA = 1;
+          }
+          if (t < 19.6) burst(F, t, 19.2, ringPts(540, 470 - 30, 380, 62, t * 0.25), 26, 1100, GOLD);
+          F.globalAlpha = 1;
+        }
+
+        // ---------- DOM setup (pre-calculated constants) ----------
+        var labels = document.getElementById("t2-labels");
+        for (var li = 0; li < 9; li++) {
+          var la = -Math.PI / 2 + (li * TAU) / 9;
+          var el = document.createElement("div");
+          el.className = "nlabel";
+          el.setAttribute("data-layout-allow-occlusion", "");
+          el.id = "t2-l" + li;
+          el.textContent = "0" + (li + 1);
+          el.style.left = 540 + Math.cos(la) * 268 + "px";
+          el.style.top = 1010 + Math.sin(la) * 268 + "px";
+          labels.appendChild(el);
+        }
+        var dots = document.getElementById("o5-dots");
+        for (var di = 0; di < 9; di++) {
+          var da = -Math.PI / 2 + (di * TAU) / 9;
+          var c1 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          c1.setAttribute("cx", 200 + Math.cos(da) * 104);
+          c1.setAttribute("cy", 405 + Math.sin(da) * 104);
+          c1.setAttribute("r", 9);
+          c1.setAttribute("fill", "#f5b84a");
+          c1.setAttribute("filter", "url(#wdot)");
+          dots.appendChild(c1);
+          var c2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          c2.setAttribute("cx", 200 + Math.cos(da) * 104);
+          c2.setAttribute("cy", 405 + Math.sin(da) * 104);
+          c2.setAttribute("r", 5);
+          c2.setAttribute("fill", "#fff3cf");
+          dots.appendChild(c2);
+        }
+
+        // ---------- timeline ----------
+        var tl = gsap.timeline({ paused: true });
+        var proxy = { t: 0 };
+        tl.to(proxy, {
+          t: 20,
+          duration: 20,
+          ease: "none",
+          onUpdate: function () {
+            draw(proxy.t);
+          },
+        }, 0);
+
+        function textIn(sel, at) {
+          tl.fromTo(sel, { opacity: 0, y: 26, filter: "blur(14px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.45, ease: "expo.out" }, at);
+        }
+        function frameOut(sel, at) {
+          tl.to(sel, { opacity: 0, scale: 1.14, filter: "blur(10px)", duration: 0.22, ease: "power2.in", transformOrigin: "50% 50%" }, at);
+        }
+        function flash(at, peak, hold) {
+          tl.fromTo("#flash", { opacity: 0 }, { opacity: peak, duration: 0.14, ease: "power2.in", immediateRender: false }, at);
+          tl.to("#flash", { opacity: 0, duration: hold || 0.35, ease: "power2.out" }, at + 0.14);
+        }
+
+        // Scene 1
+        textIn("#t1-a", 0.35);
+        textIn("#t1-b", 0.7);
+        frameOut("#t1-frame", 2.88);
+        flash(2.92, 0.75, 0.3);
+
+        // Scene 2
+        textIn("#t2-a", 3.3);
+        textIn("#t2-b", 4.05);
+        tl.fromTo("#t2-labels", { scale: 1, transformOrigin: "540px 1010px" }, { scale: 1.18, duration: 3, ease: "sine.inOut" }, 3);
+        for (var lj = 0; lj < 9; lj++) {
+          tl.fromTo("#t2-l" + lj, { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none" }, 3.25 + lj * 0.17);
+        }
+        tl.fromTo("#t2-shield", { opacity: 0, scale: 0.6, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.6)" }, 4.85);
+        frameOut("#t2-frame", 5.86);
+        tl.to("#t2-labels", { opacity: 0, duration: 0.2 }, 5.86);
+        tl.to("#t2-shield", { opacity: 0, duration: 0.2 }, 5.86);
+        flash(5.86, 0.85, 0.32);
+
+        // Scene 3
+        textIn("#t3-a", 6.15);
+        tl.fromTo("#o3-left", { x: -720, rotationY: 35, transformPerspective: 1400 }, { x: 0, rotationY: 0, duration: 0.75, ease: "expo.out" }, 6.6);
+        tl.fromTo("#o3-right", { x: 720, rotationY: -35, transformPerspective: 1400 }, { x: 0, rotationY: 0, duration: 0.75, ease: "expo.out" }, 6.6);
+        // subtle orbit around both cards
+        tl.fromTo("#o3-frame", { rotationY: -7, scale: 0.98, transformPerspective: 1800, transformOrigin: "540px 1010px" }, { rotationY: 7, scale: 1.04, duration: 2.9, ease: "sine.inOut" }, 6.6);
+        tl.fromTo("#o3-sheenL", { x: 0 }, { x: 760, duration: 0.6, ease: "power2.inOut" }, 7.55);
+        tl.fromTo("#o3-glowL", { opacity: 0 }, { opacity: 0.9, duration: 0.25 }, 7.6);
+        tl.to("#o3-glowL", { opacity: 0.35, duration: 0.4 }, 7.9);
+        tl.fromTo("#o3-sheenR", { x: 0 }, { x: 760, duration: 0.6, ease: "power2.inOut" }, 8.05);
+        tl.fromTo("#o3-glowR", { opacity: 0 }, { opacity: 0.9, duration: 0.2 }, 8.1);
+        tl.to("#o3-glowR", { opacity: 0.35, duration: 0.2 }, 8.35);
+        tl.to(["#o3-glowL", "#o3-glowR"], { opacity: 1, duration: 0.3 }, 8.65);
+        tl.to("#o3 .card", { borderColor: "rgba(255,236,190,1)", duration: 0.3 }, 8.65);
+        // merge into light
+        tl.to("#o3-left", { x: 240, scale: 0.35, opacity: 0, duration: 0.45, ease: "power3.in" }, 9.45);
+        tl.to("#o3-right", { x: -240, scale: 0.35, opacity: 0, duration: 0.45, ease: "power3.in" }, 9.45);
+        frameOut("#t3-frame", 9.72);
+        flash(9.8, 1, 0.4);
+
+        // Scene 4
+        tl.fromTo("#o4-giftwrap", { opacity: 0, y: 40, scale: 0.9, transformOrigin: "50% 60%" }, { opacity: 1, y: 0, scale: 0.94, duration: 0.7, ease: "power3.out" }, 10.25);
+        tl.to("#o4-giftwrap", { scale: 1.06, duration: 2.9, ease: "sine.inOut" }, 10.95);
+        textIn("#t4-a", 10.45);
+        textIn("#t4-b", 10.95);
+        tl.fromTo("#o4-sheen", { x: 0 }, { x: 260, duration: 0.7, ease: "power2.inOut" }, 11.75);
+        tl.fromTo("#o4-glow", { opacity: 0, scale: 0.4, transformOrigin: "50% 50%" }, { opacity: 1, scale: 3.4, duration: 0.75, ease: "power2.in" }, 13.3);
+        frameOut("#t4-frame", 13.82);
+        flash(13.88, 1, 0.38);
+
+        // Scene 5
+        tl.fromTo("#o5-watchwrap", { scale: 2.9, transformOrigin: "200px 405px" }, { scale: 1, duration: 1.45, ease: "expo.out" }, 14.05);
+        tl.fromTo("#o5-spin", { rotationY: -22, transformPerspective: 1600 }, { rotationY: 14, duration: 3, ease: "sine.inOut" }, 14.05);
+        tl.fromTo("#o5-sheen", { x: 0 }, { x: 470, duration: 0.9, ease: "power2.inOut" }, 15.15);
+        tl.fromTo("#o5-sheen", { x: 0 }, { x: 470, duration: 0.8, ease: "power2.inOut", immediateRender: false }, 16.1);
+        textIn("#t5-a", 14.35);
+        textIn("#t5-b", 15.5);
+        frameOut("#t5-frame", 16.8);
+        tl.to("#o5-frame", { opacity: 0, scale: 1.08, duration: 0.25, ease: "power2.in", transformOrigin: "540px 940px" }, 16.82);
+        flash(16.9, 0.9, 0.3);
+
+        // Scene 6
+        tl.fromTo("#t6a-a", { opacity: 0, scale: 1.25, filter: "blur(10px)", transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.28, ease: "expo.out" }, 17.15);
+        frameOut("#t6a-frame", 17.84);
+        flash(17.92, 0.7, 0.25);
+        tl.fromTo("#t6b-frame", { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "none" }, 18.05);
+        flash(19.18, 0.45, 0.35);
+        // clean cut to black; T&C remains
+        tl.set("#blackout", { opacity: 1 }, 19.6);
+
+        draw(0);
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
