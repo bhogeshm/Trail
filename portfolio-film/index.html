@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>The Medium Changes</title>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Inter"; src: url("assets/fonts/inter-latin-300-normal.woff2") format("woff2"); font-weight: 300; }
+      @font-face { font-family: "Inter"; src: url("assets/fonts/inter-latin-400-normal.woff2") format("woff2"); font-weight: 400; }
+      @font-face { font-family: "Inter"; src: url("assets/fonts/inter-latin-500-normal.woff2") format("woff2"); font-weight: 500; }
+      @font-face { font-family: "Inter"; src: url("assets/fonts/inter-latin-600-normal.woff2") format("woff2"); font-weight: 600; }
+      @font-face { font-family: "Inter"; src: url("assets/fonts/inter-latin-700-normal.woff2") format("woff2"); font-weight: 700; }
+      @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/instrument-serif-latin-400-normal.woff2") format("woff2"); font-style: normal; }
+      @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/instrument-serif-latin-400-italic.woff2") format("woff2"); font-style: italic; }
+      @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/jetbrains-mono-latin-400-normal.woff2") format("woff2"); font-weight: 400; }
+      @font-face { font-family: "JetBrains Mono"; src: url("assets/fonts/jetbrains-mono-latin-500-normal.woff2") format("woff2"); font-weight: 500; }
+
+      :root {
+        --black: #0d0d0d; --ivory: #f2f0e9; --olive: #73775b; --champ: #b8a77a; --graphite: #242424;
+        --ivory-60: rgba(242, 240, 233, 0.6); --ivory-35: rgba(242, 240, 233, 0.5); --ivory-12: rgba(242, 240, 233, 0.12);
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: var(--black); }
+      #root {
+        position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--black);
+        font-family: "Inter", sans-serif; color: var(--ivory);
+      }
+      .clip { position: absolute; inset: 0; }
+      .center { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+      .mono { font-family: "JetBrains Mono", monospace; letter-spacing: 0.18em; text-transform: uppercase; }
+      .serif { font-family: "Instrument Serif", serif; }
+      .abs { position: absolute; }
+
+      /* ---------- persistent overlays ---------- */
+      #grain { position: absolute; inset: -64px; background: url("assets/img/grain.png"); opacity: 0.5; mix-blend-mode: overlay; pointer-events: none; z-index: 90; }
+      #vignette { position: absolute; inset: 0; z-index: 89; pointer-events: none;
+        background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.65) 100%); }
+      .hud { z-index: 95; pointer-events: none; }
+      .hud .tl, .hud .tr, .hud .bl, .hud .br { position: absolute; font-size: 15px; color: var(--ivory-35); }
+      .hud .tl { left: 72px; top: 56px; } .hud .tr { right: 72px; top: 56px; text-align: right; }
+      .hud .bl { left: 72px; bottom: 52px; } .hud .br { right: 72px; bottom: 52px; text-align: right; }
+      .hud .tr b { color: var(--champ); font-weight: 500; }
+      .flash { position: absolute; inset: 0; background: var(--ivory); opacity: 0; z-index: 70; pointer-events: none; }
+
+      /* ---------- S1 idea ---------- */
+      #s1-cam { position: absolute; inset: 0; }
+      #s1-dot { position: absolute; left: 954px; top: 534px; width: 12px; height: 12px; border-radius: 6px; background: var(--ivory); opacity: 0; }
+      #s1-ring { position: absolute; left: 900px; top: 480px; width: 120px; height: 120px; border-radius: 60px; border: 1.5px solid var(--champ); opacity: 0; }
+      #s1-word { position: absolute; left: 0; right: 0; top: 600px; text-align: center; font-size: 30px; font-weight: 500; letter-spacing: 0.5em; padding-left: 0.5em; }
+      #s1-word span { opacity: 0; }
+
+      /* ---------- S2 animate ---------- */
+      #s2-svg { position: absolute; inset: 0; }
+      #s2-svg .st { fill: none; stroke: var(--ivory); stroke-width: 3; stroke-linecap: round; }
+      #s2-svg .ol { fill: none; stroke: var(--olive); stroke-width: 3; }
+      #s2-word { position: absolute; left: 0; right: 0; top: 380px; text-align: center; font-size: 260px; font-weight: 700; letter-spacing: -0.045em; line-height: 1; }
+      #s2-word span { display: inline-block; opacity: 0; }
+      #s2-word .dot { color: var(--olive); }
+      .orb { position: absolute; width: 28px; height: 28px; border-radius: 14px; background: var(--olive); opacity: 0; }
+
+      /* ---------- S3 design ecosystem ---------- */
+      #s3-strip { position: absolute; left: 0; top: 230px; height: 560px; width: 3200px; display: flex; gap: 60px; padding-left: 560px; }
+      .win { position: relative; flex: none; width: 760px; height: 520px; background: var(--graphite); border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); overflow: hidden; opacity: 0.35; }
+      .win .bar { height: 44px; display: flex; align-items: center; gap: 10px; padding: 0 18px; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 13px; color: var(--ivory-60); }
+      .win .pill { font-family: "JetBrains Mono", monospace; font-size: 12px; padding: 3px 8px; border-radius: 5px; background: rgba(242,240,233,0.08); color: var(--ivory); }
+      .win .body { position: absolute; left: 0; right: 0; top: 44px; bottom: 0; }
+      .win .side { position: absolute; left: 0; top: 0; bottom: 0; width: 54px; border-right: 1px solid rgba(255,255,255,0.06); }
+      .win .side i { display: block; width: 22px; height: 22px; margin: 16px auto; border-radius: 5px; background: rgba(242,240,233,0.1); }
+      .canvas-img { position: absolute; left: 110px; top: 40px; width: 420px; height: 410px; object-fit: cover; border-radius: 4px; }
+      .layers { position: absolute; right: 18px; top: 36px; width: 170px; }
+      .layers div { height: 34px; margin-bottom: 8px; border-radius: 5px; background: rgba(242,240,233,0.06); font-size: 12px; color: var(--ivory-60); display: flex; align-items: center; padding-left: 12px; }
+      .layers div.on { background: rgba(115,119,91,0.45); color: var(--ivory); }
+      .vec path { fill: none; stroke: var(--ivory); stroke-width: 2; }
+      .vec rect { fill: var(--black); stroke: var(--champ); stroke-width: 1.5; }
+      .track { position: absolute; left: 70px; right: 24px; height: 34px; border-radius: 4px; background: rgba(242,240,233,0.04); }
+      .kf { position: absolute; top: 9px; width: 14px; height: 14px; background: var(--champ); }
+      .clipblk { position: absolute; top: 4px; height: 26px; border-radius: 4px; background: var(--olive); overflow: hidden; }
+      .clipblk img { height: 100%; width: auto; opacity: 0.8; }
+      .playhead { position: absolute; top: 20px; bottom: 20px; width: 2px; background: var(--ivory); }
+      #s3-flow { position: absolute; left: 0; right: 0; top: 860px; text-align: center; font-size: 34px; font-weight: 500; letter-spacing: 0.22em; color: var(--ivory-35); }
+      #s3-flow span { transition: none; }
+      #s3-flow .ar { color: var(--olive); padding: 0 0.6em; }
+
+      /* ---------- S4 3D ---------- */
+      #s4-world { position: absolute; inset: 0; perspective: 900px; perspective-origin: 50% 40%; }
+      #s4-floor-wrap { position: absolute; left: -1200px; right: -1200px; top: 560px; height: 1600px; transform: rotateX(78deg); transform-origin: 50% 0; }
+      #s4-floor { position: absolute; inset: 0;
+        background-image: linear-gradient(rgba(242,240,233,0.18) 1.5px, transparent 1.5px), linear-gradient(90deg, rgba(242,240,233,0.18) 1.5px, transparent 1.5px);
+        background-size: 120px 120px; }
+      #s4-fade { position: absolute; left: 0; right: 0; top: 380px; height: 400px; background: linear-gradient(var(--black) 20%, rgba(13,13,13,0)); }
+      #s4-cube-pos { position: absolute; left: 810px; top: 300px; width: 300px; height: 300px; perspective: 1400px; }
+      #s4-cube { position: absolute; inset: 0; transform-style: preserve-3d; }
+      .face { position: absolute; width: 300px; height: 300px; border: 2px solid var(--ivory); overflow: hidden; backface-visibility: visible; }
+      .face .f-fill, .face .f-mat, .face .f-light, .face .f-img { position: absolute; inset: 0; opacity: 0; }
+      .face .f-fill { background: #2e2e2e; }
+      .face .f-mat { background: linear-gradient(135deg, #8c9070, #4e513c); }
+      .face .f-light { background: radial-gradient(circle at 25% 20%, rgba(242,230,200,0.85), rgba(184,167,122,0.25) 40%, rgba(0,0,0,0.5) 100%); mix-blend-mode: soft-light; }
+      .face .f-img { background-size: cover; background-position: center; }
+      .face .wire { position: absolute; inset: 0;
+        background-image: linear-gradient(rgba(242,240,233,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(242,240,233,0.5) 1px, transparent 1px);
+        background-size: 50px 50px; }
+      .f1 { transform: translateZ(150px); } .f2 { transform: rotateY(180deg) translateZ(150px); }
+      .f3 { transform: rotateY(90deg) translateZ(150px); } .f4 { transform: rotateY(-90deg) translateZ(150px); }
+      .f5 { transform: rotateX(90deg) translateZ(150px); } .f6 { transform: rotateX(-90deg) translateZ(150px); }
+      #s4-shadow { position: absolute; left: 760px; top: 700px; width: 400px; height: 60px; border-radius: 50%; background: radial-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0)); opacity: 0; }
+      #s4-vp { position: absolute; left: 120px; top: 120px; right: 120px; bottom: 120px; border: 1px solid var(--ivory-12); border-radius: 10px; }
+      #s4-vp .lbl { position: absolute; top: 18px; left: 22px; font-size: 14px; color: var(--ivory-60); }
+      #s4-modes { position: absolute; top: 16px; right: 22px; display: flex; gap: 8px; }
+      #s4-modes div { font-family: "JetBrains Mono", monospace; font-size: 13px; padding: 5px 10px; border-radius: 5px; color: var(--ivory-35); border: 1px solid var(--ivory-12); }
+      #s4-title { position: absolute; left: 0; right: 0; top: 820px; text-align: center; font-size: 34px; font-weight: 500; letter-spacing: 0.22em; }
+      #s4-title .ar { color: var(--olive); padding: 0 0.5em; }
+
+      /* ---------- S5 AI ---------- */
+      #s5-svg { position: absolute; inset: 0; }
+      #s5-svg line { stroke: rgba(184,167,122,0.45); stroke-width: 1.2; }
+      #s5-core { position: absolute; left: 950px; top: 470px; width: 20px; height: 20px; border-radius: 10px; background: var(--champ); opacity: 0; }
+      #s5-ai { position: absolute; left: 0; right: 0; top: 410px; text-align: center; font-size: 120px; font-weight: 600; letter-spacing: -0.02em; color: var(--champ); opacity: 0; line-height: 1; }
+      .node { position: absolute; display: flex; align-items: center; gap: 12px; opacity: 0; font-size: 18px; color: var(--ivory); white-space: nowrap; }
+      .node i { display: block; width: 10px; height: 10px; border-radius: 5px; background: var(--champ); box-shadow: 0 0 0 6px rgba(184,167,122,0.12); }
+      .node.left { flex-direction: row-reverse; }
+      #s5-flow { position: absolute; left: 0; right: 0; top: 900px; text-align: center; font-size: 22px; color: var(--ivory-35); }
+      #s5-flow .ar { color: var(--champ); padding: 0 0.9em; }
+
+      /* ---------- S6 montage ---------- */
+      .mf { background: var(--black); overflow: hidden; }
+      .mf .bg { position: absolute; inset: -80px; width: calc(100% + 160px); height: calc(100% + 160px); object-fit: cover; filter: blur(36px) brightness(0.32) saturate(0.8); }
+      .mf .fgw { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+      .mf .fg { height: 820px; width: auto; border-radius: 6px; box-shadow: 0 40px 120px rgba(0,0,0,0.6); }
+      #s6-words { z-index: 60; pointer-events: none; }
+      .mw { position: absolute; left: 96px; bottom: 120px; font-size: 150px; font-weight: 700; letter-spacing: -0.04em; line-height: 1; color: var(--ivory); mix-blend-mode: difference; }
+      .mi { position: absolute; left: 104px; bottom: 290px; font-size: 16px; color: var(--champ); }
+
+      /* ---------- S7 proof ---------- */
+      #s7-bg { position: absolute; inset: 0; background-image: linear-gradient(var(--ivory-12) 1px, transparent 1px), linear-gradient(90deg, var(--ivory-12) 1px, transparent 1px); background-size: 96px 96px; opacity: 0.25; }
+      .card-wrap { position: absolute; perspective: 1600px; }
+      .card { position: relative; border-radius: 18px; overflow: hidden; box-shadow: 0 50px 140px rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.08); }
+      .card img { display: block; width: 100%; height: auto; }
+      #s7-ig-w { left: 110px; top: 210px; width: 540px; }
+      #s7-li-w { right: 110px; top: 150px; width: 470px; }
+      #s7-li .card-crop { height: 780px; overflow: hidden; }
+      #s7-stats { position: absolute; left: 700px; width: 520px; top: 230px; }
+      .stat { margin-bottom: 44px; opacity: 0; }
+      .stat .n { font-size: 112px; font-weight: 600; letter-spacing: -0.04em; line-height: 1; }
+      .stat .l { margin-top: 10px; font-size: 15px; color: var(--champ); }
+      #s7-role { position: absolute; left: 0; right: 0; top: 960px; text-align: center; font-size: 17px; color: var(--ivory-60); }
+      #s7-role span { opacity: 0; }
+      #s7-kicker { position: absolute; left: 0; right: 0; top: 120px; text-align: center; font-size: 15px; color: var(--ivory-35); opacity: 0; }
+
+      /* ---------- S8 human ---------- */
+      #s8-frame { position: absolute; left: 50%; top: 50%; width: 1100px; height: 941px; margin-left: -550px; margin-top: -470px; overflow: hidden; opacity: 0; }
+      #s8-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: sepia(0.35) saturate(0.9) contrast(1.05) brightness(0.9); }
+      #s8-warm { position: absolute; inset: 0; background: radial-gradient(circle at 70% 55%, rgba(255,190,120,0.28), rgba(13,13,13,0) 55%); mix-blend-mode: screen; }
+      #s8-edge { position: absolute; inset: 0; background: radial-gradient(ellipse at 55% 50%, rgba(13,13,13,0) 35%, rgba(13,13,13,1) 78%); }
+      #s8-name { position: absolute; left: 0; right: 0; bottom: 120px; text-align: center; font-size: 20px; color: var(--ivory); opacity: 0; letter-spacing: 0.5em; }
+
+      /* ---------- S9 signature ---------- */
+      #s9-lock { position: absolute; left: 0; right: 0; top: 290px; text-align: center; }
+      #s9-creator { font-size: 20px; color: var(--champ); letter-spacing: 0.6em; opacity: 0; }
+      .mask { overflow: hidden; display: block; padding: 6px 0 14px; }
+      #s9-name { display: inline-block; margin-top: 26px; font-size: 136px; font-weight: 600; letter-spacing: -0.035em; line-height: 1; }
+      #s9-name span { display: inline-block; }
+      #s9-disc { margin-top: 26px; font-size: 19px; color: var(--ivory-60); letter-spacing: 0.32em; opacity: 0; }
+      #s9-rule { margin: 44px auto 0; width: 520px; height: 1.5px; background: var(--olive); transform-origin: 50% 50%; }
+      #s9-state { margin-top: 38px; font-size: 54px; font-style: italic; color: var(--ivory); }
+      #s9-state span { display: inline-block; opacity: 0; }
+      #s9-url { margin-top: 44px; font-size: 26px; letter-spacing: 0.42em; color: var(--ivory); display: inline-flex; align-items: center; gap: 14px; opacity: 0; }
+      #s9-cursor { display: inline-block; width: 3px; height: 30px; background: var(--champ); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="40" data-width="1920" data-height="1080">
+
+      <!-- ================= AUDIO ================= -->
+      <audio id="score" src="assets/audio/score.wav" data-start="0" data-duration="40" data-track-index="20" data-volume="0.9"></audio>
+      <audio id="vo0" src="assets/audio/vo0.wav" data-start="1.2" data-duration="3.14" data-track-index="21"></audio>
+      <audio id="vo1" src="assets/audio/vo1.wav" data-start="4.5" data-duration="2.48" data-track-index="21"></audio>
+      <audio id="vo2" src="assets/audio/vo2.wav" data-start="8.6" data-duration="2.51" data-track-index="21"></audio>
+      <audio id="vo3" src="assets/audio/vo3.wav" data-start="12.6" data-duration="2.5" data-track-index="21"></audio>
+      <audio id="vo4" src="assets/audio/vo4.wav" data-start="16.5" data-duration="3.16" data-track-index="21"></audio>
+      <audio id="vo5" src="assets/audio/vo5.wav" data-start="21.3" data-duration="2.89" data-track-index="21"></audio>
+      <audio id="vo6" src="assets/audio/vo6.wav" data-start="26.2" data-duration="3.81" data-track-index="21"></audio>
+      <audio id="vo7" src="assets/audio/vo7.wav" data-start="31.6" data-duration="2.65" data-track-index="21"></audio>
+      <audio id="vo8" src="assets/audio/vo8.wav" data-start="35.2" data-duration="3.24" data-track-index="21"></audio>
+
+      <!-- ================= S1 · THE IDEA (0–4) ================= -->
+      <div id="s1" class="clip" data-start="0" data-duration="4" data-track-index="1">
+        <div id="s1-cam">
+          <div id="s1-ring"></div>
+          <div id="s1-dot"></div>
+          <div id="s1-word" class="mono"><span>A</span><span>N</span><span>&nbsp;</span><span>I</span><span>D</span><span>E</span><span>A</span><span>.</span></div>
+        </div>
+      </div>
+
+      <!-- ================= S2 · ANIMATE (4–8) ================= -->
+      <div id="s2" class="clip" data-start="4" data-duration="4" data-track-index="1">
+        <svg id="s2-svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+          <path id="s2-line" class="st" d="M 960 540 C 1200 540, 1300 300, 1500 360" />
+          <circle id="s2-circ" class="st" cx="560" cy="300" r="110" />
+          <rect id="s2-sq" class="ol" x="1380" y="680" width="200" height="200" rx="4" />
+          <path id="s2-tri" class="st" d="M 400 860 L 520 650 L 640 860 Z" />
+          <path id="s2-wave" class="ol" d="M 260 540 C 360 440, 460 640, 560 540 S 760 440, 860 540" />
+        </svg>
+        <div class="orb" id="orb1" style="left: 300px; top: 220px"></div>
+        <div class="orb" id="orb2" style="left: 1580px; top: 300px"></div>
+        <div class="orb" id="orb3" style="left: 1200px; top: 820px"></div>
+        <div id="s2-word"><span>A</span><span>N</span><span>I</span><span>M</span><span>A</span><span>T</span><span>E</span><span class="dot">.</span></div>
+      </div>
+
+      <!-- ================= S3 · DESIGN ECOSYSTEM (8–12) ================= -->
+      <div id="s3" class="clip" data-start="8" data-duration="4" data-track-index="1">
+        <div id="s3-strip">
+          <div class="win" id="w-ps">
+            <div class="bar"><span class="pill">Ps</span> Photoshop — chai_frame.psd</div>
+            <div class="body">
+              <div class="side"><i></i><i></i><i></i><i></i></div>
+              <img class="canvas-img" src="assets/img/c-coffee.jpg" alt="" />
+              <div class="layers"><div class="on">Grade</div><div>Steam</div><div>Cup</div><div>Background</div></div>
+            </div>
+          </div>
+          <div class="win" id="w-ai">
+            <div class="bar"><span class="pill">Ai</span> Illustrator — chai_vector.ai</div>
+            <div class="body">
+              <div class="side"><i></i><i></i><i></i><i></i></div>
+              <svg class="vec" viewBox="0 0 760 476" width="760" height="476" style="position:absolute;inset:0">
+                <path id="ai-cup" d="M 230 170 C 230 330, 290 390, 380 390 C 470 390, 530 330, 530 170 Z" />
+                <path id="ai-handle" d="M 530 210 C 610 210, 610 310, 525 310" />
+                <path id="ai-steam1" d="M 330 140 C 300 110, 360 80, 330 40" />
+                <path id="ai-steam2" d="M 420 140 C 390 110, 450 80, 420 40" />
+                <rect x="224" y="164" width="12" height="12" /><rect x="524" y="164" width="12" height="12" />
+                <rect x="374" y="384" width="12" height="12" /><rect x="519" y="304" width="12" height="12" />
+              </svg>
+            </div>
+          </div>
+          <div class="win" id="w-ae">
+            <div class="bar"><span class="pill">Ae</span> After Effects — chai_anim.aep</div>
+            <div class="body">
+              <svg class="vec" viewBox="0 0 760 476" width="760" height="476" style="position:absolute;inset:0">
+                <path id="ae-cup" d="M 280 60 C 280 170, 320 210, 380 210 C 440 210, 480 170, 480 60 Z" />
+              </svg>
+              <div class="track" style="top: 270px"><div class="kf" style="left: 40px; transform: rotate(45deg)"></div><div class="kf" style="left: 260px; transform: rotate(45deg)"></div><div class="kf" style="left: 470px; transform: rotate(45deg)"></div></div>
+              <div class="track" style="top: 314px"><div class="kf" style="left: 120px; transform: rotate(45deg)"></div><div class="kf" style="left: 380px; transform: rotate(45deg)"></div></div>
+              <div class="track" style="top: 358px"><div class="kf" style="left: 200px; transform: rotate(45deg)"></div><div class="kf" style="left: 560px; transform: rotate(45deg)"></div></div>
+              <div class="playhead" id="ae-ph" style="left: 110px; top: 250px; bottom: 60px"></div>
+            </div>
+          </div>
+          <div class="win" id="w-pr">
+            <div class="bar"><span class="pill">Pr</span> Premiere Pro — portfolio_edit.prproj</div>
+            <div class="body">
+              <img src="assets/img/c-coffee.jpg" alt="" style="position:absolute;left:250px;top:24px;width:260px;height:200px;object-fit:cover;border-radius:4px" />
+              <div class="track" style="top: 262px"><div class="clipblk" style="left: 10px; width: 140px"><img src="assets/img/c-raw.jpg" alt="" /></div><div class="clipblk" style="left: 156px; width: 120px"><img src="assets/img/c-eye.jpg" alt="" /></div><div class="clipblk" id="pr-new" style="left: 282px; width: 150px; background: var(--champ)"><img src="assets/img/c-coffee.jpg" alt="" /></div></div>
+              <div class="track" style="top: 306px"><div class="clipblk" style="left: 60px; width: 300px; background: #4a4d3b"></div></div>
+              <div class="track" style="top: 350px"><div class="clipblk" style="left: 10px; width: 520px; background: #3a3a3a"></div></div>
+              <div class="playhead" id="pr-ph" style="left: 120px; top: 246px; bottom: 50px"></div>
+            </div>
+          </div>
+        </div>
+        <div id="s3-flow"><span id="f-d">DESIGN</span><span class="ar">→</span><span id="f-m">MOTION</span><span class="ar">→</span><span id="f-e">EDIT</span></div>
+      </div>
+
+      <!-- ================= S4 · 3D / CGI (12–16) ================= -->
+      <div id="s4" class="clip" data-start="12" data-duration="4" data-track-index="1">
+        <div id="s4-world">
+          <div id="s4-floor-wrap"><div id="s4-floor"></div></div>
+          <div id="s4-fade"></div>
+          <div id="s4-shadow"></div>
+          <div id="s4-cube-pos">
+            <div id="s4-cube">
+              <div class="face f1"><div class="f-fill"></div><div class="f-mat"></div><div class="f-img" style="background-image:url(assets/img/c-hulk.jpg)"></div><div class="f-light"></div><div class="wire"></div></div>
+              <div class="face f2"><div class="f-fill"></div><div class="f-mat"></div><div class="f-img" style="background-image:url(assets/img/c-eye.jpg)"></div><div class="f-light"></div><div class="wire"></div></div>
+              <div class="face f3"><div class="f-fill"></div><div class="f-mat"></div><div class="f-img" style="background-image:url(assets/img/c-raw.jpg)"></div><div class="f-light"></div><div class="wire"></div></div>
+              <div class="face f4"><div class="f-fill"></div><div class="f-mat"></div><div class="f-img" style="background-image:url(assets/img/c-summer.jpg)"></div><div class="f-light"></div><div class="wire"></div></div>
+              <div class="face f5"><div class="f-fill"></div><div class="f-mat"></div><div class="f-img" style="background-image:url(assets/img/c-apple.jpg)"></div><div class="f-light"></div><div class="wire"></div></div>
+              <div class="face f6"><div class="f-fill"></div><div class="f-mat"></div><div class="f-img" style="background-image:url(assets/img/c-lake.jpg)"></div><div class="f-light"></div><div class="wire"></div></div>
+            </div>
+          </div>
+        </div>
+        <div id="s4-vp">
+          <div class="lbl mono">Blender — Viewport · Camera.001</div>
+          <div id="s4-modes"><div id="m1">WIREFRAME</div><div id="m2">MODEL</div><div id="m3">MATERIAL</div><div id="m4">LIGHT</div><div id="m5">RENDER</div></div>
+        </div>
+        <div id="s4-title"><span>3D</span><span class="ar">/</span><span>CGI</span><span class="ar">/</span><span>BLENDER</span></div>
+      </div>
+
+      <!-- ================= S5 · AI ECOSYSTEM (16–21) ================= -->
+      <div id="s5" class="clip" data-start="16" data-duration="5" data-track-index="1">
+        <svg id="s5-svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+          <line id="ln0" x1="960" y1="480" x2="560" y2="230" /><line id="ln1" x1="960" y1="480" x2="1360" y2="230" />
+          <line id="ln2" x1="960" y1="480" x2="420" y2="420" /><line id="ln3" x1="960" y1="480" x2="1500" y2="420" />
+          <line id="ln4" x1="960" y1="480" x2="470" y2="640" /><line id="ln5" x1="960" y1="480" x2="1450" y2="640" />
+          <line id="ln6" x1="960" y1="480" x2="660" y2="790" /><line id="ln7" x1="960" y1="480" x2="1260" y2="790" />
+          <line id="ln8" x1="960" y1="480" x2="960" y2="180" />
+        </svg>
+        <div id="s5-core"></div>
+        <div id="s5-ai">AI</div>
+        <div class="node left" id="nd0" style="right: 1355px; top: 218px"><i></i>ChatGPT</div>
+        <div class="node" id="nd1" style="left: 1355px; top: 218px"><i></i>Adobe Firefly</div>
+        <div class="node left" id="nd2" style="right: 1495px; top: 408px"><i></i>Gemini</div>
+        <div class="node" id="nd3" style="left: 1495px; top: 408px"><i></i>Runway</div>
+        <div class="node left" id="nd4" style="right: 1445px; top: 628px"><i></i>Sora</div>
+        <div class="node" id="nd5" style="left: 1445px; top: 628px"><i></i>Veo 3</div>
+        <div class="node left" id="nd6" style="right: 1255px; top: 778px"><i></i>Leonardo AI</div>
+        <div class="node" id="nd7" style="left: 1255px; top: 778px"><i></i>Stable Diffusion</div>
+        <div class="node" id="nd8" style="left: 945px; top: 140px; flex-direction: column; gap: 10px"><i></i>Suno</div>
+        <div id="s5-flow" class="mono"><span id="a0">AI</span><span class="ar">→</span><span id="a1">IDEATE</span><span class="ar">→</span><span id="a2">GENERATE</span><span class="ar">→</span><span id="a3">ANIMATE</span><span class="ar">→</span><span id="a4">CREATE</span></div>
+      </div>
+
+      <!-- ================= S6 · PORTFOLIO PAYOFF (21–25.5) ================= -->
+      <div id="mf0" class="clip mf" data-start="21" data-duration="0.5" data-track-index="2"><img class="bg" src="assets/img/c-raw.jpg" alt="" /><div class="fgw"><img class="fg" src="assets/img/c-raw.jpg" alt="" /></div></div>
+      <div id="mf1" class="clip mf" data-start="21.5" data-duration="0.25" data-track-index="2"><img class="bg" src="assets/img/c-hulk.jpg" alt="" /><div class="fgw"><img class="fg" src="assets/img/c-hulk.jpg" alt="" /></div></div>
+      <div id="mf2" class="clip mf" data-start="21.75" data-duration="0.25" data-track-index="2"><img class="bg" src="assets/img/c-apple.jpg" alt="" /><div class="fgw"><img class="fg" src="assets/img/c-apple.jpg" alt="" /></div></div>
+      <div id="mf3" class="clip mf" data-start="22" data-duration="0.25" data-track-index="2"><img class="bg" src="assets/img/c-bhooto.jpg" alt="" /><div class="fgw"><img class="fg" src="assets/img/c-bhooto.jpg" alt="" /></div></div>
+      <div id="mf4" class="clip mf" data-start="22.25" data-duration="0.25" data-track-index="2"><img class="bg" src="assets/img/c-summer.jpg" alt="" /><div class="fgw"><img class="fg" src="assets/img/c-summer.jpg" alt="" /></div></div>
+      <div id="mf5" class="clip mf" data-start="22.5" data-duration="1" data-track-index="2"><img class="bg" src="assets/img/c-eye.jpg" alt="" /><div class="fgw"><img class="fg" src="assets/img/c-eye.jpg" alt="" /></div><div class="abs mono" id="mf5-v" style="right: 120px; bottom: 130px; font-size: 18px; color: var(--champ)">52.9K VIEWS</div></div>
+      <div id="mf6" class="clip mf" data-start="23.5" data-duration="0.25" data-track-index="2"><img class="bg" src="assets/img/c-struggle.jpg" alt="" /><div class="fgw"><img class="fg" src="assets/img/c-struggle.jpg" alt="" /></div></div>
+      <div id="mf7" class="clip mf" data-start="23.75" data-duration="0.25" data-track-index="2"><img class="bg" src="assets/img/c-fixing.jpg" alt="" /><div class="fgw"><img class="fg" src="assets/img/c-fixing.jpg" alt="" /></div></div>
+      <div id="mf8" class="clip mf" data-start="24" data-duration="0.25" data-track-index="2"><img class="bg" src="assets/img/c-alive.jpg" alt="" /><div class="fgw"><img class="fg" src="assets/img/c-alive.jpg" alt="" /></div></div>
+      <div id="mf9" class="clip mf" data-start="24.25" data-duration="0.25" data-track-index="2"><img class="bg" src="assets/img/c-portfolio.jpg" alt="" /><div class="fgw"><img class="fg" src="assets/img/c-portfolio.jpg" alt="" /></div></div>
+      <div id="mf10" class="clip mf" data-start="24.5" data-duration="0.25" data-track-index="2"><img class="bg" src="assets/img/c-sunset.jpg" alt="" /><div class="fgw"><img class="fg" src="assets/img/c-sunset.jpg" alt="" /></div></div>
+      <div id="mf11" class="clip mf" data-start="24.75" data-duration="0.25" data-track-index="2"><img class="bg" src="assets/img/c-block.jpg" alt="" /><div class="fgw"><img class="fg" src="assets/img/c-block.jpg" alt="" /></div></div>
+      <div id="mf12" class="clip mf" data-start="25" data-duration="0.5" data-track-index="2"><img class="bg" src="assets/img/c-btw.jpg" alt="" /><div class="fgw"><img class="fg" src="assets/img/c-btw.jpg" alt="" /></div></div>
+      <div id="s6-words" class="clip" data-start="21" data-duration="4.5" data-track-index="3">
+        <div class="mi mono" id="mi">01 / 05</div>
+        <div class="mw" id="mw0">ANIMATION</div>
+        <div class="mw" id="mw1">MOTION</div>
+        <div class="mw" id="mw2">3D</div>
+        <div class="mw" id="mw3">VIDEO</div>
+        <div class="mw" id="mw4">AI</div>
+      </div>
+
+      <!-- ================= S7 · THE WORK, SEEN (25.5–30.5) ================= -->
+      <div id="s7" class="clip" data-start="25.5" data-duration="5" data-track-index="1">
+        <div id="s7-bg"></div>
+        <div id="s7-kicker" class="mono">The work, seen</div>
+        <div class="card-wrap" id="s7-ig-w"><div class="card" id="s7-ig"><img src="assets/img/ig-profile.jpg" alt="Instagram profile" /></div></div>
+        <div class="card-wrap" id="s7-li-w"><div class="card" id="s7-li"><div class="card-crop"><img src="assets/img/li-profile.jpg" alt="LinkedIn profile" /></div></div></div>
+        <div id="s7-stats">
+          <div class="stat" id="st0"><div class="n" id="n0">0</div><div class="l mono">Views on a single reel</div></div>
+          <div class="stat" id="st1"><div class="n" id="n1">0</div><div class="l mono">Instagram followers</div></div>
+          <div class="stat" id="st2"><div class="n" id="n2">0</div><div class="l mono">LinkedIn followers</div></div>
+        </div>
+        <div id="s7-role" class="mono"><span id="r0">Team Lead Motion Designer</span><span id="r1"> · Xebec Communications</span><span id="r2"> · Pune</span></div>
+      </div>
+
+      <!-- ================= S8 · THE HUMAN REVEAL (30.5–34.5) ================= -->
+      <div id="s8" class="clip" data-start="30.5" data-duration="4" data-track-index="1">
+        <div id="s8-frame"><img id="s8-img" src="assets/img/desk.jpg" alt="Bhogesh at his workstation" /><div id="s8-warm"></div><div id="s8-edge"></div></div>
+        <div id="s8-name" class="mono">Bhogesh Molagavalli</div>
+      </div>
+
+      <!-- ================= S9 · SIGNATURE (34.5–40) ================= -->
+      <div id="s9" class="clip" data-start="34.5" data-duration="5.5" data-track-index="1">
+        <div id="s9-lock">
+          <div id="s9-creator" class="mono">Visual Creator</div>
+          <div class="mask"><div id="s9-name"><span>BHOGESH</span> <span>MOLAGAVALLI</span></div></div>
+          <div id="s9-disc" class="mono">Animation · Motion Graphics · 3D · CGI · Video · AI</div>
+          <div id="s9-rule"></div>
+          <div id="s9-state" class="serif"><span id="q0">The tools change.</span> <span id="q1">The story doesn’t.</span></div>
+          <div id="s9-url" class="mono">bhogeshm.in <span id="s9-cursor"></span></div>
+        </div>
+      </div>
+
+      <!-- ================= HUD + FINISH ================= -->
+      <div id="hud" class="clip hud" data-start="0" data-duration="30.5" data-track-index="5">
+        <div class="tl mono">BM — The Medium Changes</div>
+        <div class="tr mono"><b id="hud-n">01</b> / 07 &nbsp; <span id="hud-l">The idea</span></div>
+        <div class="bl mono" id="hud-tc">Pune · IN</div>
+        <div class="br mono">bhogeshm.in</div>
+      </div>
+      <div class="flash" id="flash"></div>
+      <div id="vignette"></div>
+      <div id="grain"></div>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      const q = (s) => document.querySelector(s);
+      const qa = (s) => Array.from(document.querySelectorAll(s));
+      const pathLen = (el) => (el.getTotalLength ? el.getTotalLength() : 1000);
+      const draw = (sel, at, dur, ease = "power2.inOut") => {
+        const el = q(sel); const L = pathLen(el);
+        tl.fromTo(el, { strokeDasharray: L, strokeDashoffset: L }, { strokeDashoffset: 0, duration: dur, ease }, at);
+      };
+      const flash = (at, peak = 0.5, dur = 0.25) => tl.fromTo("#flash", { opacity: peak }, { opacity: 0, duration: dur, ease: "power2.out", immediateRender: false }, at);
+
+      // ---------- grain flicker (stepped, deterministic) ----------
+      for (let i = 0; i < 160; i++) {
+        tl.set("#grain", { x: ((i * 37) % 64) - 32, y: ((i * 53) % 64) - 32 }, i * 0.25);
+      }
+
+      // ---------- HUD section labels ----------
+      const sections = [[0, "01", "The idea"], [4, "02", "Animation"], [8, "03", "Design"], [12, "04", "3D / CGI"], [16, "05", "AI"], [21, "06", "Work"], [25.5, "07", "Proof"]];
+      sections.forEach(([t, n, l]) => { tl.set("#hud-n", { textContent: n }, t); tl.set("#hud-l", { textContent: l }, t); });
+      tl.fromTo("#hud .tl, #hud .tr, #hud .bl, #hud .br", { opacity: 0 }, { opacity: 1, duration: 1.2, ease: "power1.out" }, 4.0);
+
+      // ================= S1 =================
+      tl.fromTo("#s1-cam", { scale: 1 }, { scale: 1.32, duration: 4, ease: "power1.in" }, 0);
+      tl.fromTo("#s1-dot", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.5, ease: "power3.out" }, 0.6);
+      tl.to("#s1-dot", { scale: 1.9, duration: 0.18, ease: "power2.out" }, 1.0);
+      tl.to("#s1-dot", { scale: 1, duration: 0.4, ease: "power2.inOut" }, 1.18);
+      tl.fromTo("#s1-ring", { opacity: 0.8, scale: 0.1 }, { opacity: 0, scale: 1.4, duration: 0.9, ease: "power2.out" }, 1.0);
+      // dot stretches into a line, then into a cursor
+      tl.to("#s1-dot", { width: 260, x: -124, height: 2, y: 5, borderRadius: 1, duration: 0.45, ease: "power3.inOut" }, 1.55);
+      tl.to("#s1-dot", { width: 4, x: 4, height: 64, y: -26, borderRadius: 0, duration: 0.35, ease: "power3.inOut" }, 2.0);
+      [2.2, 2.7].forEach((t) => { tl.set("#s1-dot", { opacity: 0 }, t); tl.set("#s1-dot", { opacity: 1 }, t + 0.18); });
+      qa("#s1-word span").forEach((s, i) => tl.set(s, { opacity: 1 }, 2.35 + i * 0.07));
+      tl.fromTo("#s1-ring", { opacity: 0.9, scale: 0.1 }, { opacity: 0, scale: 0.9, duration: 0.5, ease: "power2.out", immediateRender: false }, 3.5);
+
+      // ================= S2 =================
+      draw("#s2-line", 4.0, 0.7);
+      tl.fromTo("#s2-line", { opacity: 1 }, { opacity: 0.25, duration: 0.8 }, 5.0);
+      draw("#s2-circ", 4.9, 0.6, "power3.out");
+      draw("#s2-wave", 5.1, 0.7);
+      draw("#s2-tri", 5.6, 0.5, "power3.out");
+      tl.fromTo("#s2-sq", { opacity: 0, scale: 0.4, rotation: -45, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, rotation: 0, duration: 0.5, ease: "back.out(1.7)" }, 6.0);
+      tl.to("#s2-circ", { x: 60, y: -20, duration: 2, ease: "sine.inOut" }, 5.5);
+      tl.to("#s2-tri", { rotation: 30, transformOrigin: "50% 60%", duration: 2, ease: "sine.inOut" }, 6.0);
+      ["#orb1", "#orb2", "#orb3"].forEach((o, i) => {
+        tl.fromTo(o, { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, 5.0 + i * 0.25);
+        tl.to(o, { x: [140, -160, 120][i], y: [80, 120, -90][i], duration: 2.4, ease: "sine.inOut" }, 5.3);
+      });
+      // kinetic type lands on the 7.0 impact
+      qa("#s2-word span").forEach((s, i) => {
+        tl.fromTo(s, { opacity: 0, y: 140, rotation: (i % 2 ? 8 : -8) }, { opacity: 1, y: 0, rotation: 0, duration: 0.45, ease: "power4.out" }, 6.55 + i * 0.045);
+      });
+      tl.to("#s2-svg, .orb", { opacity: 0.18, duration: 0.4 }, 6.9);
+      tl.fromTo("#s2-word", { scale: 1.0 }, { scale: 1.06, duration: 1.0, ease: "power1.out" }, 7.0);
+      flash(7.0, 0.12, 0.3);
+
+      // ================= S3 =================
+      tl.fromTo("#s3-strip", { x: 0 }, { x: -820 * 3, duration: 3.6, ease: "power2.inOut" }, 8.15);
+      tl.fromTo("#s3-strip", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" }, 8.0);
+      const wins = ["#w-ps", "#w-ai", "#w-ae", "#w-pr"];
+      wins.forEach((w, i) => {
+        tl.to(w, { opacity: 1, scale: 1.0, duration: 0.25, ease: "power2.out" }, 8.0 + i);
+        if (i < 3) tl.to(w, { opacity: 0.35, duration: 0.4 }, 9.0 + i);
+      });
+      ["#ai-cup", "#ai-handle", "#ai-steam1", "#ai-steam2"].forEach((p, i) => draw(p, 9.05 + i * 0.12, 0.55));
+      tl.fromTo("#ae-cup", { y: -40, scaleY: 1, transformOrigin: "50% 100%" }, { y: 50, duration: 0.35, ease: "power2.in" }, 10.05);
+      tl.to("#ae-cup", { scaleY: 0.8, duration: 0.1 }, 10.4);
+      tl.to("#ae-cup", { scaleY: 1, y: 0, duration: 0.45, ease: "elastic.out(1, 0.45)" }, 10.5);
+      tl.fromTo("#ae-ph", { x: 0 }, { x: 520, duration: 1.0, ease: "none" }, 10.0);
+      tl.fromTo("#pr-new", { x: 200, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: "power3.out" }, 11.0);
+      tl.fromTo("#pr-ph", { x: 0 }, { x: 420, duration: 1.0, ease: "power1.inOut" }, 11.0);
+      tl.to("#f-d", { color: "#f2f0e9", duration: 0.2 }, 8.6);
+      tl.to("#f-m", { color: "#f2f0e9", duration: 0.2 }, 10.0);
+      tl.to("#f-e", { color: "#f2f0e9", duration: 0.2 }, 11.0);
+      tl.fromTo("#s3-strip", { scale: 1 }, { scale: 0.92, duration: 0.5, ease: "power2.in", immediateRender: false }, 11.5);
+
+      // ================= S4 =================
+      tl.fromTo("#s4-floor", { backgroundPositionY: "0px" }, { backgroundPositionY: "840px", duration: 4, ease: "power1.in" }, 12.0);
+      tl.fromTo("#s4-world", { scale: 1.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.8, ease: "power3.out" }, 12.0);
+      tl.fromTo("#s4-cube", { rotationX: -18, rotationY: 20 }, { rotationX: -28, rotationY: 290, duration: 4, ease: "power1.inOut" }, 12.0);
+      tl.fromTo("#s4-cube-pos", { y: 40 }, { y: -10, duration: 4, ease: "sine.inOut" }, 12.0);
+      const modes = [12.3, 13.0, 13.7, 14.4, 15.1];
+      modes.forEach((t, i) => {
+        tl.to(`#m${i + 1}`, { color: "#0d0d0d", backgroundColor: "#b8a77a", borderColor: "#b8a77a", duration: 0.12 }, t);
+        if (i) tl.to(`#m${i}`, { color: "rgba(242,240,233,0.35)", backgroundColor: "rgba(0,0,0,0)", borderColor: "rgba(242,240,233,0.12)", duration: 0.12 }, t);
+      });
+      tl.to(".face .f-fill", { opacity: 1, duration: 0.3 }, 13.0);
+      tl.to(".face .wire", { opacity: 0.25, duration: 0.3 }, 13.0);
+      tl.to(".face .f-mat", { opacity: 1, duration: 0.35 }, 13.7);
+      tl.to(".face", { borderColor: "rgba(242,240,233,0.15)", duration: 0.35 }, 13.7);
+      tl.to(".face .f-light", { opacity: 1, duration: 0.4 }, 14.4);
+      tl.to("#s4-shadow", { opacity: 1, duration: 0.4 }, 14.4);
+      tl.to(".face .f-img", { opacity: 1, duration: 0.3 }, 15.1);
+      tl.to(".face .wire", { opacity: 0, duration: 0.3 }, 15.1);
+      flash(15.1, 0.18, 0.3);
+      tl.fromTo("#s4-title span", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.12, ease: "power3.out" }, 12.4);
+      tl.to("#s4-world", { scale: 1.5, duration: 0.6, ease: "power3.in" }, 15.4);
+
+      // ================= S5 =================
+      tl.fromTo("#s5-core", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.25, ease: "power2.out" }, 16.3);
+      tl.to("#s5-core", { scale: 2.2, duration: 0.15, ease: "power2.out" }, 16.3);
+      tl.to("#s5-core", { scale: 1, duration: 0.3 }, 16.45);
+      tl.to("#s5-core", { scale: 1.8, duration: 0.12 }, 17.1);
+      tl.to("#s5-core", { scale: 1, opacity: 0, duration: 0.3 }, 17.22);
+      tl.fromTo("#s5-ai", { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.7, ease: "expo.out" }, 17.2);
+      for (let i = 0; i < 9; i++) {
+        const at = 17.6 + i * 0.33;
+        draw(`#ln${i}`, at - 0.12, 0.3, "power2.out");
+        tl.fromTo(`#nd${i}`, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)" }, at);
+      }
+      tl.fromTo("#s5-flow", { opacity: 0 }, { opacity: 1, duration: 0.4 }, 17.6);
+      ["#a0", "#a1", "#a2", "#a3", "#a4"].forEach((a, i) => tl.to(a, { color: "#f2f0e9", duration: 0.15 }, 18.4 + i * 0.5));
+      tl.to("#s5-ai", { scale: 1.12, duration: 1.3, ease: "power1.inOut" }, 19.4);
+      tl.to("#s5-svg, .node", { opacity: 0.4, duration: 0.5 }, 20.3);
+
+      // ================= S6 =================
+      flash(21.0, 0.85, 0.35);
+      const mf = [[0, 0.5], [1, 0.25], [2, 0.25], [3, 0.25], [4, 0.25], [5, 1.0], [6, 0.25], [7, 0.25], [8, 0.25], [9, 0.25], [10, 0.25], [11, 0.25], [12, 0.5]];
+      const mfStart = [21, 21.5, 21.75, 22, 22.25, 22.5, 23.5, 23.75, 24, 24.25, 24.5, 24.75, 25];
+      mf.forEach(([i, d], k) => {
+        const hero = i === 5;
+        tl.fromTo(`#mf${i} .fg`, { scale: hero ? 1.0 : 1.08, rotation: hero ? 0 : (k % 2 ? 1.2 : -1.2) },
+          { scale: hero ? 1.12 : 1.0, rotation: 0, duration: d, ease: hero ? "power1.inOut" : "power3.out" }, mfStart[k]);
+        tl.fromTo(`#mf${i} .bg`, { scale: 1.0 }, { scale: 1.08, duration: d, ease: "none" }, mfStart[k]);
+      });
+      tl.fromTo("#mf5-v", { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.3 }, 22.8);
+      const words = [[21.0, 21.75], [21.75, 22.5], [22.5, 23.5], [23.5, 24.25], [24.25, 25.5]];
+      words.forEach(([a, b], i) => {
+        tl.fromTo(`#mw${i}`, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.18, ease: "power3.out" }, a);
+        if (i < 4) tl.set(`#mw${i}`, { opacity: 0 }, b);
+        tl.set("#mi", { textContent: `0${i + 1} / 05` }, a);
+      });
+      [22.5, 23.5, 25.0].forEach((t) => flash(t, 0.25, 0.15));
+
+      // ================= S7 =================
+      tl.fromTo("#s7-ig", { x: -500, rotationY: 40, opacity: 0 }, { x: 0, rotationY: 16, opacity: 1, duration: 0.9, ease: "expo.out" }, 25.5);
+      tl.to("#s7-ig", { rotationY: 10, y: -14, duration: 4, ease: "sine.inOut" }, 26.4);
+      tl.fromTo("#s7-li", { x: 500, rotationY: -40, opacity: 0 }, { x: 0, rotationY: -16, opacity: 1, duration: 0.9, ease: "expo.out" }, 27.5);
+      tl.to("#s7-li", { rotationY: -10, y: 14, duration: 3, ease: "sine.inOut" }, 28.4);
+      tl.fromTo("#s7-kicker", { opacity: 0 }, { opacity: 1, duration: 0.6 }, 25.7);
+      tl.fromTo("#s7-bg", { y: 0 }, { y: -96, duration: 5, ease: "none" }, 25.5);
+      const counters = [["#n0", 52.9, 26.0, (v) => v.toFixed(1) + "K"], ["#n1", 953, 26.8, (v) => Math.round(v).toString()], ["#n2", 1194, 28.0, (v) => Math.round(v).toLocaleString("en-US")]];
+      counters.forEach(([sel, to, at, fmt], i) => {
+        tl.fromTo(`#st${i}`, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, at);
+        const o = { v: 0 }; const el = q(sel);
+        tl.to(o, { v: to, duration: 1.1, ease: "power3.out", onUpdate: () => { el.textContent = fmt(o.v); } }, at);
+      });
+      ["#r0", "#r1", "#r2"].forEach((r, i) => tl.fromTo(r, { opacity: 0 }, { opacity: 1, duration: 0.4 }, 28.6 + i * 0.35));
+
+      // ================= S8 =================
+      tl.fromTo("#s8-frame", { opacity: 0 }, { opacity: 1, duration: 1.4, ease: "power1.inOut" }, 31.0);
+      tl.fromTo("#s8-img", { scale: 1.0 }, { scale: 1.14, duration: 3.5, ease: "none" }, 31.0);
+      tl.fromTo("#s8-warm", { opacity: 0.4 }, { opacity: 1, duration: 3, ease: "sine.inOut" }, 31.0);
+      tl.fromTo("#s8-name", { opacity: 0, scale: 1.08 }, { opacity: 1, scale: 1, duration: 1.6, ease: "power2.out" }, 31.6);
+      tl.to("#s8-frame, #s8-name", { opacity: 0, duration: 0.25 }, 34.2);
+
+      // ================= S9 =================
+      flash(34.5, 0.35, 0.6);
+      tl.fromTo("#s9-name span", { yPercent: 115 }, { yPercent: 0, duration: 0.9, stagger: 0.12, ease: "expo.out" }, 34.5);
+      tl.fromTo("#s9-name", { scale: 1.08 }, { scale: 1, duration: 5.5, ease: "power2.out" }, 34.5);
+      tl.fromTo("#s9-creator", { opacity: 0, scale: 1.15 }, { opacity: 1, scale: 1, duration: 1.0, ease: "power2.out" }, 34.9);
+      tl.fromTo("#s9-disc", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, 35.4);
+      tl.fromTo("#s9-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.9, ease: "power3.inOut" }, 35.6);
+      tl.fromTo("#q0", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 35.3);
+      tl.fromTo("#q1", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 36.6);
+      tl.fromTo("#s9-url", { opacity: 0 }, { opacity: 1, duration: 0.05 }, 38.6);
+      [39.0, 39.6].forEach((t) => { tl.set("#s9-cursor", { opacity: 0 }, t); tl.set("#s9-cursor", { opacity: 1 }, t + 0.3); });
+
+      tl.seek(0);
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
