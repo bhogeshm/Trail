@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <script src="assets/strips.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #fdfdfd;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+      .layer {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1920px;
+        height: 1080px;
+        object-fit: contain;
+      }
+      #skyline,
+      #glow {
+        top: 300px;
+        height: 780px;
+      }
+      #water {
+        top: 991px;
+        height: 89px;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="8"
+      data-width="1920"
+      data-height="1080"
+      data-layout-allow-overlap
+    >
+      <!-- Sky and calm water with the city and the "5" removed: cool, then warm -->
+      <img id="plate-cool" class="clip layer" src="assets/plate_cool.jpg" alt="" data-start="0" data-duration="8" data-track-index="0" />
+      <img id="plate-warm" class="clip layer" src="assets/plate_warm.jpg" alt="" data-start="0" data-duration="8" data-track-index="1" />
+      <!-- The "5", exactly as in the source, behind the skyline -->
+      <img id="five" class="clip layer" src="assets/five.png" alt="" data-start="0" data-duration="8" data-track-index="2" />
+      <!-- Golden light between the towers -->
+      <img id="glow" class="clip layer" src="assets/glow.png" alt="" data-start="0" data-duration="8" data-track-index="3" />
+      <!-- Skyline, revealed building by building from the shoreline up -->
+      <canvas id="skyline" class="clip layer" width="1920" height="780" data-start="0" data-duration="8" data-track-index="4"></canvas>
+      <!-- The uploaded image itself: the composition lands on it exactly -->
+      <img id="final" class="clip layer" src="assets/final.png" alt="" data-start="0" data-duration="8" data-track-index="5" />
+      <!-- Water ripples and shimmer for the hold -->
+      <canvas id="water" class="clip layer" width="1920" height="89" data-start="0" data-duration="8" data-track-index="6"></canvas>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__hf = window.__hf || {};
+      window.__hf.buildReady = window.__hf.buildReady || {};
+
+      const SK = window.SKYLINE;
+      const SW = 1920;
+      const SH = 1080 - SK.top; // skyline canvas rows
+      const SOFT_PX = 7; // feather of the rising reveal edge
+      const LOW_PX = 130; // the low-rise along the shore rises first, as one gentle front
+      const HOLD = 5; // ripples live between HOLD and the end
+      const END = 7.9; // ripples settle just before the last frame (7.967 s at 30 fps)
+
+      const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+      const inOut = (p) => (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
+      const sineInOut = (p) => -(Math.cos(Math.PI * p) - 1) / 2;
+
+      // warmth of the light: a hint while the city rises, full golden light by 5 s
+      function warmth(t) {
+        if (t < 3) return 0.25 * sineInOut(clamp01(t / 3));
+        return 0.25 + 0.75 * sineInOut(clamp01((t - 3) / 2));
+      }
+
+      function loadImage(src) {
+        return new Promise((resolve, reject) => {
+          const im = new Image();
+          im.onload = () => resolve(im);
+          im.onerror = reject;
+          im.src = src;
+        });
+      }
+      function pixels(im) {
+        const c = document.createElement("canvas");
+        c.width = im.naturalWidth;
+        c.height = im.naturalHeight;
+        const x = c.getContext("2d");
+        x.drawImage(im, 0, 0);
+        return x.getImageData(0, 0, c.width, c.height).data;
+      }
+
+      const sky = document.getElementById("skyline");
+      const skyCtx = sky.getContext("2d");
+      const maskCanvas = document.createElement("canvas");
+      maskCanvas.width = SW;
+      maskCanvas.height = SH;
+      const maskCtx = maskCanvas.getContext("2d");
+      const maskData = maskCtx.createImageData(SW, SH);
+      const water = document.getElementById("water");
+      const waterCtx = water.getContext("2d");
+
+      let ready = false;
+      let reveal, bldCool, bldWarm, finalImg;
+      const prog = new Float32Array(SK.strips.length + 1);
+      const soft = new Float32Array(SK.strips.length + 1);
+      const heightPx = new Float32Array(SK.strips.length + 1);
+      SK.strips.forEach((s, i) => {
+        soft[i + 1] = SOFT_PX / (s[2] + 4);
+        heightPx[i + 1] = s[2] + 4;
+      });
+
+      function drawSkyline(t) {
+        for (let i = 0; i < SK.strips.length; i++) {
+          const [delay, dur] = SK.strips[i];
+          prog[i + 1] = inOut(clamp01((t - delay) / dur));
+        }
+        const low = LOW_PX * inOut(clamp01((t - 0.2) / 1.1));
+        const out = maskData.data;
+        if (t >= 3.2) {
+          for (let i = 0; i < out.length; i += 4) out[i + 3] = reveal[i + 2];
+        } else {
+          for (let i = 0; i < out.length; i += 4) {
+            const a = reveal[i + 2];
+            if (a === 0) {
+              out[i + 3] = 0;
+              continue;
+            }
+            const id = reveal[i];
+            const g = reveal[i + 1] / 255;
+            const sp = soft[id];
+            const rs = clamp01((prog[id] * (1 + sp) - g) / sp);
+            const hpx = g * heightPx[id];
+            const rl = clamp01((low - hpx) / SOFT_PX);
+            out[i + 3] = a * (rs > rl ? rs : rl);
+          }
+        }
+        maskCtx.putImageData(maskData, 0, 0);
+
+        skyCtx.globalCompositeOperation = "source-over";
+        skyCtx.globalAlpha = 1;
+        skyCtx.clearRect(0, 0, SW, SH);
+        skyCtx.drawImage(bldCool, 0, 0);
+        skyCtx.globalAlpha = warmth(t);
+        skyCtx.drawImage(bldWarm, 0, 0);
+        skyCtx.globalAlpha = 1;
+        skyCtx.globalCompositeOperation = "destination-in";
+        skyCtx.drawImage(maskCanvas, 0, 0);
+        skyCtx.globalCompositeOperation = "source-over";
+      }
+
+      // Rows of the source water slide sideways by a few pixels; amplitude grows from
+      // zero at HOLD and returns to zero at END, so the last frame is the source image.
+      function drawWater(t) {
+        waterCtx.clearRect(0, 0, SW, 89);
+        if (t <= HOLD || t >= END) return;
+        const env = Math.pow(Math.sin((Math.PI * (t - HOLD)) / (END - HOLD)), 2);
+        const top = SK.shore;
+        for (let y = 0; y < 89; y++) {
+          const depth = 0.35 + 0.65 * (y / 88); // nearer water moves a little more
+          const dx =
+            env * depth * (1.6 * Math.sin(y * 0.42 + t * 3.1) + 0.9 * Math.sin(y * 0.17 - t * 1.9));
+          // unshifted row underneath fills the sliver the shift uncovers at the frame edge
+          waterCtx.drawImage(finalImg, 0, top + y, SW, 1, 0, y, SW, 1);
+          waterCtx.drawImage(finalImg, 0, top + y, SW, 1, dx, y, SW, 1);
+        }
+        // shimmer: a soft screen pass over the reflections, drifting along the rows
+        waterCtx.globalCompositeOperation = "screen";
+        for (let y = 0; y < 89; y += 2) {
+          const s = 0.5 + 0.5 * Math.sin(y * 0.9 - t * 4.2);
+          waterCtx.globalAlpha = env * 0.1 * s * s;
+          waterCtx.drawImage(finalImg, 0, top + y, SW, 2, 0, y, SW, 2);
+        }
+        waterCtx.globalAlpha = 1;
+        waterCtx.globalCompositeOperation = "source-over";
+      }
+
+      function renderAt(t) {
+        if (!ready) return;
+        drawSkyline(t);
+        drawWater(t);
+      }
+
+      window.__hf.buildReady["skyline"] = Promise.all([
+        loadImage("assets/reveal.png"),
+        loadImage("assets/bld_cool.png"),
+        loadImage("assets/bld_warm.png"),
+        loadImage("assets/final.png"),
+      ]).then(([rv, bc, bw, fi]) => {
+        reveal = pixels(rv);
+        bldCool = bc;
+        bldWarm = bw;
+        finalImg = fi;
+        ready = true;
+        renderAt(lastTime);
+      });
+
+      let lastTime = 0;
+      window.addEventListener("hf-seek", (e) => {
+        lastTime = e.detail.time;
+        renderAt(lastTime);
+      });
+
+      const tl = gsap.timeline({ paused: true });
+      const clock = { t: 0 };
+      // golden light arrives in the sky and water as it does on the towers
+      tl.fromTo(
+        "#plate-warm",
+        { opacity: 0 },
+        { opacity: 0.25, duration: 3, ease: "sine.inOut" },
+        0
+      );
+      tl.to("#plate-warm", { opacity: 1, duration: 2, ease: "sine.inOut" }, 3);
+      // warm sunlight brightens in the gaps between the buildings
+      tl.fromTo("#glow", { opacity: 0 }, { opacity: 1, duration: 2, ease: "sine.inOut" }, 3);
+      // the "5" fades in behind the skyline
+      tl.fromTo("#five", { opacity: 0 }, { opacity: 1, duration: 2, ease: "power1.inOut" }, 3);
+      // the source image takes over once everything has landed (identical pixels)
+      tl.fromTo("#final", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "none" }, 4.7);
+      // keep the canvases in step when the timeline is driven directly (Studio scrubbing)
+      tl.to(clock, {
+        t: 8,
+        duration: 8,
+        ease: "none",
+        onUpdate: () => {
+          lastTime = clock.t;
+          renderAt(lastTime);
+        },
+      }, 0);
+      renderAt(0);
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
