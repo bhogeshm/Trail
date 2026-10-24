@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <script src="assets/strips.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #f6efe4;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+      .layer {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1920px;
+        height: 1080px;
+        object-fit: contain;
+      }
+      #skyline {
+        top: 120px;
+        height: 960px;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="10"
+      data-width="1920"
+      data-height="1080"
+      data-layout-allow-overlap
+    >
+      <!-- Sky and waterfront with the skyline removed: calm water, then the source's reflections -->
+      <img id="plate" class="clip layer" src="assets/plate.jpg" alt="" data-start="0" data-duration="10" data-track-index="0" />
+      <img id="plate-water" class="clip layer" src="assets/plate_water.jpg" alt="" data-start="0" data-duration="10" data-track-index="1" />
+      <!-- Skyline, revealed building by building from the base up, left to right -->
+      <canvas id="skyline" class="clip layer" width="1920" height="960" data-start="0" data-duration="10" data-track-index="2"></canvas>
+      <!-- The source image without the curve: the composition lands on it once the city is up -->
+      <img id="final" class="clip layer" src="assets/final.png" alt="" data-start="0" data-duration="10" data-track-index="3" />
+      <!-- Water ripples for the hold -->
+      <canvas id="water" class="clip layer" width="1920" height="1080" data-start="0" data-duration="10" data-track-index="4"></canvas>
+      <!-- The curve, its ticks and the two balls -->
+      <canvas id="curve" class="clip layer" width="1920" height="1080" data-start="0" data-duration="10" data-track-index="5"></canvas>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__hf = window.__hf || {};
+      window.__hf.buildReady = window.__hf.buildReady || {};
+
+      const SK = window.SKYLINE;
+      const W = 1920;
+      const SKY_H = 1080 - SK.top;
+      const SOFT_PX = 7; // feather of the rising reveal edge
+      const LOW_PX = 110; // the low-rise at each building's foot rises with its cluster
+      const LOW_DUR = 1.1;
+
+      // the curve: 3 s to 7 s for the orange ball, the blue ball one second behind
+      const DRAW_START = 3;
+      const DRAW_DUR = 4;
+      const BALL_GAP = 1;
+      const BALL_R = 11.5;
+      const RING = 2.5;
+      const TICK_DUR = 0.45;
+
+      // water ripples during the hold, settling just before the last frame
+      const HOLD = 8;
+      const END = 9.9;
+
+      const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+      const inOut = (p) => (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
+      const outCubic = (p) => 1 - Math.pow(1 - p, 3);
+
+      function loadImage(src) {
+        return new Promise((resolve, reject) => {
+          const im = new Image();
+          im.onload = () => resolve(im);
+          im.onerror = reject;
+          im.src = src;
+        });
+      }
+      function pixels(im) {
+        const c = document.createElement("canvas");
+        c.width = im.naturalWidth;
+        c.height = im.naturalHeight;
+        const x = c.getContext("2d");
+        x.drawImage(im, 0, 0);
+        return x.getImageData(0, 0, c.width, c.height).data;
+      }
+
+      // ------------------------------------------------------------ skyline reveal
+      const sky = document.getElementById("skyline");
+      const skyCtx = sky.getContext("2d");
+      const maskCanvas = document.createElement("canvas");
+      maskCanvas.width = W;
+      maskCanvas.height = SKY_H;
+      const maskCtx = maskCanvas.getContext("2d");
+      const maskData = maskCtx.createImageData(W, SKY_H);
+      const n = SK.strips.length + 1;
+      const prog = new Float32Array(n);
+      const low = new Float32Array(n);
+      const soft = new Float32Array(n);
+      const heightPx = new Float32Array(n);
+      SK.strips.forEach((s, i) => {
+        soft[i + 1] = SOFT_PX / (s[2] + 4);
+        heightPx[i + 1] = s[2] + 4;
+      });
+      const clusterStart = (delay, landmark) => (landmark ? delay : delay - 0.3);
+
+      let reveal, bld, finalImg, occluder;
+
+      function drawSkyline(t) {
+        for (let i = 0; i < SK.strips.length; i++) {
+          const [delay, dur, , landmark] = SK.strips[i];
+          prog[i + 1] = inOut(clamp01((t - delay) / dur));
+          low[i + 1] = LOW_PX * inOut(clamp01((t - clusterStart(delay, landmark)) / LOW_DUR));
+        }
+        const out = maskData.data;
+        if (t >= 5) {
+          for (let i = 0; i < out.length; i += 4) out[i + 3] = reveal[i + 2];
+        } else {
+          for (let i = 0; i < out.length; i += 4) {
+            const a = reveal[i + 2];
+            if (a === 0) {
+              out[i + 3] = 0;
+              continue;
+            }
+            const id = reveal[i];
+            const g = reveal[i + 1] / 255;
+            const sp = soft[id];
+            const rs = clamp01((prog[id] * (1 + sp) - g) / sp);
+            const rl = clamp01((low[id] - g * heightPx[id]) / SOFT_PX);
+            out[i + 3] = a * (rs > rl ? rs : rl);
+          }
+        }
+        maskCtx.putImageData(maskData, 0, 0);
+        skyCtx.globalCompositeOperation = "source-over";
+        skyCtx.clearRect(0, 0, W, SKY_H);
+        skyCtx.drawImage(bld, 0, 0);
+        skyCtx.globalCompositeOperation = "destination-in";
+        skyCtx.drawImage(maskCanvas, 0, 0);
+        skyCtx.globalCompositeOperation = "source-over";
+      }
+
+      // ------------------------------------------------------------ the curve
+      // traced points, extended past both frame edges so the balls enter and leave cleanly
+      const P = SK.curve.slice();
+      {
+        const [x0, y0] = P[0], [x1, y1] = P[1];
+        const k0 = (y1 - y0) / (x1 - x0);
+        const m = P.length;
+        const [xa, ya] = P[m - 2], [xb, yb] = P[m - 1];
+        const k1 = (yb - ya) / (xb - xa);
+        for (let d = 4; d <= 48; d += 4) P.unshift([x0 - d, y0 - k0 * d]);
+        for (let d = 4; d <= 48; d += 4) P.push([xb + d, yb + k1 * d]);
+      }
+      const S = new Float32Array(P.length); // cumulative arc length
+      for (let i = 1; i < P.length; i++) S[i] = S[i - 1] + Math.hypot(P[i][0] - P[i - 1][0], P[i][1] - P[i - 1][1]);
+      const L = S[S.length - 1];
+      function pointAt(s) {
+        if (s <= 0) return { i: 0, x: P[0][0], y: P[0][1] };
+        if (s >= L) return { i: P.length - 1, x: P[P.length - 1][0], y: P[P.length - 1][1] };
+        let lo = 0, hi = S.length - 1;
+        while (hi - lo > 1) {
+          const mid = (lo + hi) >> 1;
+          if (S[mid] <= s) lo = mid;
+          else hi = mid;
+        }
+        const f = (s - S[lo]) / (S[hi] - S[lo]);
+        return { i: lo, x: P[lo][0] + f * (P[hi][0] - P[lo][0]), y: P[lo][1] + f * (P[hi][1] - P[lo][1]) };
+      }
+      // arc length where the curve crosses a given x (the curve is a function of x)
+      function sAtX(x) {
+        for (let i = 1; i < P.length; i++) {
+          if (P[i][0] >= x) {
+            const f = (x - P[i - 1][0]) / (P[i][0] - P[i - 1][0]);
+            return S[i - 1] + f * (S[i] - S[i - 1]);
+          }
+        }
+        return L;
+      }
+      const headAt = (t) => (L * (t - DRAW_START)) / DRAW_DUR; // constant speed
+      const tickTimes = SK.ticks.map((tk) => DRAW_START + (DRAW_DUR * sAtX(tk.x)) / L);
+
+      const curve = document.getElementById("curve");
+      const cctx = curve.getContext("2d");
+      const LINE = "rgb(15, 135, 194)"; // sampled from the source stroke
+      const ORANGE = "rgb(253, 136, 3)"; // sampled from the source dot
+
+      function strokeTo(s, color, width) {
+        const end = pointAt(s);
+        cctx.beginPath();
+        cctx.moveTo(P[0][0], P[0][1]);
+        for (let i = 1; i <= end.i; i++) cctx.lineTo(P[i][0], P[i][1]);
+        cctx.lineTo(end.x, end.y);
+        cctx.strokeStyle = color;
+        cctx.lineWidth = width;
+        cctx.stroke();
+      }
+      function ball(s, fill) {
+        const p = pointAt(s);
+        if (p.x < -BALL_R - RING - 2 || p.x > W + BALL_R + RING + 2) return;
+        cctx.beginPath();
+        cctx.arc(p.x, p.y, BALL_R + RING, 0, Math.PI * 2);
+        cctx.fillStyle = "#ffffff";
+        cctx.fill();
+        cctx.beginPath();
+        cctx.arc(p.x, p.y, BALL_R, 0, Math.PI * 2);
+        cctx.fillStyle = fill;
+        cctx.fill();
+      }
+
+      function drawCurve(t) {
+        cctx.clearRect(0, 0, W, 1080);
+        if (t <= DRAW_START) return;
+        const head = Math.min(headAt(t), L);
+        cctx.lineJoin = "round";
+        cctx.lineCap = "butt";
+        // ticks grow up (and down) from the curve once the head has passed them
+        SK.ticks.forEach((tk, i) => {
+          const p = clamp01((t - tickTimes[i]) / TICK_DUR);
+          if (p <= 0) return;
+          const e = outCubic(p);
+          const y0 = tk.lineY - (tk.lineY - tk.top) * e;
+          const y1 = tk.lineY + (tk.bottom - tk.lineY) * e;
+          for (const [color, w] of [["rgba(255,255,255,0.9)", 6], [LINE, 3]]) {
+            cctx.beginPath();
+            cctx.moveTo(tk.x, y0);
+            cctx.lineTo(tk.x, y1);
+            cctx.strokeStyle = color;
+            cctx.lineWidth = w;
+            cctx.stroke();
+          }
+        });
+        // thin white halo under the stroke, as in the source
+        strokeTo(head, "rgba(255,255,255,0.85)", SK.stroke + 3);
+        strokeTo(head, LINE, SK.stroke);
+        // blue follows one second behind; orange leads at the head of the line
+        ball(headAt(t - BALL_GAP), LINE);
+        ball(headAt(t), ORANGE);
+        // the curve and the balls pass behind the Gherkin
+        cctx.globalCompositeOperation = "destination-out";
+        cctx.drawImage(occluder, 0, 0);
+        cctx.globalCompositeOperation = "source-over";
+      }
+
+      // ------------------------------------------------------------ water
+      // rows of open water slide sideways by a pixel or two; zero at HOLD and END
+      const water = document.getElementById("water");
+      const wctx = water.getContext("2d");
+      const WATER_TOP = 975;
+      const QUAY = [1010, 1565, 1052]; // the island quay does not ripple
+      function drawWater(t) {
+        wctx.clearRect(0, 0, W, 1080);
+        if (t <= HOLD || t >= END) return;
+        const env = Math.pow(Math.sin((Math.PI * (t - HOLD)) / (END - HOLD)), 2);
+        for (let y = WATER_TOP; y < 1080; y++) {
+          const depth = 0.35 + (0.65 * (y - WATER_TOP)) / (1080 - WATER_TOP);
+          const dx = env * depth * (1.6 * Math.sin(y * 0.42 + t * 3.1) + 0.9 * Math.sin(y * 0.17 - t * 1.9));
+          const spans = y < QUAY[2] ? [[0, QUAY[0]], [QUAY[1], W]] : [[0, W]];
+          for (const [a, b] of spans) {
+            wctx.drawImage(finalImg, a, y, b - a, 1, a, y, b - a, 1);
+            wctx.drawImage(finalImg, a, y, b - a, 1, a + dx, y, b - a, 1);
+          }
+        }
+        // soft golden shimmer drifting along the reflections
+        wctx.globalCompositeOperation = "screen";
+        for (let y = WATER_TOP; y < 1080; y += 2) {
+          const s = 0.5 + 0.5 * Math.sin(y * 0.9 - t * 4.2);
+          wctx.globalAlpha = env * 0.1 * s * s;
+          const spans = y < QUAY[2] ? [[0, QUAY[0]], [QUAY[1], W]] : [[0, W]];
+          for (const [a, b] of spans) wctx.drawImage(finalImg, a, y, b - a, 2, a, y, b - a, 2);
+        }
+        wctx.globalAlpha = 1;
+        wctx.globalCompositeOperation = "source-over";
+        // keep the ripple inside the open water: clip off the island and the land
+        wctx.clearRect(QUAY[0], WATER_TOP, QUAY[1] - QUAY[0], QUAY[2] - WATER_TOP);
+      }
+
+      // ------------------------------------------------------------ frame
+      let ready = false;
+      let lastTime = 0;
+      function renderAt(t) {
+        if (!ready) return;
+        drawSkyline(t);
+        drawWater(t);
+        drawCurve(t);
+      }
+
+      window.__hf.buildReady["skyline"] = Promise.all([
+        loadImage("assets/reveal.png"),
+        loadImage("assets/bld.png"),
+        loadImage("assets/final.png"),
+        loadImage("assets/occluder.png"),
+      ]).then(([rv, b, fi, oc]) => {
+        reveal = pixels(rv);
+        bld = b;
+        finalImg = fi;
+        occluder = oc;
+        ready = true;
+        renderAt(lastTime);
+      });
+
+      window.addEventListener("hf-seek", (e) => {
+        lastTime = e.detail.time;
+        renderAt(lastTime);
+      });
+
+      const tl = gsap.timeline({ paused: true });
+      const clock = { t: 0 };
+      // the city's reflections settle into the water as the buildings rise
+      tl.fromTo("#plate-water", { opacity: 0 }, { opacity: 1, duration: 4.5, ease: "sine.inOut" }, 0.5);
+      // once every building is up, the source pixels take over (identical, so no visible change)
+      tl.fromTo("#final", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "none" }, 5);
+      // keep the canvases in step when the timeline is driven directly (Studio scrubbing)
+      tl.to(
+        clock,
+        {
+          t: 10,
+          duration: 10,
+          ease: "none",
+          onUpdate: () => {
+            lastTime = clock.t;
+            renderAt(lastTime);
+          },
+        },
+        0
+      );
+      renderAt(0);
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
