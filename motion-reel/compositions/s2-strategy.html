@@ -1,0 +1,179 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    #s2-cam {
+      position: absolute;
+      inset: 0;
+    }
+    .s2-seg {
+      position: absolute;
+      left: 958px;
+      width: 4px;
+      background: var(--ink);
+    }
+    #s2-top {
+      top: 162px;
+      height: 378px;
+    }
+    #s2-bot {
+      top: 540px;
+      height: 378px;
+    }
+    #s2-eye {
+      position: absolute;
+      left: 918px;
+      top: 533px;
+      width: 14px;
+      height: 14px;
+      background: var(--ink);
+    }
+    #s2-geo {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1920px;
+      height: 1080px;
+      overflow: visible;
+    }
+    .s2-word {
+      position: absolute;
+      font-family: "Inter", sans-serif;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.045em;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+    #s2-observe {
+      left: 1000px;
+      top: 474px;
+      font-size: 132px;
+    }
+    #s2-question {
+      left: 984px;
+      top: 386px;
+      font-size: 132px;
+    }
+    #s2-question span {
+      display: inline-block;
+    }
+    #s2-reimagine {
+      left: 0;
+      top: 442px;
+      width: 1920px;
+      text-align: center;
+      font-size: 196px;
+      clip-path: inset(0% 0% 0% 0%);
+    }
+    #s2-kicker {
+      position: absolute;
+      right: 1040px;
+      top: 300px;
+      text-align: right;
+      font-family: "Inter", sans-serif;
+      font-weight: 400;
+      font-size: 40px;
+      line-height: 1.25;
+      color: var(--graphite);
+      white-space: nowrap;
+    }
+    #s2-kicker span {
+      display: inline-block;
+    }
+  </style>
+  <div id="root" data-composition-id="s2-strategy" data-width="1920" data-height="1080">
+    <div id="s2-cam">
+      <div id="s2-kicker"><span>I</span> <span>see</span> <span>what</span> <span>it</span><br /><span>could</span> <span>become.</span></div>
+
+      <div id="s2-top" class="s2-seg"></div>
+      <div id="s2-bot" class="s2-seg"></div>
+      <div id="s2-eye"></div>
+
+      <svg id="s2-geo" viewBox="0 0 1920 1080" data-layout-allow-overflow>
+        <g id="s2-geo-g">
+          <!-- the two segments, taken over from the divs at 2.0 s -->
+          <line id="s2-hl" x1="960" y1="540" x2="1338" y2="540" stroke="#111110" stroke-width="4" opacity="0" />
+          <line id="s2-vl" x1="840" y1="540" x2="840" y2="918" stroke="#111110" stroke-width="4" opacity="0" />
+          <!-- the remaining two sides of the square -->
+          <line id="s2-rl" x1="1140" y1="360" x2="1140" y2="360" stroke="#111110" stroke-width="4" />
+          <line id="s2-bl" x1="780" y1="720" x2="780" y2="720" stroke="#111110" stroke-width="4" />
+          <!-- the impossible moment: an ambiguous cube and a circle that should not fit -->
+          <rect id="s2-back" x="880" y="260" width="360" height="360" fill="none" stroke="#111110" stroke-width="2" stroke-dasharray="1440" stroke-dashoffset="1440" />
+          <line id="s2-d1" x1="780" y1="360" x2="780" y2="360" stroke="#111110" stroke-width="2" />
+          <line id="s2-d2" x1="1140" y1="360" x2="1140" y2="360" stroke="#111110" stroke-width="2" />
+          <line id="s2-d3" x1="1140" y1="720" x2="1140" y2="720" stroke="#111110" stroke-width="2" />
+          <line id="s2-d4" x1="780" y1="720" x2="780" y2="720" stroke="#111110" stroke-width="2" />
+          <circle id="s2-circle" cx="960" cy="540" r="180" fill="none" stroke="#5e5b55" stroke-width="2" stroke-dasharray="1131" stroke-dashoffset="1131" />
+        </g>
+        <!-- the resolved composition: one clean frame -->
+        <rect id="s2-frame" x="780" y="360" width="360" height="360" fill="none" stroke="#111110" stroke-width="4" opacity="0" />
+      </svg>
+
+      <div id="s2-observe" class="s2-word">OBSERVE.</div>
+      <div id="s2-question" class="s2-word"><span id="s2-q1">QUES</span><span id="s2-q2">TION.</span></div>
+      <div id="s2-reimagine" class="s2-word">REIMAGINE.</div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+
+      // 0.00-0.40 · the push from 01 carries on and decelerates onto the line.
+      tl.fromTo("#s2-cam", { scale: 1, transformOrigin: "960px 540px" }, { scale: 1.1, duration: 0.4, ease: "power3.out" }, 0);
+
+      // OBSERVE. · a vertical matte opens upward; the word locks to the line with a dry click.
+      tl.fromTo("#s2-eye", { scale: 0 }, { scale: 1, duration: 0.16, ease: "expo.out" }, 0.1);
+      tl.fromTo("#s2-observe", { clipPath: "inset(100% 0% 0% 0%)", scale: 1.05, transformOrigin: "0% 50%" }, { clipPath: "inset(0% 0% 0% 0%)", scale: 1, duration: 0.26, ease: "expo.out" }, 0.1);
+      tl.fromTo("#s2-kicker span", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.14, stagger: 0.06, ease: "power2.out" }, 0.3);
+      tl.to("#s2-observe", { opacity: 0, filter: "blur(8px)", duration: 0.14, ease: "power2.in" }, 0.88);
+      tl.to("#s2-eye", { scale: 0, duration: 0.12, ease: "power2.in" }, 0.9);
+
+      // QUESTION. · the line splits; the top half swings 90° about its foot, the bottom half
+      // slides the other way. The word snaps into the corner they leave behind.
+      tl.to("#s2-top", { rotation: 90, transformOrigin: "50% 100%", duration: 0.28, ease: "power4.out" }, 1.0);
+      tl.to("#s2-bot", { x: -120, duration: 0.28, ease: "power4.out" }, 1.0);
+      tl.fromTo("#s2-q1", { y: -110, opacity: 0 }, { y: 0, opacity: 1, duration: 0.24, ease: "expo.out" }, 1.08);
+      tl.fromTo("#s2-q2", { x: 160, opacity: 0 }, { x: 0, opacity: 1, duration: 0.24, ease: "expo.out" }, 1.2);
+      tl.to("#s2-question", { opacity: 0, filter: "blur(8px)", duration: 0.14, ease: "power2.in" }, 1.84);
+      tl.to("#s2-kicker span", { opacity: 0, filter: "blur(6px)", duration: 0.12, stagger: 0.03, ease: "power2.in" }, 1.8);
+
+      // REIMAGINE. · the segments become two sides of a square, the square grows a second square
+      // and a circle (an ambiguous, briefly impossible cube), then everything resolves into one frame.
+      tl.set("#s2-top, #s2-bot", { opacity: 0 }, 2.0);
+      tl.set("#s2-hl, #s2-vl", { opacity: 1 }, 2.0);
+      tl.to("#s2-cam", { scale: 1, duration: 0.5, ease: "power2.inOut" }, 2.0);
+      tl.to("#s2-hl", { attr: { x1: 780, y1: 360, x2: 1140, y2: 360 }, duration: 0.26, ease: "power3.inOut" }, 2.0);
+      tl.to("#s2-vl", { attr: { x1: 780, y1: 360, x2: 780, y2: 720 }, duration: 0.26, ease: "power3.inOut" }, 2.02);
+      tl.to("#s2-rl", { attr: { y2: 720 }, duration: 0.16, ease: "power2.out" }, 2.2);
+      tl.to("#s2-bl", { attr: { x2: 1140 }, duration: 0.16, ease: "power2.out" }, 2.26);
+      tl.to("#s2-back", { attr: { "stroke-dashoffset": 0 }, duration: 0.26, ease: "power2.inOut" }, 2.3);
+      tl.to("#s2-d1", { attr: { x2: 880, y2: 260 }, duration: 0.14, ease: "power2.out" }, 2.36);
+      tl.to("#s2-d2", { attr: { x2: 1240, y2: 260 }, duration: 0.14, ease: "power2.out" }, 2.39);
+      tl.to("#s2-d3", { attr: { x2: 1240, y2: 620 }, duration: 0.14, ease: "power2.out" }, 2.42);
+      tl.to("#s2-d4", { attr: { x2: 880, y2: 620 }, duration: 0.14, ease: "power2.out" }, 2.45);
+      tl.to("#s2-circle", { attr: { "stroke-dashoffset": 0 }, duration: 0.3, ease: "power2.inOut" }, 2.34);
+      tl.fromTo("#s2-geo-g", { rotation: 0, svgOrigin: "960 540" }, { rotation: -7, duration: 0.34, ease: "power2.inOut" }, 2.3);
+
+      // resolve: the back square slides onto the front, the diagonals vanish, the circle closes
+      tl.to("#s2-back", { attr: { x: 780, y: 360 }, duration: 0.14, ease: "power3.in" }, 2.64);
+      tl.to("#s2-d1, #s2-d2, #s2-d3, #s2-d4", { opacity: 0, duration: 0.1, ease: "power2.in" }, 2.64);
+      tl.to("#s2-circle", { attr: { r: 0 }, opacity: 0, duration: 0.14, ease: "power3.in" }, 2.64);
+      tl.to("#s2-geo-g", { rotation: 0, duration: 0.14, ease: "power3.in" }, 2.64);
+      tl.set("#s2-geo-g", { opacity: 0 }, 2.78);
+      tl.set("#s2-frame", { opacity: 1 }, 2.78);
+      tl.to("#s2-frame", { attr: { x: 180, y: 392, width: 1560, height: 296 }, duration: 0.3, ease: "power4.out" }, 2.78);
+      tl.fromTo("#s2-reimagine", { opacity: 0, scale: 1.2, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.3, ease: "expo.out" }, 2.8);
+
+      // 3.55-3.92 · the frame folds flat into a single horizontal rule: hand-off to 03.
+      tl.to("#s2-frame", { attr: { x: 260, y: 540, width: 1400, height: 0 }, duration: 0.36, ease: "power3.inOut" }, 3.56);
+      tl.to("#s2-reimagine", { clipPath: "inset(50% 0% 50% 0%)", duration: 0.32, ease: "power3.inOut" }, 3.56);
+      tl.to("#s2-reimagine", { opacity: 0, duration: 0.2, ease: "power2.in" }, 3.6);
+
+      window.__timelines["s2-strategy"] = tl;
+    })();
+  </script>
+</template>

@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      :root {
+        --paper: #edeae3;
+        --paper-clean: #f2f0ea;
+        --ink: #111110;
+        --graphite: #5e5b55;
+        --void: #0a0a09;
+        --font-display: "Inter", sans-serif;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--paper);
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family: var(--font-display);
+      }
+      /* Paper plate: oversized so the push-in and the one-frame shake never show an edge. */
+      #paper-plate {
+        position: absolute;
+        left: -192px;
+        top: -108px;
+        width: 2304px;
+        height: 1296px;
+        background: url("assets/paper.jpg") center / cover no-repeat;
+        z-index: 1;
+      }
+      #grain {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1920px;
+        height: 1080px;
+        background: url("assets/grain.png") 0 0 / 640px 640px repeat;
+        mix-blend-mode: soft-light;
+        opacity: 0.42;
+        z-index: 50;
+        pointer-events: none;
+      }
+      .scene {
+        z-index: 10;
+      }
+      #blackout {
+        background: var(--void);
+        z-index: 60;
+      }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-hq0q"
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="20"
+      data-fps="25"
+      data-width="1920"
+      data-height="1080"
+    >
+      <!-- ground -->
+      <div data-hf-id="hf-mdhj" id="paper-plate" class="clip" data-start="0" data-duration="20" data-track-index="0"></div>
+
+      <!-- 01_SURFACE_HOOK · MYSTERY -->
+      <div data-hf-id="hf-89gy"
+        id="s1-hook"
+        class="scene"
+        data-composition-id="s1-hook"
+        data-composition-src="compositions/s1-hook.html"
+        data-start="0"
+        data-duration="4"
+        data-track-index="1"
+        data-track-kind="graphics"
+        data-width="1920"
+        data-height="1080"
+      ></div>
+
+      <!-- 02_TYPE_TRANSFORM · STRATEGY -->
+      <div data-hf-id="hf-3jyt"
+        id="s2-strategy"
+        class="scene"
+        data-composition-id="s2-strategy"
+        data-composition-src="compositions/s2-strategy.html"
+        data-start="4"
+        data-duration="4"
+        data-track-index="1"
+        data-track-kind="graphics"
+        data-width="1920"
+        data-height="1080"
+      ></div>
+
+      <!-- 03_NAME_INTRO · PERSONALITY -->
+      <div data-hf-id="hf-gl54"
+        id="s3-name"
+        class="scene"
+        data-composition-id="s3-name"
+        data-composition-src="compositions/s3-name.html"
+        data-start="8"
+        data-duration="4"
+        data-track-index="1"
+        data-track-kind="graphics"
+        data-width="1920"
+        data-height="1080"
+      ></div>
+
+      <!-- 04_PIXEL_JOKE · HUMOUR -->
+      <div data-hf-id="hf-5nhx"
+        id="s4-pixel"
+        class="scene"
+        data-composition-id="s4-pixel"
+        data-composition-src="compositions/s4-pixel.html"
+        data-start="12"
+        data-duration="2"
+        data-track-index="1"
+        data-track-kind="graphics"
+        data-width="1920"
+        data-height="1080"
+      ></div>
+
+      <!-- 05_SKILL_METAPHORS · CAPABILITY -->
+      <div data-hf-id="hf-egkz"
+        id="s5-capability"
+        class="scene"
+        data-composition-id="s5-capability"
+        data-composition-src="compositions/s5-capability.html"
+        data-start="14"
+        data-duration="3"
+        data-track-index="1"
+        data-track-kind="graphics"
+        data-width="1920"
+        data-height="1080"
+      ></div>
+
+      <!-- 06_FINAL_LOCKUP · CONNECTION -->
+      <div data-hf-id="hf-7rnu"
+        id="s6-finish"
+        class="scene"
+        data-composition-id="s6-finish"
+        data-composition-src="compositions/s6-finish.html"
+        data-start="17"
+        data-duration="2.92"
+        data-track-index="1"
+        data-track-kind="graphics"
+        data-width="1920"
+        data-height="1080"
+      ></div>
+
+      <!-- film grain over everything, cut to black for the last two frames -->
+      <div data-hf-id="hf-lo4p" id="grain" class="clip" data-start="0" data-duration="20" data-track-index="2"></div>
+      <div data-hf-id="hf-cjy9" id="blackout" class="clip" data-start="19.92" data-duration="0.08" data-track-index="3"></div>
+
+      <!-- ===================== SOUND ===================== -->
+      <!-- air bed: cut for 2 frames before the pixel hit so the silence is felt -->
+      <audio data-hf-id="hf-ytu8" id="room-a" class="clip" src="assets/sfx/room-tone.wav" data-start="0" data-duration="12.64" data-volume="0.22" data-fade-in="0.4" data-track-index="10"></audio>
+      <audio data-hf-id="hf-3xdt" id="room-b" class="clip" src="assets/sfx/room-tone.wav" data-start="12.72" data-media-start="12.72" data-duration="7.2" data-volume="0.22" data-track-index="10"></audio>
+
+      <!-- 01 hook -->
+      <audio data-hf-id="hf-h2mg" id="sfx-tension" class="clip" src="assets/sfx/paper-tension.wav" data-start="0.40" data-duration="1.6" data-volume="0.75" data-track-index="11"></audio>
+      <audio data-hf-id="hf-iy9g" id="sfx-tear" class="clip" src="assets/sfx/paper-tear.wav" data-start="0.70" data-duration="0.5" data-volume="0.8" data-track-index="12"></audio>
+      <audio data-hf-id="hf-8i26" id="sfx-whatis" class="clip" src="assets/sfx/impact-bass-1.mp3" data-start="1.967" data-duration="2.1" data-volume="0.8" data-track-index="13"></audio>
+      <audio data-hf-id="hf-jn3q" id="sfx-push" class="clip" src="assets/sfx/whoosh-short.mp3" data-start="3.66" data-duration="0.57" data-volume="0.3" data-track-index="14"></audio>
+
+      <!-- 02 strategy -->
+      <audio data-hf-id="hf-elqt" id="sfx-bed" class="clip" src="assets/sfx/sub-swell.wav" data-start="4" data-duration="4" data-volume="0.55" data-track-index="15"></audio>
+      <audio data-hf-id="hf-yjl9" id="sfx-observe" class="clip" src="assets/sfx/click.mp3" data-start="4.327" data-duration="0.36" data-volume="0.75" data-track-index="11"></audio>
+      <audio data-hf-id="hf-ur00" id="sfx-split" class="clip" src="assets/sfx/paper-cut-a.wav" data-start="5.00" data-duration="0.22" data-volume="0.7" data-track-index="12"></audio>
+      <audio data-hf-id="hf-65p2" id="sfx-question" class="clip" src="assets/sfx/click.mp3" data-start="5.327" data-duration="0.36" data-volume="0.4" data-track-index="11"></audio>
+      <audio data-hf-id="hf-ibmr" id="sfx-reimagine" class="clip" src="assets/sfx/impact-bass-1.mp3" data-start="6.767" data-duration="2.1" data-volume="0.5" data-track-index="13"></audio>
+      <audio data-hf-id="hf-mh8l" id="sfx-collapse" class="clip" src="assets/sfx/paper-cut-b.wav" data-start="7.58" data-duration="0.18" data-volume="0.6" data-track-index="12"></audio>
+
+      <!-- 03 name -->
+      <audio data-hf-id="hf-42mw" id="sfx-slam" class="clip" src="assets/sfx/impact-bass-1.mp3" data-start="8.287" data-duration="2.1" data-volume="0.75" data-track-index="14"></audio>
+      <audio data-hf-id="hf-tv6u" id="sfx-baseline" class="clip" src="assets/sfx/click.mp3" data-start="8.767" data-duration="0.36" data-volume="0.5" data-track-index="11"></audio>
+      <audio data-hf-id="hf-ylbi" id="sfx-wipe" class="clip" src="assets/sfx/paper-cut-b.wav" data-start="10.55" data-duration="0.18" data-volume="0.6" data-track-index="12"></audio>
+
+      <!-- 04 pixel joke: everything stops, then a hit far too big for 2 px -->
+      <audio data-hf-id="hf-uepw" id="sfx-nudge" class="clip" src="assets/sfx/click.mp3" data-start="12.687" data-duration="0.36" data-volume="0.8" data-track-index="11"></audio>
+      <audio data-hf-id="hf-6a15" id="sfx-boom" class="clip" src="assets/sfx/boom.wav" data-start="12.728" data-duration="2.4" data-volume="1" data-track-index="16"></audio>
+      <audio data-hf-id="hf-0vxs" id="sfx-boom-body" class="clip" src="assets/sfx/impact-bass-1.mp3" data-start="12.687" data-duration="2.1" data-volume="0.9" data-track-index="13"></audio>
+
+      <!-- 05 capability -->
+      <audio data-hf-id="hf-93qw" id="sfx-choose" class="clip" src="assets/sfx/click.mp3" data-start="14.667" data-duration="0.36" data-volume="0.35" data-track-index="11"></audio>
+      <audio data-hf-id="hf-sct0" id="sfx-cubefold" class="clip" src="assets/sfx/paper-fold.wav" data-start="15.02" data-duration="0.7" data-volume="0.55" data-track-index="12"></audio>
+      <audio data-hf-id="hf-pkhq" id="sfx-strip" class="clip" src="assets/sfx/whoosh-short.mp3" data-start="16.15" data-duration="0.57" data-volume="0.45" data-track-index="14"></audio>
+      <audio data-hf-id="hf-kchh" id="sfx-stop" class="clip" src="assets/sfx/click.mp3" data-start="16.317" data-duration="0.36" data-volume="0.8" data-track-index="11"></audio>
+      <audio data-hf-id="hf-u8ux" id="sfx-stop-body" class="clip" src="assets/sfx/impact-bass-1.mp3" data-start="16.317" data-duration="2.1" data-volume="0.3" data-track-index="13"></audio>
+
+      <!-- 06 finish -->
+      <audio data-hf-id="hf-sbfr" id="sfx-fold" class="clip" src="assets/sfx/paper-fold.wav" data-start="17.40" data-duration="0.7" data-volume="0.7" data-track-index="12"></audio>
+      <audio data-hf-id="hf-w2hz" id="sfx-period" class="clip" src="assets/sfx/click.mp3" data-start="18.627" data-duration="0.36" data-volume="0.6" data-track-index="11"></audio>
+      <audio data-hf-id="hf-v71d" id="sfx-period-body" class="clip" src="assets/sfx/impact-bass-1.mp3" data-start="18.627" data-duration="1.29" data-volume="0.35" data-fade-out="0.3" data-track-index="13"></audio>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+
+      // Ground: a slow 2% push through the hook, then a gentle settle.
+      tl.fromTo("#paper-plate", { scale: 1 }, { scale: 1.02, duration: 4, ease: "none" }, 0);
+      tl.to("#paper-plate", { scale: 1.0, duration: 13, ease: "sine.inOut" }, 4);
+
+      // The pixel joke: the background (and only the background) jolts for one frame.
+      tl.set("#paper-plate", { x: 14, y: -9 }, 12.72);
+      tl.set("#paper-plate", { x: -6, y: 4 }, 12.76);
+      tl.set("#paper-plate", { x: 0, y: 0 }, 12.8);
+
+      // Analogue grain: the tile jumps to a new offset every frame (stepped, so seek-safe).
+      tl.fromTo(
+        "#grain",
+        { backgroundPosition: "0px 0px" },
+        { backgroundPosition: `${317 * 500}px ${211 * 500}px`, duration: 20, ease: "steps(500)" },
+        0,
+      );
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

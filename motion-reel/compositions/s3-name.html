@@ -1,0 +1,169 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    .s3-rule {
+      position: absolute;
+      left: 260px;
+      top: 538px;
+      width: 1400px;
+      height: 4px;
+      background: var(--ink);
+    }
+    .s3-name {
+      position: absolute;
+      left: 252px;
+      font-family: "Inter", sans-serif;
+      font-weight: 900;
+      font-size: 190px;
+      line-height: 1;
+      letter-spacing: -0.05em;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+    #s3-first {
+      top: 370px;
+    }
+    #s3-last {
+      top: 580px;
+    }
+    .s3-ch {
+      position: relative;
+      display: inline-block;
+    }
+    .s3-ghost {
+      visibility: hidden;
+    }
+    .s3-t,
+    .s3-b {
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    .s3-t {
+      clip-path: inset(0% 0% 50% 0%);
+    }
+    .s3-b {
+      clip-path: inset(50% 0% 0% 0%);
+    }
+    .s3-quiet {
+      position: absolute;
+      font-family: "Inter", sans-serif;
+      font-weight: 400;
+      font-size: 40px;
+      color: var(--graphite);
+      white-space: nowrap;
+    }
+    #s3-im {
+      left: 262px;
+      top: 300px;
+    }
+    .s3-role {
+      position: absolute;
+      font-family: "Inter", sans-serif;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+    #s3-artist {
+      right: 1000px;
+      top: 476px;
+      font-size: 104px;
+      font-weight: 700;
+      text-align: right;
+    }
+    #s3-strategist {
+      left: 1000px;
+      top: 470px;
+      font-size: 112px;
+      font-weight: 900;
+      clip-path: inset(0% 100% 0% 0%);
+    }
+    #s3-craft {
+      right: 1004px;
+      top: 594px;
+      text-align: right;
+    }
+    #s3-instinct {
+      left: 1004px;
+      top: 594px;
+    }
+    #s3-wipe {
+      position: absolute;
+      left: 980px;
+      top: 452px;
+      width: 860px;
+      height: 196px;
+      background: var(--ink);
+    }
+  </style>
+  <div id="root" data-composition-id="s3-name" data-width="1920" data-height="1080">
+    <div id="s3-im" class="s3-quiet">I’m</div>
+    <div id="s3-first" class="s3-name">BHOGESH</div>
+    <div id="s3-last" class="s3-name" data-layout-allow-overlap><span class="s3-ch"><span class="s3-ghost">M</span><span class="s3-t">M</span><span class="s3-b">M</span></span><span class="s3-ch"><span class="s3-ghost">O</span><span class="s3-t">O</span><span class="s3-b">O</span></span><span class="s3-ch"><span class="s3-ghost">L</span><span class="s3-t">L</span><span class="s3-b">L</span></span><span class="s3-ch"><span class="s3-ghost">A</span><span class="s3-t">A</span><span class="s3-b">A</span></span><span class="s3-ch"><span class="s3-ghost">G</span><span class="s3-t">G</span><span class="s3-b">G</span></span><span class="s3-ch"><span class="s3-ghost">A</span><span class="s3-t">A</span><span class="s3-b">A</span></span><span class="s3-ch"><span class="s3-ghost">V</span><span class="s3-t">V</span><span class="s3-b">V</span></span><span class="s3-ch"><span class="s3-ghost">A</span><span class="s3-t">A</span><span class="s3-b">A</span></span><span class="s3-ch"><span class="s3-ghost">L</span><span class="s3-t">L</span><span class="s3-b">L</span></span><span class="s3-ch"><span class="s3-ghost">L</span><span class="s3-t">L</span><span class="s3-b">L</span></span><span class="s3-ch"><span class="s3-ghost">I</span><span class="s3-t">I</span><span class="s3-b">I</span></span></div>
+    <div id="s3-l2" class="s3-rule"></div>
+    <div id="s3-l1" class="s3-rule"></div>
+
+    <div id="s3-artist" class="s3-role">ARTIST.</div>
+    <div id="s3-craft" class="s3-quiet">by craft,</div>
+    <div id="s3-strategist" class="s3-role">STRATEGIST.</div>
+    <div id="s3-instinct" class="s3-quiet">by instinct.</div>
+    <div id="s3-wipe"></div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+
+      // 0.00 · the rule from 02 splits: a copy drops to become the second baseline.
+      tl.fromTo("#s3-l2", { y: 0 }, { y: 222, rotation: 1.4, scaleX: 0.97, duration: 0.2, ease: "power3.out" }, 0.02);
+      tl.fromTo("#s3-im", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.14, ease: "power2.out" }, 0.04);
+
+      // BHOGESH slams down onto the rule, which flexes once.
+      tl.fromTo("#s3-first", { y: -470 }, { y: 10, duration: 0.2, ease: "power4.in" }, 0.1);
+      tl.to("#s3-first", { y: 0, duration: 0.12, ease: "power2.out" }, 0.3);
+      tl.fromTo("#s3-l1", { scaleY: 1 }, { scaleY: 3, duration: 0.04, ease: "none" }, 0.3);
+      tl.to("#s3-l1", { scaleY: 1, duration: 0.12, ease: "power2.out" }, 0.34);
+
+      // MOLAGAVALLI assembles from split letter halves, one letter a frame apart.
+      const jx = [-38, 24, -16, 42, -30, 12, -44, 20, -8, 36, -26];
+      gsap.utils.toArray("#s3-last .s3-ch").forEach((ch, i) => {
+        const t = ch.querySelector(".s3-t");
+        const b = ch.querySelector(".s3-b");
+        const at = 0.34 + i * 0.04;
+        tl.fromTo(t, { x: jx[i], y: -70, opacity: 0 }, { x: 0, y: 0, opacity: 1, duration: 0.28, ease: "expo.out" }, at);
+        tl.fromTo(b, { x: -jx[i], y: 70, opacity: 0 }, { x: 0, y: 0, opacity: 1, duration: 0.28, ease: "expo.out" }, at + 0.02);
+      });
+      // the baseline snaps into precision
+      tl.to("#s3-l2", { rotation: 0, scaleX: 1, duration: 0.08, ease: "power4.out" }, 0.8);
+
+      // 1.72-2.30 · the name splits away; the two rules close and turn into a vertical divider.
+      tl.to("#s3-im", { opacity: 0, duration: 0.12, ease: "power2.in" }, 1.68);
+      tl.to("#s3-first", { y: -40, opacity: 0, filter: "blur(8px)", duration: 0.2, ease: "power3.in" }, 1.72);
+      tl.to("#s3-last .s3-t, #s3-last .s3-b", { opacity: 0, filter: "blur(8px)", duration: 0.18, stagger: 0.012, ease: "power3.in" }, 1.74);
+      tl.to("#s3-l2", { y: 0, duration: 0.22, ease: "power3.inOut" }, 1.8);
+      tl.set("#s3-l2", { opacity: 0 }, 2.02);
+      tl.to("#s3-l1", { scaleX: 260 / 1400, rotation: 90, transformOrigin: "50% 50%", duration: 0.3, ease: "power3.inOut" }, 1.92);
+
+      // 2.10 · ARTIST. slides in on the left; 2.55 a black block wipes across the divider
+      // and leaves STRATEGIST. behind it, heavier and slightly larger.
+      tl.fromTo("#s3-artist", { x: -90, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "expo.out" }, 2.1);
+      tl.fromTo("#s3-craft", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.14, ease: "power2.out" }, 2.3);
+      tl.fromTo("#s3-wipe", { scaleX: 0, transformOrigin: "0% 50%" }, { scaleX: 1, duration: 0.16, ease: "power3.in" }, 2.55);
+      tl.set("#s3-strategist", { clipPath: "inset(0% 0% 0% 0%)" }, 2.71);
+      tl.set("#s3-wipe", { transformOrigin: "100% 50%" }, 2.71);
+      tl.to("#s3-wipe", { scaleX: 0, duration: 0.18, ease: "power3.out" }, 2.71);
+      tl.to("#s3-artist", { x: -14, duration: 0.3, ease: "power2.out" }, 2.7);
+      tl.fromTo("#s3-instinct", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.14, ease: "power2.out" }, 2.86);
+
+      // 3.55-3.92 · the words leave; the divider shrinks to one small square at the centre.
+      tl.to("#s3-artist, #s3-strategist, #s3-craft, #s3-instinct", { opacity: 0, filter: "blur(8px)", duration: 0.18, stagger: 0.03, ease: "power2.in" }, 3.55);
+      tl.to("#s3-l1", { scaleX: 18 / 1400, scaleY: 18 / 4, duration: 0.32, ease: "power3.inOut" }, 3.62);
+
+      window.__timelines["s3-name"] = tl;
+    })();
+  </script>
+</template>

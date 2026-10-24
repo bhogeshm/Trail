@@ -1,0 +1,244 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    #s5-kicker {
+      position: absolute;
+      left: 160px;
+      top: 228px;
+      font-family: "Inter", sans-serif;
+      font-weight: 400;
+      font-size: 40px;
+      color: var(--graphite);
+      white-space: nowrap;
+    }
+    #s5-kicker span {
+      display: inline-block;
+    }
+    #s5-mask {
+      position: absolute;
+      left: 160px;
+      top: 296px;
+      width: 960px;
+      height: 240px;
+      overflow: hidden;
+    }
+    .s5-say {
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-family: "Inter", sans-serif;
+      font-weight: 900;
+      font-size: 112px;
+      line-height: 1.02;
+      letter-spacing: -0.045em;
+      color: var(--ink);
+      white-space: nowrap;
+      opacity: 0;
+    }
+    #s5-seed {
+      position: absolute;
+      left: 1260px;
+      top: 500px;
+      width: 120px;
+      height: 120px;
+      background: var(--ink);
+    }
+    .s5-var {
+      position: absolute;
+      left: 1278px;
+      top: 518px;
+      width: 84px;
+      height: 84px;
+      opacity: 0;
+    }
+    .s5-shape {
+      position: absolute;
+      inset: 0;
+      background: var(--ink);
+    }
+    #s5-v0 .s5-shape { border-radius: 50%; }
+    #s5-v1 .s5-shape { inset: 12px; transform: rotate(45deg); }
+    #s5-v2 .s5-shape { clip-path: polygon(50% 4%, 100% 92%, 0% 92%); }
+    #s5-v3 .s5-shape { background: var(--graphite); border-radius: 22px; }
+    #s5-v4 .s5-shape { background: transparent; border: 4px solid var(--ink); }
+    #s5-v5 .s5-shape { background: linear-gradient(135deg, var(--ink) 50%, var(--graphite) 50%); }
+    #s5-select {
+      position: absolute;
+      left: 1262px;
+      top: 502px;
+      width: 116px;
+      height: 116px;
+      border: 2px solid var(--ink);
+      opacity: 0;
+    }
+    #s5-persp {
+      position: absolute;
+      left: 1240px;
+      top: 480px;
+      width: 160px;
+      height: 160px;
+      perspective: 1600px;
+      opacity: 0;
+    }
+    #s5-cube {
+      position: absolute;
+      inset: 0;
+      transform-style: preserve-3d;
+    }
+    .s5-face {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 160px;
+      height: 160px;
+      border: 2px solid var(--ink);
+      overflow: hidden;
+    }
+    #s5-front { background: #d8d3c9; }
+    #s5-top { top: -160px; background: #f1eee8; }
+    #s5-bottom { top: 160px; background: #6b665e; }
+    #s5-right { left: 160px; background: #8f897f; }
+    #s5-left { left: -160px; background: #a39d92; }
+    .s5-sheen {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(105deg, rgba(255, 255, 255, 0) 38%, rgba(255, 255, 255, 0.6) 50%, rgba(255, 255, 255, 0) 62%) 0 0 / 300% 100% no-repeat;
+    }
+    #s5-strip {
+      position: absolute;
+      left: 1220px;
+      top: 740px;
+      width: 1544px;
+      height: 120px;
+      opacity: 0;
+    }
+    .s5-frame {
+      position: absolute;
+      top: 0;
+      width: 200px;
+      height: 120px;
+      background: var(--paper-clean);
+      border: 3px solid var(--ink);
+    }
+    .s5-frame svg {
+      position: absolute;
+      left: -3px;
+      top: -3px;
+    }
+  </style>
+  <div id="root" data-composition-id="s5-capability" data-width="1920" data-height="1080">
+    <div id="s5-kicker"><span>I</span> <span>turn</span> <span>ideas</span> <span>into</span> <span>images</span> <span>that</span> <span>move</span> <span>people.</span></div>
+    <div id="s5-mask">
+      <div id="s5-say1" class="s5-say">AI FILMS.</div>
+      <div id="s5-say2" class="s5-say">3D + MOTION.</div>
+      <div id="s5-say3" class="s5-say">STORIES<br />WITH PURPOSE.</div>
+    </div>
+
+    <div id="s5-v0" class="s5-var"><div class="s5-shape"></div></div>
+    <div id="s5-v1" class="s5-var"><div class="s5-shape"></div></div>
+    <div id="s5-v2" class="s5-var"><div class="s5-shape"></div></div>
+    <div id="s5-v3" class="s5-var"><div class="s5-shape"></div></div>
+    <div id="s5-v4" class="s5-var"><div class="s5-shape"></div></div>
+    <div id="s5-v5" class="s5-var"><div class="s5-shape"></div></div>
+    <div id="s5-seed"></div>
+    <div id="s5-select"></div>
+
+    <div id="s5-persp">
+      <div id="s5-cube">
+        <div id="s5-left" class="s5-face"></div>
+        <div id="s5-bottom" class="s5-face"></div>
+        <div id="s5-top" class="s5-face"><div class="s5-sheen"></div></div>
+        <div id="s5-right" class="s5-face"><div class="s5-sheen"></div></div>
+        <div id="s5-front" class="s5-face"><div class="s5-sheen"></div></div>
+      </div>
+    </div>
+
+    <div id="s5-strip">
+        <div id="s5-f0" class="s5-frame" style="left:0px"><svg viewBox="0 0 200 120" width="200" height="120"><path d="M100,16 C80,44 80,76 100,104 C120,76 120,44 100,16Z" fill="#111110"/></svg></div>
+        <div id="s5-f1" class="s5-frame" style="left:224px"><svg viewBox="0 0 200 120" width="200" height="120"><rect x="70" y="18" width="3" height="84" fill="#111110"/><rect x="84" y="52" width="82" height="16" fill="#111110"/></svg></div>
+        <div id="s5-f2" class="s5-frame" style="left:448px"><svg viewBox="0 0 200 120" width="200" height="120"><rect x="84" y="68" width="88" height="3" fill="#111110"/><rect x="62" y="68" width="3" height="40" fill="#111110"/><rect x="88" y="44" width="70" height="16" fill="#111110"/></svg></div>
+        <div id="s5-f3" class="s5-frame" style="left:672px"><svg viewBox="0 0 200 120" width="200" height="120"><g fill="none" stroke="#111110" stroke-width="2.5"><rect x="66" y="34" width="56" height="56"/><rect x="82" y="20" width="56" height="56" stroke-width="1.5"/><path d="M66 34 L82 20 M122 34 L138 20 M122 90 L138 76 M66 90 L82 76" stroke-width="1.5"/></g><circle cx="94" cy="62" r="28" fill="none" stroke="#5e5b55" stroke-width="1.5"/></svg></div>
+        <div id="s5-f4" class="s5-frame" style="left:896px"><svg viewBox="0 0 200 120" width="200" height="120"><rect x="28" y="36" width="104" height="18" fill="#111110"/><rect x="28" y="62" width="144" height="18" fill="#111110"/><rect x="28" y="56" width="150" height="2" fill="#111110"/><rect x="28" y="82" width="150" height="2" fill="#111110"/></svg></div>
+        <div id="s5-f5" class="s5-frame" style="left:1120px"><svg viewBox="0 0 200 120" width="200" height="120"><rect x="46" y="30" width="8" height="8" fill="#111110"/><rect x="68" y="30" width="8" height="8" fill="#111110"/><rect x="90" y="30" width="8" height="8" fill="#111110"/><rect x="112" y="30" width="8" height="8" fill="#111110"/><rect x="134" y="30" width="8" height="8" fill="#111110"/><rect x="156" y="30" width="8" height="8" fill="#111110"/><rect x="46" y="52" width="8" height="8" fill="#111110"/><rect x="68" y="52" width="8" height="8" fill="#111110"/><rect x="90" y="52" width="8" height="8" fill="#111110"/><rect x="112" y="52" width="8" height="8" fill="#111110"/><rect x="136" y="54" width="8" height="8" fill="#111110"/><rect x="156" y="52" width="8" height="8" fill="#111110"/><rect x="46" y="74" width="8" height="8" fill="#111110"/><rect x="68" y="74" width="8" height="8" fill="#111110"/><rect x="90" y="74" width="8" height="8" fill="#111110"/><rect x="112" y="74" width="8" height="8" fill="#111110"/><rect x="134" y="74" width="8" height="8" fill="#111110"/><rect x="156" y="74" width="8" height="8" fill="#111110"/><rect x="46" y="96" width="8" height="8" fill="#111110"/><rect x="68" y="96" width="8" height="8" fill="#111110"/><rect x="90" y="96" width="8" height="8" fill="#111110"/><rect x="112" y="96" width="8" height="8" fill="#111110"/><rect x="134" y="96" width="8" height="8" fill="#111110"/><rect x="156" y="96" width="8" height="8" fill="#111110"/></svg></div>
+        <div id="s5-f6" class="s5-frame" style="left:1344px"><svg viewBox="0 0 200 120" width="200" height="120"><path d="M100 22 L138 42 L100 62 L62 42Z" fill="#f1eee8" stroke="#111110" stroke-width="2"/><path d="M62 42 L100 62 L100 102 L62 82Z" fill="#d8d3c9" stroke="#111110" stroke-width="2"/><path d="M100 62 L138 42 L138 82 L100 102Z" fill="#8f897f" stroke="#111110" stroke-width="2"/></svg></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const SX = 1320;
+      const SY = 560;
+      const R = 210;
+      const angles = [-90, -30, 30, 90, 150, 210];
+      const pos = angles.map((a) => [Math.cos((a * Math.PI) / 180) * R, Math.sin((a * Math.PI) / 180) * R]);
+      const roll = (out, inn, at) => {
+        if (out) {
+          tl.to(out, { y: -250, duration: 0.24, ease: "power3.inOut" }, at);
+          tl.set(out, { opacity: 0 }, at + 0.24);
+        }
+        tl.set(inn, { opacity: 1 }, at);
+        tl.fromTo(inn, { y: 250 }, { y: 0, duration: 0.24, ease: "power3.inOut" }, at);
+      };
+
+      // hidden until their beat
+
+      // ---- AI FILMS. · one form becomes many possibilities, then one is chosen ----
+      tl.fromTo("#s5-kicker span", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.12, stagger: 0.04, ease: "power2.out" }, 0.04);
+      roll(null, "#s5-say1", 0.08);
+      tl.fromTo("#s5-seed", { x: 960 - SX, y: 540 - SY, scale: 47 / 120 }, { x: 0, y: 0, scale: 0.7, duration: 0.3, ease: "power3.inOut" }, 0.02);
+      pos.forEach(([x, y], i) => {
+        tl.fromTo(`#s5-v${i}`, { x: 0, y: 0, scale: 0.3, opacity: 0 }, { x, y, scale: 1, opacity: 1, duration: 0.3, ease: "expo.out" }, 0.3 + i * 0.03);
+      });
+      tl.set("#s5-select", { opacity: 1, x: pos[1][0], y: pos[1][1] }, 0.54);
+      tl.set("#s5-select", { x: pos[4][0], y: pos[4][1] }, 0.6);
+      tl.set("#s5-select", { x: pos[3][0], y: pos[3][1] }, 0.66);
+      tl.to("#s5-select", { scale: 0.9, duration: 0.04, ease: "none" }, 0.7);
+      tl.to("#s5-select", { opacity: 0, scale: 1.1, duration: 0.12, ease: "power2.in" }, 0.74);
+      [0, 1, 2, 4, 5].forEach((i) => {
+        tl.to(`#s5-v${i}`, { x: 0, y: 0, scale: 0, duration: 0.16, ease: "power3.in" }, 0.74 + (i % 3) * 0.015);
+      });
+      tl.to("#s5-seed", { scale: 0, duration: 0.14, ease: "power3.in" }, 0.74);
+      tl.to("#s5-v3", { x: 0, y: 0, scale: 160 / 84, duration: 0.18, ease: "power3.inOut" }, 0.74);
+      tl.to("#s5-v3 .s5-shape", { borderRadius: 0, backgroundColor: "#d8d3c9", duration: 0.16, ease: "power2.inOut" }, 0.76);
+
+      // ---- 3D + MOTION. · the chosen square unfolds into a net, folds into a cube, turns, catches light ----
+      roll("#s5-say1", "#s5-say2", 0.9);
+      tl.set("#s5-persp", { opacity: 1 }, 0.92);
+      tl.set("#s5-v3", { opacity: 0 }, 0.92);
+      tl.fromTo("#s5-top, #s5-bottom, #s5-left, #s5-right", { opacity: 0 }, { opacity: 1, duration: 0.08, ease: "none" }, 0.92);
+      tl.fromTo("#s5-top", { rotationX: 0, transformOrigin: "50% 100%" }, { rotationX: 90, duration: 0.3, ease: "power3.inOut" }, 1.02);
+      tl.fromTo("#s5-right", { rotationY: 0, transformOrigin: "0% 50%" }, { rotationY: 90, duration: 0.3, ease: "power3.inOut" }, 1.05);
+      tl.fromTo("#s5-bottom", { rotationX: 0, transformOrigin: "50% 0%" }, { rotationX: -90, duration: 0.3, ease: "power3.inOut" }, 1.08);
+      tl.fromTo("#s5-left", { rotationY: 0, transformOrigin: "100% 50%" }, { rotationY: -90, duration: 0.3, ease: "power3.inOut" }, 1.11);
+      tl.fromTo("#s5-cube", { rotationX: 0, rotationY: 0, z: -80, transformOrigin: "50% 50% -80px" }, { rotationX: -24, rotationY: -36, duration: 0.45, ease: "expo.out" }, 1.16);
+      tl.fromTo("#s5-persp .s5-sheen", { backgroundPosition: "100% 0%" }, { backgroundPosition: "0% 0%", duration: 0.36, ease: "power2.inOut", stagger: 0.04 }, 1.38);
+
+      // ---- STORIES WITH PURPOSE. · the cube flattens into a frame, the frame becomes a strip of
+      // frames that accelerates across the screen and stops dead on the beat ----
+      roll("#s5-say2", "#s5-say3", 1.8);
+      tl.to("#s5-cube", { rotationX: 0, rotationY: 0, duration: 0.15, ease: "power3.in" }, 1.8);
+      tl.to("#s5-persp", { y: 240, scaleX: 200 / 160, scaleY: 120 / 160, duration: 0.15, ease: "power3.in" }, 1.8);
+      tl.set("#s5-persp", { opacity: 0 }, 1.95);
+      tl.set("#s5-strip", { opacity: 1 }, 1.95);
+      tl.fromTo("#s5-strip", { x: 0 }, { x: -1036, duration: 0.4, ease: "power4.in" }, 1.95);
+      tl.to("#s5-strip", { x: -1032, duration: 0.08, ease: "power2.out" }, 2.35);
+
+      // ---- art direction · the frames take a hierarchy: one hero, a column, a row ----
+      const L = [[1180, 800, 1.0], [1420, 800, 1.0], [1660, 800, 1.0], [1300, 520, 2.2], [1650, 420, 0.8], [1650, 540, 0.8], [1650, 660, 0.8]];
+      L.forEach(([x, y, s], i) => {
+        const bx = 188 + i * 224 + 100;
+        tl.to(`#s5-f${i}`, { x: x - bx, y: y - 800, scale: s, duration: 0.42, ease: "power3.inOut" }, 2.44 + [3, 1, 0, 2, 4, 5, 6][i] * 0.025);
+      });
+
+      // hand-off: words leave, the frames stay for 06
+      tl.to("#s5-kicker span", { opacity: 0, filter: "blur(6px)", duration: 0.12, stagger: 0.015, ease: "power2.in" }, 2.8);
+      tl.to("#s5-say3", { opacity: 0, filter: "blur(8px)", duration: 0.14, ease: "power2.in" }, 2.82);
+
+      window.__timelines["s5-capability"] = tl;
+    })();
+  </script>
+</template>

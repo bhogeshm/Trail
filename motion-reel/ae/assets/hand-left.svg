@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+<defs>
+          <linearGradient id="s1-plaster" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#fbf9f5" />
+            <stop offset="0.45" stop-color="#e6e1d8" />
+            <stop offset="1" stop-color="#a49d90" />
+          </linearGradient>
+          <!-- darkens each finger toward the slit: the part still inside the wall is unlit -->
+          <linearGradient id="s1-root-l" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#000" stop-opacity="0" />
+            <stop offset="0.62" stop-color="#000" stop-opacity="0" />
+            <stop offset="0.9" stop-color="#0a0a09" stop-opacity="0.92" />
+          </linearGradient>
+          <linearGradient id="s1-root-r" x1="1" y1="0" x2="0" y2="0">
+            <stop offset="0" stop-color="#000" stop-opacity="0" />
+            <stop offset="0.62" stop-color="#000" stop-opacity="0" />
+            <stop offset="0.9" stop-color="#0a0a09" stop-opacity="0.92" />
+          </linearGradient>
+          <filter id="s1-soft" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="7" />
+          </filter>
+          <filter id="s1-lipblur" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="2.2" />
+          </filter>
+          <clipPath id="s1-clip-l"><rect id="s1-clip-l-r" x="0" y="0" width="560" height="1080" /></clipPath>
+          <clipPath id="s1-clip-r"><rect id="s1-clip-r-r" x="560" y="0" width="1360" height="1080" /></clipPath>
+        </defs>
+<g transform="translate(300 -360)"><g id="s1-hand-l">
+            <g filter="url(#s1-soft)" opacity="0.34" transform="translate(6 12)">
+              <path d="M30,412.0 L-74.8,414.8 Q-92.0,414.8 -92.0,432 Q-92.0,449.2 -74.8,449.2 L30,452.0 Z" fill="#2c261f" transform="rotate(-6 0 432)" />
+              <path d="M30,458.0 L-87.1,461.1 Q-106.0,461.1 -106.0,480 Q-106.0,498.9 -87.1,498.9 L30,502.0 Z" fill="#2c261f" transform="rotate(-2 0 480)" />
+              <path d="M30,508.0 L-80.9,510.9 Q-99.0,510.9 -99.0,529 Q-99.0,547.1 -80.9,547.1 L30,550.0 Z" fill="#2c261f" transform="rotate(2 0 529)" />
+              <path d="M30,557.0 L-63.4,559.4 Q-78.0,559.4 -78.0,574 Q-78.0,588.6 -63.4,588.6 L30,591.0 Z" fill="#2c261f" transform="rotate(7 0 574)" />
+            </g>
+            <path d="M30,412.0 L-74.8,414.8 Q-92.0,414.8 -92.0,432 Q-92.0,449.2 -74.8,449.2 L30,452.0 Z" fill="url(#s1-plaster)" transform="rotate(-6 0 432)" />
+            <path d="M30,458.0 L-87.1,461.1 Q-106.0,461.1 -106.0,480 Q-106.0,498.9 -87.1,498.9 L30,502.0 Z" fill="url(#s1-plaster)" transform="rotate(-2 0 480)" />
+            <path d="M30,508.0 L-80.9,510.9 Q-99.0,510.9 -99.0,529 Q-99.0,547.1 -80.9,547.1 L30,550.0 Z" fill="url(#s1-plaster)" transform="rotate(2 0 529)" />
+            <path d="M30,557.0 L-63.4,559.4 Q-78.0,559.4 -78.0,574 Q-78.0,588.6 -63.4,588.6 L30,591.0 Z" fill="url(#s1-plaster)" transform="rotate(7 0 574)" />
+            <path d="M30,412.0 L-74.8,414.8 Q-92.0,414.8 -92.0,432 Q-92.0,449.2 -74.8,449.2 L30,452.0 Z" fill="url(#s1-root-l)" transform="rotate(-6 0 432)" />
+            <path d="M30,458.0 L-87.1,461.1 Q-106.0,461.1 -106.0,480 Q-106.0,498.9 -87.1,498.9 L30,502.0 Z" fill="url(#s1-root-l)" transform="rotate(-2 0 480)" />
+            <path d="M30,508.0 L-80.9,510.9 Q-99.0,510.9 -99.0,529 Q-99.0,547.1 -80.9,547.1 L30,550.0 Z" fill="url(#s1-root-l)" transform="rotate(2 0 529)" />
+            <path d="M30,557.0 L-63.4,559.4 Q-78.0,559.4 -78.0,574 Q-78.0,588.6 -63.4,588.6 L30,591.0 Z" fill="url(#s1-root-l)" transform="rotate(7 0 574)" />
+            <rect x="-75.4" y="422.9" width="21.2" height="16.2" rx="8.1" fill="#fdfbf7" stroke="#a79f91" stroke-opacity="0.55" stroke-width="1" transform="rotate(-6 0 432)" />
+            <rect x="-88.7" y="470.1" width="23.3" height="17.9" rx="8.9" fill="#fdfbf7" stroke="#a79f91" stroke-opacity="0.55" stroke-width="1" transform="rotate(-2 0 480)" />
+            <rect x="-82.1" y="519.5" width="22.2" height="17.1" rx="8.5" fill="#fdfbf7" stroke="#a79f91" stroke-opacity="0.55" stroke-width="1" transform="rotate(2 0 529)" />
+            <rect x="-62.3" y="566.1" width="18.0" height="13.8" rx="6.9" fill="#fdfbf7" stroke="#a79f91" stroke-opacity="0.55" stroke-width="1" transform="rotate(7 0 574)" />
+            <path d="M-41.4,418.0 q3,14.0 0,28.0" stroke="#8d8578" stroke-opacity="0.5" stroke-width="1.4" fill="none" transform="rotate(-6 0 432)" />
+            <path d="M-47.7,464.6 q3,15.4 0,30.8" stroke="#8d8578" stroke-opacity="0.5" stroke-width="1.4" fill="none" transform="rotate(-2 0 480)" />
+            <path d="M-44.5,514.3 q3,14.7 0,29.4" stroke="#8d8578" stroke-opacity="0.5" stroke-width="1.4" fill="none" transform="rotate(2 0 529)" />
+            <path d="M-35.1,562.1 q3,11.9 0,23.8" stroke="#8d8578" stroke-opacity="0.5" stroke-width="1.4" fill="none" transform="rotate(7 0 574)" />
+          </g></g>
+</svg>

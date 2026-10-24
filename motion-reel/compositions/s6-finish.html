@@ -1,0 +1,208 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    #s6-clean {
+      position: absolute;
+      inset: 0;
+      background: var(--paper-clean);
+    }
+    #s6-doors {
+      position: absolute;
+      inset: 0;
+      perspective: 2400px;
+    }
+    .s6-door {
+      position: absolute;
+      top: 0;
+      width: 960px;
+      height: 1080px;
+      overflow: hidden;
+    }
+    .s6-door-paper {
+      position: absolute;
+      top: -108px;
+      width: 2304px;
+      height: 1296px;
+      background: url("assets/paper.jpg") center / cover no-repeat;
+    }
+    #s6-door-l { left: 0; }
+    #s6-door-l .s6-door-paper { left: -192px; }
+    #s6-door-r { left: 960px; }
+    #s6-door-r .s6-door-paper { left: -1152px; }
+    .s6-shade {
+      position: absolute;
+      inset: 0;
+      background: #2b2620;
+      opacity: 0;
+    }
+    #s6-strip {
+      position: absolute;
+      left: 188px;
+      top: 740px;
+      width: 1544px;
+      height: 120px;
+    }
+    .s6-frame {
+      position: absolute;
+      top: 0;
+      width: 200px;
+      height: 120px;
+      background: var(--paper-clean);
+      border: 3px solid var(--ink);
+    }
+    .s6-frame svg {
+      position: absolute;
+      left: -3px;
+      top: -3px;
+    }
+    .s6-name {
+      position: absolute;
+      left: 172px;
+      font-family: "Inter", sans-serif;
+      font-weight: 900;
+      font-size: 150px;
+      line-height: 1;
+      letter-spacing: -0.05em;
+      color: var(--ink);
+      white-space: nowrap;
+      clip-path: inset(0% 100% 0% 0%);
+    }
+    #s6-first { top: 190px; }
+    #s6-last { top: 350px; }
+    #s6-rule {
+      position: absolute;
+      left: 180px;
+      top: 556px;
+      width: 1560px;
+      height: 2px;
+      background: var(--ink);
+    }
+    .s6-skill {
+      position: absolute;
+      left: 180px;
+      font-family: "Inter", sans-serif;
+      font-weight: 700;
+      font-size: 28px;
+      letter-spacing: 0.16em;
+      color: var(--graphite);
+      white-space: nowrap;
+    }
+    #s6-skill1 { top: 584px; }
+    #s6-skill2 { top: 628px; }
+    #s6-ask {
+      position: absolute;
+      left: 180px;
+      top: 742px;
+      font-family: "Inter", sans-serif;
+      font-weight: 400;
+      font-size: 40px;
+      color: var(--graphite);
+      white-space: nowrap;
+    }
+    #s6-invite {
+      position: absolute;
+      left: 176px;
+      top: 800px;
+      font-family: "Inter", sans-serif;
+      font-weight: 900;
+      font-size: 68px;
+      line-height: 1;
+      letter-spacing: -0.035em;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+    #s6-invite .w {
+      display: inline-block;
+    }
+    #s6-period {
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      margin-left: 6px;
+      background: var(--ink);
+      opacity: 0;
+    }
+  </style>
+  <div id="root" data-composition-id="s6-finish" data-width="1920" data-height="1080">
+    <div id="s6-clean"></div>
+    <div id="s6-doors">
+      <div id="s6-door-l" class="s6-door"><div class="s6-door-paper"></div><div class="s6-shade"></div></div>
+      <div id="s6-door-r" class="s6-door"><div class="s6-door-paper"></div><div class="s6-shade"></div></div>
+    </div>
+
+    <div id="s6-strip">
+        <div id="s6-f0" class="s6-frame" style="left:0px"><svg viewBox="0 0 200 120" width="200" height="120"><path d="M100,16 C80,44 80,76 100,104 C120,76 120,44 100,16Z" fill="#111110"/></svg></div>
+        <div id="s6-f1" class="s6-frame" style="left:224px"><svg viewBox="0 0 200 120" width="200" height="120"><rect x="70" y="18" width="3" height="84" fill="#111110"/><rect x="84" y="52" width="82" height="16" fill="#111110"/></svg></div>
+        <div id="s6-f2" class="s6-frame" style="left:448px"><svg viewBox="0 0 200 120" width="200" height="120"><rect x="84" y="68" width="88" height="3" fill="#111110"/><rect x="62" y="68" width="3" height="40" fill="#111110"/><rect x="88" y="44" width="70" height="16" fill="#111110"/></svg></div>
+        <div id="s6-f3" class="s6-frame" style="left:672px"><svg viewBox="0 0 200 120" width="200" height="120"><g fill="none" stroke="#111110" stroke-width="2.5"><rect x="66" y="34" width="56" height="56"/><rect x="82" y="20" width="56" height="56" stroke-width="1.5"/><path d="M66 34 L82 20 M122 34 L138 20 M122 90 L138 76 M66 90 L82 76" stroke-width="1.5"/></g><circle cx="94" cy="62" r="28" fill="none" stroke="#5e5b55" stroke-width="1.5"/></svg></div>
+        <div id="s6-f4" class="s6-frame" style="left:896px"><svg viewBox="0 0 200 120" width="200" height="120"><rect x="28" y="36" width="104" height="18" fill="#111110"/><rect x="28" y="62" width="144" height="18" fill="#111110"/><rect x="28" y="56" width="150" height="2" fill="#111110"/><rect x="28" y="82" width="150" height="2" fill="#111110"/></svg></div>
+        <div id="s6-f5" class="s6-frame" style="left:1120px"><svg viewBox="0 0 200 120" width="200" height="120"><rect x="46" y="30" width="8" height="8" fill="#111110"/><rect x="68" y="30" width="8" height="8" fill="#111110"/><rect x="90" y="30" width="8" height="8" fill="#111110"/><rect x="112" y="30" width="8" height="8" fill="#111110"/><rect x="134" y="30" width="8" height="8" fill="#111110"/><rect x="156" y="30" width="8" height="8" fill="#111110"/><rect x="46" y="52" width="8" height="8" fill="#111110"/><rect x="68" y="52" width="8" height="8" fill="#111110"/><rect x="90" y="52" width="8" height="8" fill="#111110"/><rect x="112" y="52" width="8" height="8" fill="#111110"/><rect x="136" y="54" width="8" height="8" fill="#111110"/><rect x="156" y="52" width="8" height="8" fill="#111110"/><rect x="46" y="74" width="8" height="8" fill="#111110"/><rect x="68" y="74" width="8" height="8" fill="#111110"/><rect x="90" y="74" width="8" height="8" fill="#111110"/><rect x="112" y="74" width="8" height="8" fill="#111110"/><rect x="134" y="74" width="8" height="8" fill="#111110"/><rect x="156" y="74" width="8" height="8" fill="#111110"/><rect x="46" y="96" width="8" height="8" fill="#111110"/><rect x="68" y="96" width="8" height="8" fill="#111110"/><rect x="90" y="96" width="8" height="8" fill="#111110"/><rect x="112" y="96" width="8" height="8" fill="#111110"/><rect x="134" y="96" width="8" height="8" fill="#111110"/><rect x="156" y="96" width="8" height="8" fill="#111110"/></svg></div>
+        <div id="s6-f6" class="s6-frame" style="left:1344px"><svg viewBox="0 0 200 120" width="200" height="120"><path d="M100 22 L138 42 L100 62 L62 42Z" fill="#f1eee8" stroke="#111110" stroke-width="2"/><path d="M62 42 L100 62 L100 102 L62 82Z" fill="#d8d3c9" stroke="#111110" stroke-width="2"/><path d="M100 62 L138 42 L138 82 L100 102Z" fill="#8f897f" stroke="#111110" stroke-width="2"/></svg></div>
+    </div>
+
+    <div id="s6-first" class="s6-name">BHOGESH</div>
+    <div id="s6-last" class="s6-name">MOLAGAVALLI</div>
+    <div id="s6-rule"></div>
+    <div id="s6-skill1" class="s6-skill">AI FILMMAKING · MOTION DESIGN</div>
+    <div id="s6-skill2" class="s6-skill">ART DIRECTION · CREATIVE STRATEGY</div>
+    <div id="s6-ask">Got a good problem?</div>
+    <div id="s6-invite" data-layout-allow-overlap><span class="w">LET’S</span> <span class="w">CREATE</span> <span class="w">SOMETHING</span> <span class="w">UNEXPECTED</span><span id="s6-period"></span></div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+      const L = [[1180, 800, 1.0], [1420, 800, 1.0], [1660, 800, 1.0], [1300, 520, 2.2], [1650, 420, 0.8], [1650, 540, 0.8], [1650, 660, 0.8]];
+
+      // the frames start exactly where 05 left them
+      L.forEach(([x, y, s], i) => {
+        const bx = 188 + i * 224 + 100;
+        tl.set(`#s6-f${i}`, { x: x - bx, y: y - 800, scale: s }, 0);
+      });
+
+      // 0.00-0.52 · convergence: every frame takes its own path to the centre, slowing as it arrives.
+      const durs = [0.48, 0.42, 0.52, 0.38, 0.45, 0.5, 0.46];
+      const xe = ["power2.out", "power3.out", "power1.out", "power3.out", "power2.out", "power4.out", "power2.out"];
+      const ye = ["power3.inOut", "power2.in", "power3.in", "power2.inOut", "power4.inOut", "power2.inOut", "power3.inOut"];
+      L.forEach((_, i) => {
+        const bx = 188 + i * 224 + 100;
+        const f = `#s6-f${i}`;
+        tl.to(f, { x: 960 - bx, duration: durs[i], ease: xe[i] }, 0.02 * i);
+        tl.to(f, { y: 540 - 800, duration: durs[i], ease: ye[i] }, 0.02 * i);
+        tl.to(f, { scale: 0.06, rotation: (i % 2 ? 1 : -1) * 8, duration: durs[i], ease: "power2.in" }, 0.02 * i);
+        tl.to(f, { opacity: 0, duration: 0.1, ease: "none" }, 0.02 * i + durs[i] - 0.08);
+      });
+
+      // the period is the square everything converged into; it waits at the centre
+      const period = document.querySelector("#s6-period");
+      const invite = document.querySelector("#s6-invite");
+      const dx = () => 960 - (invite.offsetLeft + period.offsetLeft + 7.5);
+      const dy = () => 540 - (invite.offsetTop + period.offsetTop + 7.5);
+      tl.set(period, { opacity: 1 }, 0.44);
+      tl.fromTo(period, { x: dx, y: dy, scale: 0 }, { x: dx, y: dy, scale: 1.6, duration: 0.18, ease: "expo.out", immediateRender: false }, 0.44);
+
+      // 0.42-0.84 · the old sheet folds open from the centre like two doors: a clean sheet beneath.
+      tl.fromTo("#s6-door-l", { rotationY: 0, transformOrigin: "0% 50%" }, { rotationY: -100, duration: 0.42, ease: "power2.inOut" }, 0.42);
+      tl.fromTo("#s6-door-r", { rotationY: 0, transformOrigin: "100% 50%" }, { rotationY: 100, duration: 0.42, ease: "power2.inOut" }, 0.42);
+      tl.to(".s6-shade", { opacity: 0.55, duration: 0.42, ease: "power2.in" }, 0.42);
+      tl.set("#s6-doors", { opacity: 0 }, 0.86);
+
+      // 0.55 · the name: a clean wipe, surname 3 frames behind.
+      tl.to("#s6-first", { clipPath: "inset(0% 0% 0% 0%)", duration: 0.28, ease: "power3.out" }, 0.55);
+      tl.to("#s6-last", { clipPath: "inset(0% 0% 0% 0%)", duration: 0.3, ease: "power3.out" }, 0.67);
+      tl.fromTo("#s6-rule", { scaleX: 0, transformOrigin: "0% 50%" }, { scaleX: 1, duration: 0.32, ease: "power3.inOut" }, 0.74);
+      tl.fromTo("#s6-skill1, #s6-skill2", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.16, stagger: 0.06, ease: "power2.out" }, 0.78);
+      tl.fromTo("#s6-ask", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.16, ease: "power2.out" }, 0.84);
+      tl.fromTo("#s6-invite .w", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.13, stagger: 0.067, ease: "power2.out" }, 0.88);
+
+      // 1.24-1.66 · the square travels to the end of the line and lands... 3 px off. Then it fixes itself.
+      tl.to(period, { x: 3, y: -2, scale: 1, duration: 0.3, ease: "power3.inOut" }, 1.24);
+      tl.to(period, { x: 0, y: 0, duration: 0.06, ease: "power4.out" }, 1.66);
+
+      window.__timelines["s6-finish"] = tl;
+    })();
+  </script>
+</template>

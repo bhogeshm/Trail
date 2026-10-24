@@ -1,0 +1,173 @@
+<template>
+  <style>
+    #root {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+    #s4-grid {
+      position: absolute;
+      inset: 0;
+    }
+    .s4-sq {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background: var(--ink);
+    }
+    .s4-guide {
+      position: absolute;
+      background: var(--graphite);
+    }
+    #s4-gh {
+      left: 600px;
+      top: 475.5px;
+      width: 720px;
+      height: 1px;
+    }
+    #s4-gv {
+      left: 1151.5px;
+      top: 380px;
+      width: 1px;
+      height: 320px;
+    }
+    #s4-cursor {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 40px;
+      height: 56px;
+      overflow: visible;
+    }
+    #s4-kicker {
+      position: absolute;
+      left: 160px;
+      top: 150px;
+      font-family: "Inter", sans-serif;
+      font-weight: 400;
+      font-size: 40px;
+      color: var(--graphite);
+      white-space: nowrap;
+    }
+    #s4-kicker span,
+    #s4-punch span {
+      display: inline-block;
+    }
+    #s4-punch {
+      position: absolute;
+      left: 0;
+      top: 800px;
+      width: 1920px;
+      text-align: center;
+      font-family: "Inter", sans-serif;
+      font-weight: 900;
+      font-size: 96px;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+  </style>
+  <div id="root" data-composition-id="s4-pixel" data-width="1920" data-height="1080">
+    <div id="s4-grid">
+      <div id="s4-gh" class="s4-guide"></div>
+      <div id="s4-gv" class="s4-guide"></div>
+      <div class="s4-sq" style="left:631px;top:403px"></div>
+      <div class="s4-sq" style="left:695px;top:403px"></div>
+      <div class="s4-sq" style="left:759px;top:403px"></div>
+      <div class="s4-sq" style="left:823px;top:403px"></div>
+      <div class="s4-sq" style="left:887px;top:403px"></div>
+      <div class="s4-sq" style="left:951px;top:403px"></div>
+      <div class="s4-sq" style="left:1015px;top:403px"></div>
+      <div class="s4-sq" style="left:1079px;top:403px"></div>
+      <div class="s4-sq" style="left:1143px;top:403px"></div>
+      <div class="s4-sq" style="left:1207px;top:403px"></div>
+      <div class="s4-sq" style="left:1271px;top:403px"></div>
+      <div class="s4-sq" style="left:631px;top:467px"></div>
+      <div class="s4-sq" style="left:695px;top:467px"></div>
+      <div class="s4-sq" style="left:759px;top:467px"></div>
+      <div class="s4-sq" style="left:823px;top:467px"></div>
+      <div class="s4-sq" style="left:887px;top:467px"></div>
+      <div class="s4-sq" style="left:951px;top:467px"></div>
+      <div class="s4-sq" style="left:1015px;top:467px"></div>
+      <div class="s4-sq" style="left:1079px;top:467px"></div>
+      <div class="s4-sq s4-hero" id="s4-hero" style="left:1148px;top:470px"></div>
+      <div class="s4-sq" style="left:1207px;top:467px"></div>
+      <div class="s4-sq" style="left:1271px;top:467px"></div>
+      <div class="s4-sq" style="left:631px;top:531px"></div>
+      <div class="s4-sq" style="left:695px;top:531px"></div>
+      <div class="s4-sq" style="left:759px;top:531px"></div>
+      <div class="s4-sq" style="left:823px;top:531px"></div>
+      <div class="s4-sq" style="left:887px;top:531px"></div>
+      <div class="s4-sq" style="left:951px;top:531px"></div>
+      <div class="s4-sq" style="left:1015px;top:531px"></div>
+      <div class="s4-sq" style="left:1079px;top:531px"></div>
+      <div class="s4-sq" style="left:1143px;top:531px"></div>
+      <div class="s4-sq" style="left:1207px;top:531px"></div>
+      <div class="s4-sq" style="left:1271px;top:531px"></div>
+      <div class="s4-sq" style="left:631px;top:595px"></div>
+      <div class="s4-sq" style="left:695px;top:595px"></div>
+      <div class="s4-sq" style="left:759px;top:595px"></div>
+      <div class="s4-sq" style="left:823px;top:595px"></div>
+      <div class="s4-sq" style="left:887px;top:595px"></div>
+      <div class="s4-sq" style="left:951px;top:595px"></div>
+      <div class="s4-sq" style="left:1015px;top:595px"></div>
+      <div class="s4-sq" style="left:1079px;top:595px"></div>
+      <div class="s4-sq" style="left:1143px;top:595px"></div>
+      <div class="s4-sq" style="left:1207px;top:595px"></div>
+      <div class="s4-sq" style="left:1271px;top:595px"></div>
+      <div class="s4-sq" style="left:631px;top:659px"></div>
+      <div class="s4-sq" style="left:695px;top:659px"></div>
+      <div class="s4-sq" style="left:759px;top:659px"></div>
+      <div class="s4-sq" style="left:823px;top:659px"></div>
+      <div class="s4-sq" style="left:887px;top:659px"></div>
+      <div class="s4-sq" style="left:951px;top:659px"></div>
+      <div class="s4-sq" style="left:1015px;top:659px"></div>
+      <div class="s4-sq" style="left:1079px;top:659px"></div>
+      <div class="s4-sq" style="left:1143px;top:659px"></div>
+      <div class="s4-sq" style="left:1207px;top:659px"></div>
+      <div class="s4-sq" style="left:1271px;top:659px"></div>
+    </div>
+    <div id="s4-kicker"><span>And</span> <span>professionally…</span> <span>I</span> <span>overthink</span> <span>the</span> <span>details.</span></div>
+    <svg id="s4-cursor" viewBox="0 0 40 56" data-layout-allow-overflow>
+      <path d="M2 2 L2 44 L12.5 34 L20 52 L27 49 L19.5 31.5 L34 31.5 Z" fill="#111110" stroke="#f2f0ea" stroke-width="2.5" stroke-linejoin="round" />
+    </svg>
+    <div id="s4-punch"><span>YES.</span> <span>EVEN</span> <span>THAT</span> <span>PIXEL.</span></div>
+  </div>
+  <script>
+    (function () {
+      const tl = gsap.timeline({ paused: true });
+
+      // 0.00-0.30 · a perfect grid prints outward from the square that ended 03 ... almost perfect.
+      tl.fromTo(".s4-sq", { scale: 0 }, { scale: 1, duration: 0.14, ease: "power3.out", stagger: { grid: [5, 11], from: "center", amount: 0.22 } }, 0);
+      tl.fromTo("#s4-kicker span", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.13, stagger: 0.06, ease: "power2.out" }, 0.12);
+
+      // 0.20-0.60 · the camera finds the one square that is out of line.
+      tl.fromTo("#s4-grid", { scale: 1, x: 0, y: 0, transformOrigin: "1152px 476px" }, { scale: 2.6, x: -192, y: 64, duration: 0.4, ease: "power2.inOut" }, 0.16);
+      tl.fromTo("#s4-gh", { scaleX: 0, transformOrigin: "0% 50%" }, { scaleX: 1, duration: 0.2, ease: "power2.out" }, 0.3);
+      tl.fromTo("#s4-gv", { scaleY: 0, transformOrigin: "50% 0%" }, { scaleY: 1, duration: 0.2, ease: "power2.out" }, 0.36);
+
+      // 0.30-0.66 · a cursor arrives and stops on it. Then nothing. (Sound cuts out for 2 frames.)
+      tl.fromTo("#s4-cursor", { x: 2000, y: 1160 }, { x: 990, y: 570, duration: 0.36, ease: "power3.inOut" }, 0.3);
+
+      // 0.72 · click: the square moves 3 px. The world reacts as if it were a building.
+      tl.to("#s4-cursor", { scale: 0.88, transformOrigin: "0% 0%", duration: 0.04, ease: "none" }, 0.72);
+      tl.to("#s4-cursor", { scale: 1, duration: 0.08, ease: "power2.out" }, 0.76);
+      tl.fromTo("#s4-hero", { x: 0, y: 0 }, { x: -5, y: -3, duration: 0.08, ease: "power4.out" }, 0.72);
+      tl.to("#s4-cursor", { x: 977, y: 562, duration: 0.08, ease: "power4.out" }, 0.72);
+      tl.to("#s4-gh, #s4-gv", { opacity: 0, duration: 0.16, ease: "power2.in" }, 0.96);
+      tl.to("#s4-cursor", { x: 1240, y: 900, opacity: 0, duration: 0.3, ease: "power3.in" }, 1.16);
+
+      // the rest of the grid steps back so the corrected square and the line own the frame
+      tl.to(".s4-sq:not(#s4-hero)", { opacity: 0.16, duration: 0.2, ease: "power2.out" }, 0.78);
+      // 0.80 · the dry caption, word by word, then dead still.
+      tl.fromTo("#s4-punch span", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.13, stagger: 0.07, ease: "power2.out" }, 0.8);
+
+      // 1.80-2.00 · everything clears except the corrected square, which 05 picks up.
+      tl.to("#s4-kicker span, #s4-punch span", { opacity: 0, filter: "blur(8px)", duration: 0.12, stagger: 0.01, ease: "power2.in" }, 1.86);
+      tl.to(".s4-sq:not(#s4-hero)", { scale: 0, duration: 0.14, ease: "power2.in", stagger: { grid: [5, 11], from: "edges", amount: 0.1 } }, 1.8);
+
+      window.__timelines["s4-pixel"] = tl;
+    })();
+  </script>
+</template>
